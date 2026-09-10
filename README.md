@@ -42,3 +42,4 @@ Projektą kuria Vilniaus universiteto programų sistemų inžinerijos studentai:
 * Edvinas Averlingis
 * Gabija Janušauskaitė
 * Edgar Dainarovič
+* Artūras Sereika
