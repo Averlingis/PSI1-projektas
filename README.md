@@ -1,45 +1,78 @@
-# PSI1-projektas
+# PSI1 Project
 
-Programų sistemų inžinerijos semestro projektas. Tai interaktyvi mokymosi programėlė, skirta efektyviai įsisavinti naujas žinias, ugdyti įpročius ir sekti asmeninį progresą.
+A semester project for Software Systems Engineering. It is an interactive learning application designed to help users effectively acquire new knowledge, develop habits and track their personal progress.
 
-## Produkto vizija (Product Vision)
+## Product Vision
 
-### Galutinis tikslas (End Goal)
+### End Goal
 
-Sukurti patrauklią, žaidybiniais elementais (gamification) paremtą mokymosi platformą, kuri skatintų vartotojų motyvaciją mokytis per asmeninio progreso sekimą, interaktyvius testus bei dinamišką konkurenciją su kitais žaidėjais realiame laike.
+To create an engaging, gamification-based learning platform that encourages users' motivation to learn new languages **(kokias ? LT, EN, ??)** through personal progress tracking, interactive quizzes, and dynamic real-time competition with other players.
 
-### Priėmimo kriterijai (Acceptance Criteria)
+### Acceptance Criteria
 
-* Vartotojai gali sėkmingai susikurti paskyrą, saugiai prisijungti ir pritaikyti savo profilį (kalba, avataras, slapyvardis).
-* Sistema patikimai išsaugo individualų mokymosi progresą ir skaičiuoja nepertraukiamas mokymosi dienas (streaks).
-* Sklandžiai veikia kelių žaidėjų (multiplayer) režimas su integruotu atsakymų laiko limitu, užtikrinančiu greitą žaidimo tempą.
-* Veikia lyderių lentelė (leaderboard) ir pasiekimų (achievements) sistema, atspindinti vartotojų rezultatus.
-* Vartotojams pateikiamas grįžtamasis ryšys apie jų rezultatus po kiekvienos pamokos ar sesijos.
-* Vartotojai turi galimybę patys kurti savo testus ir priskirti juos norimoms kategorijoms.
+* Users can successfully create an account, securely log in, and customize their profile (language, avatar, nickname).
 
+* The system reliably saves individual learning progress and tracks consecutive learning days (streaks).
 
-## Vartotojų istorijos (User Stories)
+* The multiplayer mode works smoothly with an integrated answer time limit, ensuring a fast-paced gaming experience.
 
-Sistema kuriama atsižvelgiant į šiuos pagrindinius vartotojų poreikius:
+* A leaderboard and achievements system is available, reflecting users' performance.
 
-* **Paskyra ir autentifikacija:** Kaip vartotojas, noriu saugiai prisijungti prie sistemos, kad mano duomenys būtų apsaugoti.
-* **Kalbos pasirinkimas:** Kaip vartotojas, noriu pasirinkti vartotojo sąsajos kalbą, kad programėle naudotis būtų patogu.
-* **Progresas:** Kaip vartotojas, noriu, kad mano mokymosi eiga būtų automatiškai išsaugoma, jog bet kada galėčiau tęsti nuo ten, kur baigiau.
-* **Kategorijų pasirinkimas:** Kaip vartotojas, noriu pasirinkti mane dominančią mokymosi kategoriją.
-* **Kelių vartotojų režimas (Multiplayer):** Kaip vartotojas, noriu mokytis ir varžytis su kitais žaidėjais realiame laike.
-* **Atsakymo laiko limitas:** Kaip vartotojas, noriu, kad kelių žaidėjų (multiplayer) režime atsakymams būtų skirtas ribotas laikas, jog nereikėtų per ilgai laukti kitų žaidėjų ėjimų.
-* **Pasiekimai (Achievements):** Kaip vartotojas, noriu atrakinti pasiekimus už įveiktus iššūkius, kad išlaikyčiau motyvaciją.
-* **Mokymosi serijos (Streaks):** Kaip vartotojas, noriu sekti savo nepertraukiamo kasdienio mokymosi dienas.
-* **Profilio personalizacija:** Kaip vartotojas, noriu pritaikyti savo profilį (keisti avatarą, slapyvardį), kad jis atspindėtų mano asmenybę.
-* **Grįžtamasis ryšys:** Kaip vartotojas, noriu po kiekvienos pamokos gauti rezultatų analizę ir patarimus, kad žinočiau, kur tobulėti.
-* **Lyderių lentelė (Leaderboard):** Kaip vartotojas, noriu matyti geriausiųjų sąrašą ir lyginti savo rezultatus su kitais.
-* **Turinio kūrimas:** Kaip vartotojas, noriu turėti galimybę kurti savo individualius testus ir dalintis jais su bendruomene.
+* Users receive feedback on their performance after each lesson or session.
 
-## Komanda
+* Users have the ability to create their own quizzes and assign them to desired categories.
 
-Projektą kuria Vilniaus universiteto programų sistemų inžinerijos studentai:
+## User Stories
+
+The system is being developed with the following key user needs in mind:
+
+* **Account and Authentication:** As a user, I want to securely log in to the system so that my data is protected.
+
+* **Language Selection:** As a user, I want to choose the user interface language so that the application is convenient to use.
+
+* **Progress:** As a user, I want my learning progress to be automatically saved so that I can continue from where I left off at any time.
+
+* **Category Selection:** As a user, I want to choose a learning category that interests me.
+
+* **Multiplayer:** As a user, I want to learn and compete with other players in real time.
+
+* **Answer Time Limit:** As a user, I want answers in multiplayer mode to have a limited time so that I do not have to wait too long for other players to make their moves.
+
+* **Achievements:** As a user, I want to unlock achievements for completing challenges so that I can stay motivated.
+
+* **Streaks:** As a user, I want to track the number of consecutive days I have been learning.
+
+* **Profile Personalization:** As a user, I want to customize my profile (change my avatar and nickname) so that it reflects my personality.
+
+* **Feedback:** As a user, I want to receive performance analysis and advice after each lesson so that I know what I need to improve.
+
+* **Leaderboard:** As a user, I want to see a list of the top players and compare my results with others.
+
+* **Content Creation:** As a user, I want to be able to create my own quizzes and share them with the community.
+
+## Team
+
+The project is being developed by Software Systems Engineering students at Vilnius University:
 
 * Edvinas Averlingis
 * Gabija Janušauskaitė
 * Edgar Dainarovič
 * Artūras Sereika
+
+## To do list 1/3:
+- [ ] 1. Application can be interacted with using *some* sort of interface. There exists at least one user scenario, which can be demonstrated end to end.
+- [ ] 2. Creating and using your own `class`, `struct`, `record` and `enum`. 1 type must be immutable.
+- [ ] 3. Property usage in `struct` and `class`.
+- [ ] 4. Named and optional argument usage.
+- [ ] 5. Extension method usage.
+- [ ] 6. Iterating through collections the right way.
+- [ ] 7. Using a stream to load data (can be from file, web service, socket etc.).
+- [ ] 8. LINQ to Objects used where appropriate (methods or queries). If LINQ is not used in a particular scenario, provide a justification.
+- [ ] 9. Implement at least one of the standard .NET interfaces (`IEnumerable`, `IComparable`, `IComparer`, `IEquatable`, `IEnumerator`, etc.)
+- [ ] 10. All changes reviewed via pull requests; each PR must have description explaining what was done and why. Each team member must have authored at least 3 merged PRs and reviewed at least 3 PRs from teammates. PR is counted as reviewed only if there are any meaningful comments and discussions.
+- [ ] 11. Uniform coding style is used throughout the project.
+
+## To do list 2/3:
+
+## To do list 3/3:
+
