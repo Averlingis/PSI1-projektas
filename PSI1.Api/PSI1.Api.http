@@ -1,6 +1,21 @@
 @PSI1.Api_HostAddress = http://localhost:5158
 
-GET {{PSI1.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpass"
+}
+
+###
+
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpass"
+}
 
 ###

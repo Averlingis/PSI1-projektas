@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Local test data
+users.json
+
 # dotenv files
 .env
 
