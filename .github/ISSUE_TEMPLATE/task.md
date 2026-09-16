@@ -8,15 +8,6 @@ type: Task
 
 ---
 
-name: Task
-about: Add a task under user story
-title: "[Task]: "
-labels: task
-assignees: ''
-type: Task
-
----
-
 **Parent story**
 *Which user story does this belong to?*
 
