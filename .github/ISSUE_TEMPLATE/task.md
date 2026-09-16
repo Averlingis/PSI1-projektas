@@ -4,20 +4,10 @@ about: Add a task under user story
 title: "[Task]: "
 labels: Task
 assignees: ''
-
----
-
----
-name: Task
-about: Add a task under user story
-title: "[Task]: "
-labels: Task
-assignees: ' '
 type: Task
 
 ---
 
----
 name: Task
 about: Add a task under user story
 title: "[Task]: "

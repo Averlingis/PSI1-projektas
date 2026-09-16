@@ -4,15 +4,6 @@ about: Add a user story to the backlog
 title: "[User story]: "
 labels: User-story
 assignees: ''
-
----
-
----
-name: User story
-about: Add a user story to the backlog
-title: "[User story]: "
-labels: User-story
-assignees: ' '
 type: Feature
 
 ---
