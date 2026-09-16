@@ -1,6 +1,7 @@
-using System.Text.Json; // for conversion from c sharp to json
+using PSI1.Api.Data; // for AppDbContext
 using Microsoft.AspNetCore.Mvc; // for features needed to build a web api controller
 using PSI1.Api.Models; // for User class
+using Microsoft.EntityFrameworkCore; // for async queries
 
 namespace PSI1.Api.Controllers;
 
@@ -17,60 +18,49 @@ public record LoginRequest(string Username, string Password);
 // Inhertis from ControllerBase core class
 public class AuthController : ControllerBase
 {
-// where user data is saved on disk, value is shared across all requests and never changes for now
-    private static readonly string filePath = "users.json";
+	// where user data is saved on disk, value is shared across all requests and never changes for now
+	private readonly AppDbContext _db;
 
-// reads users
-    private List<User> LoadUsers()
-    {
-        if (!System.IO.File.Exists(filePath))
-        {
-            return new List<User>();
-        }
+	public AuthController(AppDbContext db)
+	{
+		_db = db;
+	}
 
-// converts from json to dynamic list
-        using var stream = System.IO.File.OpenRead(filePath);
-        var users = JsonSerializer.Deserialize<List<User>>(stream);
-        return users ?? new List<User>();
-    }
+	// Handles POST req
+	[HttpPost("register")]
+	public async Task<IActionResult> Register(RegisterRequest request)
+	{
+		// reject duplicate usernames instead of silently adding
+		var exists = await _db.Users.AnyAsync(u => u.Username == request.Username);
+		if (exists)
+		{
+			return Conflict("Username already taken.");
+		}
 
-// writes the given list back  to json
-    private void SaveUsers(List<User> users)
-    {
-// creates or overwrites the file and opens it
-        using var stream = System.IO.File.Create(filePath);
-// converts to json
-        JsonSerializer.Serialize(stream, users);
-    }
+		var user = new User
+		{
+			Username = request.Username,
+			// bcrypt hashes the password and generates + embeds a random salt for us
+			PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+		};
 
-// Handles POST req
-    [HttpPost("register")]
-    public IActionResult Register(RegisterRequest request)
-    {
-// load the users
-        var users = LoadUsers();
-// adds user
-        users.Add(new User { Username = request.Username, Password = request.Password });
-        SaveUsers(users);
+		_db.Users.Add(user);
+		await _db.SaveChangesAsync();
 
+		return Ok("Account created.");
+	}
 
-        return Ok("Account created.");
-    }
+	[HttpPost("login")]
+	public async Task<IActionResult> Login(LoginRequest request)
+	{
+		var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
-    [HttpPost("login")]
-    public IActionResult Login(LoginRequest request)
-    {
-        var users = LoadUsers();
+		if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+		{
+			return Unauthorized("Wrong username or password.");
+		}
 
-// for loop to check if un and pw match saved ones
-        foreach (var user in users)
-        {
-            if (user.Username == request.Username && user.Password == request.Password)
-            {
-                return Ok("Logged in.");
-            }
-        }
-
-        return Unauthorized("Wrong username or password.");
-    }
+		return Ok("Logged in.");
+	}
 }
+

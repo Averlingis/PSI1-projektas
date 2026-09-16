@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  psi1-db:
+    image: postgres:15-alpine
+    container_name: psi1-postgres
+    environment:
+      POSTGRES_DB: psi1
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - psi1_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  psi1_postgres_data:
