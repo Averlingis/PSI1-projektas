@@ -8,7 +8,8 @@ public class User
     public string Username { get; set; } = "";
     public string PasswordHash { get; set; } = "";
     public string PictureFilename {get; set; } = "default.jpg";
-}
 
+    public Language? LearningLanguage { get; set; }
+}
 
 // ***pws are currently saved a plain text
