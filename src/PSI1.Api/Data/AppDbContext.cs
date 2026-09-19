@@ -13,9 +13,9 @@ public class AppDbContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// usernames must be unique - also lets Register() check for duplicates efficiently
+		// email must be unique - also lets Register() check for duplicates efficiently
 		modelBuilder.Entity<User>()
-		    .HasIndex(u => u.Username)
+		    .HasIndex(u => u.Email)
 		    .IsUnique();
 	}
 }

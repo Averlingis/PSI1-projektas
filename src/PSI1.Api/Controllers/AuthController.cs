@@ -1,13 +1,14 @@
 using PSI1.Api.Data; // for AppDbContext
-using Microsoft.AspNetCore.Mvc; // for features needed to build a web api controller
 using PSI1.Api.Models; // for User class
-using Microsoft.EntityFrameworkCore; // for async queries
+using PSI1.Api.DTOs; // for RegisterRequest class
+using Microsoft.AspNetCore.Mvc; // for features needed to build a web api controller
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace PSI1.Api.Controllers;
-
-public record RegisterRequest(string Username, string Password);
-public record LoginRequest(string Username, string Password);
-
 
 // Tells asp.net that this class handles API
 [ApiController]
@@ -20,46 +21,72 @@ public class AuthController : ControllerBase
 {
 	// where user data is saved on disk, value is shared across all requests and never changes for now
 	private readonly AppDbContext _db;
+    private readonly IConfiguration _configuration;
 
-	public AuthController(AppDbContext db)
+	public AuthController(AppDbContext db, IConfiguration configuration)
 	{
 		_db = db;
+		_configuration = configuration;
 	}
 
-	// Handles POST req
-	[HttpPost("register")]
-	public async Task<IActionResult> Register(RegisterRequest request)
-	{
-		// reject duplicate usernames instead of silently adding
-		var exists = await _db.Users.AnyAsync(u => u.Username == request.Username);
-		if (exists)
-		{
-			return Conflict("Username already taken.");
-		}
+    // Handles POST req
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        // reject duplicate emails instead of silently adding
+        var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
+        if (exists)
+        {
+            return Conflict("Email already registered.");
+        }
 
-		var user = new User
-		{
-			Username = request.Username,
-			// bcrypt hashes the password and generates + embeds a random salt for us
-			PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
-		};
+        var user = new User
+        {
+            Email = request.Email.ToLower(), // store emails in lowercase to avoid duplicates
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password) // bcrypt hashes the password and generates + embeds a random salt for us
+        };
 
-		_db.Users.Add(user);
-		await _db.SaveChangesAsync();
+        _db.Users.Add(user);
+        await _db.SaveChangesAsync();
 
-		return Ok("Account created.");
-	}
+        return StatusCode(201, "Account created.");
+    }
 
-	[HttpPost("login")]
-	public async Task<IActionResult> Login(LoginRequest request)
-	{
-		var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
 
-		if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-		{
-			return Unauthorized("Wrong username or password.");
-		}
+        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        {
+            return Unauthorized("Invalid email or password.");
+        }
 
-		return Ok("Logged in.");
-	}
+        var token = GenerateJwtToken(user);
+        
+        return Ok(new { Token = token});
+    }
+
+    private string GenerateJwtToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);   
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: credentials
+            );       
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 }
+

@@ -1,0 +1,13 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Jwt": {
+    "Key": "REPLACE_WITH_YOUR_OWN_GENERATED_SECRET_KEY",
+    "Issuer": "PSI1.Api",
+    "Audience": "PSI1.Api"
+  }
+}
