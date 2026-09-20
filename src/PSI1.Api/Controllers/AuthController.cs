@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
 {
 	// where user data is saved on disk, value is shared across all requests and never changes for now
 	private readonly AppDbContext _db;
-    private readonly IConfiguration _configuration;
+	private readonly IConfiguration _configuration;
 
 	public AuthController(AppDbContext db, IConfiguration configuration)
 	{
@@ -29,64 +29,64 @@ public class AuthController : ControllerBase
 		_configuration = configuration;
 	}
 
-    // Handles POST req
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
-    {
-        // reject duplicate emails instead of silently adding
-        var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
-        if (exists)
-        {
-            return Conflict("Email already registered.");
-        }
+	// Handles POST req
+	[HttpPost("register")]
+	public async Task<IActionResult> Register(RegisterRequest request)
+	{
+		// reject duplicate emails instead of silently adding
+		var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
+		if (exists)
+		{
+			return Conflict(new { message = "Email already registered." });
+		}
 
-        var user = new User
-        {
-            Email = request.Email.ToLower(), // store emails in lowercase to avoid duplicates
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password) // bcrypt hashes the password and generates + embeds a random salt for us
-        };
+		var user = new User
+		{
+			Email = request.Email.ToLower(), // store emails in lowercase to avoid duplicates
+			PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password) // bcrypt hashes the password and generates + embeds a random salt for us
+		};
 
-        _db.Users.Add(user);
-        await _db.SaveChangesAsync();
+		_db.Users.Add(user);
+		await _db.SaveChangesAsync();
 
-        return StatusCode(201, "Account created.");
-    }
+		return StatusCode(201, new { message = "Account created." });
+	}
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request)
-    {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+	[HttpPost("login")]
+	public async Task<IActionResult> Login(LoginRequest request)
+	{
+		var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-        {
-            return Unauthorized("Invalid email or password.");
-        }
+		if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+		{
+			return Unauthorized(new { message = "Invalid email or password." });
+		}
 
-        var token = GenerateJwtToken(user);
-        
-        return Ok(new { Token = token});
-    }
+		var token = GenerateJwtToken(user);
 
-    private string GenerateJwtToken(User user)
-        {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email)
-            };
+		return Ok(new { Token = token });
+	}
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);   
+	private string GenerateJwtToken(User user)
+	{
+		var claims = new[]
+		{
+		new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+		new Claim(JwtRegisteredClaimNames.Email, user.Email)
+	    };
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: credentials
-            );       
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+		var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+		var token = new JwtSecurityToken(
+		    issuer: _configuration["Jwt:Issuer"],
+		    audience: _configuration["Jwt:Audience"],
+		    claims: claims,
+		    expires: DateTime.UtcNow.AddHours(1),
+		    signingCredentials: credentials
+		);
+
+		return new JwtSecurityTokenHandler().WriteToken(token);
+	}
 }
 
