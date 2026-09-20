@@ -63,4 +63,3 @@ public class AuthController : ControllerBase
 		return Ok("Logged in.");
 	}
 }
-
