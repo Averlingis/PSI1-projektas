@@ -11,8 +11,8 @@ using PSI1.Api.Data;
 namespace PSI1.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260916132322_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260920214350_Username")]
+    partial class Username
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,11 +32,15 @@ namespace PSI1.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PictureFilename")
+                    b.Property<string>("ProfilePictureFilename")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -45,6 +49,9 @@ namespace PSI1.Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("Username")
                         .IsUnique();
