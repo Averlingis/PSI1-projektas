@@ -1,21 +1,64 @@
 @PSI1.Api_HostAddress = http://localhost:5158
 
+### Sėkminga registracija
 POST {{PSI1.Api_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "testuser",
+  "email": "test@gmail.com",
   "password": "testpass"
 }
 
-###
+### Registracija su tuo pačiu email patikrai dėl case-insensitive
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
 
+{
+  "email": "TEST@GMAIL.COM",
+  "password": "testpass"
+}
+
+### Netinkamas email formatas
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser",
+  "password": "testpass"
+}
+
+### Per trumpas password
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "pvz@gmail.com",
+  "password": "123"
+}
+
+### Sėkmingas prisijungimas
 POST {{PSI1.Api_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "testuser",
+  "email": "test@gmail.com",
   "password": "testpass"
 }
 
-###
+### Neteisingas slaptažodis
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "blogas_slaptazodis"
+}
+
+### Neregistruotas email
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "tokionera@gmail.com",
+  "password": "testpass"
+}
