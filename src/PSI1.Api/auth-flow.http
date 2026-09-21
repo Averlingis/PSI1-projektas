@@ -32,6 +32,8 @@ Content-Type: application/json
 }
 
 ### 4. Log in -> stash the token into the global "token" variable
+
+# @name login
 POST {{PSI1.Api_HostAddress}}/api/auth/login
 Content-Type: application/json
 
@@ -39,11 +41,8 @@ Content-Type: application/json
   "email": "flowtest@gmail.com",
   "password": "testpass123"
 }
-
-> {%
-client.global.set("token", response.body.token);
-client.log("Saved token: " + response.body.token);
-%}
+###
+@token = {{login.response.body.$.token}}
 
 ### 5. Log in with the wrong password -> expect 401
 POST {{PSI1.Api_HostAddress}}/api/auth/login
