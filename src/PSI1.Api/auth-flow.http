@@ -81,16 +81,16 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "language": "German"
+  "language": "Russian"
 }
 
-### 10. Confirm the change by selecting a different language -> expect 200, language: "French"
+### 10. Confirm the change by selecting a different language -> expect 200, language: "English"
 PUT {{PSI1.Api_HostAddress}}/api/languages/select
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "language": "French"
+  "language": "English"
 }
 
 ### 11. integer form

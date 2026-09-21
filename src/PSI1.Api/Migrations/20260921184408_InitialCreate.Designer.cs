@@ -11,8 +11,8 @@ using PSI1.Api.Data;
 namespace PSI1.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260920214350_Username")]
-    partial class Username
+    [Migration("20260921184408_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace PSI1.Api.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int?>("LearningLanguage")
+                        .HasColumnType("integer");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
