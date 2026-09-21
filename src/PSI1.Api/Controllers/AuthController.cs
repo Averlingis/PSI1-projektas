@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
 		var user = new User
 		{
 			Email = request.Email.ToLower(), // store emails in lowercase to avoid duplicates
-			Username = request.Username,
+			Username = request.Username.ToLower(),
 			PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password) // bcrypt hashes the password and generates + embeds a random salt for us
 		};
 
