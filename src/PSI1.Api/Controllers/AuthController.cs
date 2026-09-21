@@ -34,15 +34,23 @@ public class AuthController : ControllerBase
 	public async Task<IActionResult> Register(RegisterRequest request)
 	{
 		// reject duplicate emails instead of silently adding
-		var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
-		if (exists)
+		var emailExists = await _db.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
+		if (emailExists)
 		{
 			return Conflict(new { message = "Email already registered." });
+		}
+
+		// reject duplicate usernames too, since Username is unique in the database
+		var usernameExists = await _db.Users.AnyAsync(u => u.Username.ToLower() == request.Username.ToLower());
+		if (usernameExists)
+		{
+			return Conflict(new { message = "Username already taken." });
 		}
 
 		var user = new User
 		{
 			Email = request.Email.ToLower(), // store emails in lowercase to avoid duplicates
+			Username = request.Username,
 			PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password) // bcrypt hashes the password and generates + embeds a random salt for us
 		};
 
@@ -72,7 +80,8 @@ public class AuthController : ControllerBase
 		var claims = new[]
 		{
 		new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-		new Claim(JwtRegisteredClaimNames.Email, user.Email)
+		new Claim(JwtRegisteredClaimNames.Email, user.Email),
+		new Claim(JwtRegisteredClaimNames.UniqueName, user.Username)
 	    };
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));

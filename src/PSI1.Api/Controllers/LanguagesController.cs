@@ -1,52 +1,68 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PSI1.Api.Models;
+using PSI1.Api.DTOs;
 using Microsoft.EntityFrameworkCore;
 using PSI1.Api.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace PSI1.Api.Controllers;
-
-// DTO for receiving the username and selected language from the client
-public record LanguageSelectionRequest(string Username, Language Language);
 
 [ApiController]
 [Route("api/languages")]
 public class LanguagesController : ControllerBase
 {
-    private readonly AppDbContext _db;
+	private readonly AppDbContext _db;
 
-    public LanguagesController(AppDbContext db)
-    {
-        _db = db;
-    }
+	public LanguagesController(AppDbContext db)
+	{
+		_db = db;
+	}
 
-// Returns all available languages defined in the Language enum
-    [HttpGet]
-    public IActionResult GetLanguages()
-    {
-        var languages = Enum.GetValues<Language>()
-            .Select(language => language.ToString())
-            .ToList();
+	// Returns all available languages defined in the Language enum.
+	// Left open to anonymous users so the sign-up/selection UI can list options before login.
+	[HttpGet]
+	public IActionResult GetLanguages()
+	{
+		var languages = Enum.GetValues<Language>()
+		    .Select(language => language.ToString())
+		    .ToList();
 
-        return Ok(languages);
-    }
+		return Ok(languages);
+	}
 
 
-// Updates and saves the selected learning language for a user
-    [HttpPut("select")]
-    public async Task<IActionResult> SelectLanguage(LanguageSelectionRequest request)
-    {
-        var user = await _db.Users
-            .FirstOrDefaultAsync(u => u.Username == request.Username);
+	// Updates and saves the selected learning language for the authenticated user.
+	// Requires a valid JWT (see AuthController.Login); the target user comes from
+	// the token's "sub" claim rather than from the request body.
+	[Authorize]
+	[HttpPut("select")]
+	public async Task<IActionResult> SelectLanguage(LanguageSelectionRequest request)
+	{
+		var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+		    ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (user is null)
-        {
-            return NotFound("User not found.");
-        }
+		if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
+		{
+			return Unauthorized(new { message = "Invalid or missing token." });
+		}
 
-        user.LearningLanguage = request.Language;
+		var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-        await _db.SaveChangesAsync();
+		if (user is null)
+		{
+			return NotFound(new { message = "User not found." });
+		}
 
-        return Ok($"Learning language changed to: {request.Language}.");
-    }
+		user.LearningLanguage = request.Language;
+
+		await _db.SaveChangesAsync();
+
+		return Ok(new
+		{
+			message = $"Learning language changed to: {request.Language}.",
+			language = request.Language.ToString()
+		});
+	}
 }

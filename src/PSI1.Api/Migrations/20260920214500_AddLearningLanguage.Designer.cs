@@ -11,7 +11,7 @@ using PSI1.Api.Data;
 namespace PSI1.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260917122640_AddLearningLanguage")]
+    [Migration("20260920214500_AddLearningLanguage")]
     partial class AddLearningLanguage
     {
         /// <inheritdoc />

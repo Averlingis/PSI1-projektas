@@ -6,6 +6,7 @@ Content-Type: application/json
 
 {
   "email": "test@gmail.com",
+  "username": "testuser",
   "password": "testpass"
 }
 
@@ -15,6 +16,17 @@ Content-Type: application/json
 
 {
   "email": "TEST@GMAIL.COM",
+  "username": "testuser2",
+  "password": "testpass"
+}
+
+### Registracija su tuo pačiu username patikrai dėl case-insensitive
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "kitas@gmail.com",
+  "username": "TESTUSER",
   "password": "testpass"
 }
 
@@ -24,6 +36,7 @@ Content-Type: application/json
 
 {
   "email": "testuser",
+  "username": "testuser3",
   "password": "testpass"
 }
 
@@ -33,6 +46,7 @@ Content-Type: application/json
 
 {
   "email": "pvz@gmail.com",
+  "username": "pvzuser",
   "password": "123"
 }
 
@@ -61,4 +75,25 @@ Content-Type: application/json
 {
   "email": "tokionera@gmail.com",
   "password": "testpass"
+}
+
+### Galimų kalbų sąrašas (viešas endpoint'as)
+GET {{PSI1.Api_HostAddress}}/api/languages
+
+### Kalbos pasirinkimas - reikalauja JWT iš /api/auth/login atsakymo
+# Pakeisk {{token}} į Token reikšmę, gautą prisijungus.
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "language": "Lithuanian"
+}
+
+### Kalbos pasirinkimas be JWT - turi grąžinti 401
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+
+{
+  "language": "Lithuanian"
 }

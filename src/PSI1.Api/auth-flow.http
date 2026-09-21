@@ -1,0 +1,104 @@
+@PSI1.Api_HostAddress = http://localhost:5158
+
+### 1. Register a new user
+# Change the email/username if you've already run this once (both are unique).
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "flowtest@gmail.com",
+  "username": "flowtest",
+  "password": "testpass123"
+}
+
+### 2. Register with the same email again -> expect 409 Conflict
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "flowtest@gmail.com",
+  "username": "someoneelse",
+  "password": "testpass123"
+}
+
+### 3. Register with the same username again -> expect 409 Conflict
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "someoneelse@gmail.com",
+  "username": "flowtest",
+  "password": "testpass123"
+}
+
+### 4. Log in -> stash the token into the global "token" variable
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "flowtest@gmail.com",
+  "password": "testpass123"
+}
+
+> {%
+client.global.set("token", response.body.token);
+client.log("Saved token: " + response.body.token);
+%}
+
+### 5. Log in with the wrong password -> expect 401
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "flowtest@gmail.com",
+  "password": "wrongpassword"
+}
+
+### 6. List available languages (anonymous, no token needed) -> expect 200 + JSON array
+GET {{PSI1.Api_HostAddress}}/api/languages
+
+### 7. Select a language WITHOUT a token -> expect 401 Unauthorized
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+
+{
+  "language": "Lithuanian"
+}
+
+### 8. Select a language WITH an invalid/garbage token -> expect 401 Unauthorized
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer this.is.not.a.valid.jwt
+
+{
+  "language": "Lithuanian"
+}
+
+### 9. Select a language WITH the token from step 4 -> expect 200 + JSON object
+# Requires running request #4 first in the same session so {{token}} is populated.
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "language": "German"
+}
+
+### 10. Confirm the change by selecting a different language -> expect 200, language: "French"
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "language": "French"
+}
+
+### 11. integer form
+
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "language": 2
+}

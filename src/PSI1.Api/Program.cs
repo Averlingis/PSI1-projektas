@@ -3,13 +3,21 @@ using PSI1.Api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 //Creates builder object that is used to configure the app before start
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container for class AuthController to handle HTTP req
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Serialize/deserialize enums (e.g. Language) as their string names
+        // ("Lithuanian") instead of raw integers, so clients don't need to
+        // know the underlying numeric values.
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
