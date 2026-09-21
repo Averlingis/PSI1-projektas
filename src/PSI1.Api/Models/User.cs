@@ -7,5 +7,5 @@ public class User
 	public string PasswordHash { get; set; } = "";
 	public string Username { get; set; } = "";
 	public string ProfilePictureFilename { get; set; } = "default.jpg";
-	public Language? LearningLanguage { get; set; }
+	public Language? LearningLanguage { get; set; } // default null 
 }

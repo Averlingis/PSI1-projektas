@@ -81,7 +81,7 @@ public class AuthController : ControllerBase
 		{
 		new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
 		new Claim(JwtRegisteredClaimNames.Email, user.Email),
-		new Claim(JwtRegisteredClaimNames.UniqueName, user.Username)
+		new Claim(JwtRegisteredClaimNames.UniqueName, user.Username) // aTODO: delete after adding username changing 
 	    };
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
