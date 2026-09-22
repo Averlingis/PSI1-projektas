@@ -88,18 +88,9 @@ public class LanguagesController : ControllerBase
 			return NotFound(new { message = "User not found." });
 		}
 
-		if (user.LearningLanguage is null)
-		{
 			return Ok(new
-			{
-				language = (string?)null,
-				message = "No learning language selected."
-			});
-		}
-
-		return Ok(new
 		{
-			language = user.LearningLanguage.ToString()
+			language = user.LearningLanguage?.ToString()
 		});
 	}
 }

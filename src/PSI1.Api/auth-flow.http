@@ -83,13 +83,13 @@ Authorization: Bearer {{token}}
   "language": "Russian"
 }
 
-### 10. Confirm the change by selecting a different language -> expect 200, language: "English"
+### 10. Confirm the change by selecting a different language -> expect 200, language: "Italian"
 PUT {{PSI1.Api_HostAddress}}/api/languages/select
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "language": "English"
+  "language": "Italian"
 }
 
 ### 11. integer form
@@ -101,3 +101,131 @@ Authorization: Bearer {{token}}
 {
   "language": 2
 }
+
+###-------------------------------------------
+### 12. Register first language test user
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "languagetest1@gmail.com",
+  "username": "languagetest1",
+  "password": "testpass123"
+}
+
+### 13. Register second language test user
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "languagetest2@gmail.com",
+  "username": "languagetest2",
+  "password": "testpass123"
+}
+
+### 14. Log in as first language test user
+
+# @name loginUser1
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "languagetest1@gmail.com",
+  "password": "testpass123"
+}
+###
+@token1 = {{loginUser1.response.body.$.token}}
+
+### 15. Log in as second language test user
+
+# @name loginUser2
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "languagetest2@gmail.com",
+  "password": "testpass123"
+}
+###
+@token2 = {{loginUser2.response.body.$.token}}
+
+### 16. Select Russian for first user
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token1}}
+
+{
+  "language": "Russian"
+}
+
+### 17. Select Italian for second user
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token2}}
+
+{
+  "language": "Italian"
+}
+
+### 18. Change first user's language to Lithuanian
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token1}}
+
+{
+  "language": "Lithuanian"
+}
+
+### 19. Check second user's language -> expect Italian
+# changing one user's language does not affect another user.
+GET {{PSI1.Api_HostAddress}}/api/languages/selected
+Authorization: Bearer {{token2}}
+
+### 20. Check first user's saved language -> expect Lithuanian
+# selected language is persisted and returned by GET.
+GET {{PSI1.Api_HostAddress}}/api/languages/selected
+Authorization: Bearer {{token1}}
+
+### 21. Change first user's language from Lithuanian to Italian
+PUT {{PSI1.Api_HostAddress}}/api/languages/select
+Content-Type: application/json
+Authorization: Bearer {{token1}}
+
+{
+  "language": "Italian"
+}
+
+### 22. Check first user's language again -> expect Italian
+# new language replaces the previous selection.
+GET {{PSI1.Api_HostAddress}}/api/languages/selected
+Authorization: Bearer {{token1}}
+
+### 23. Register user without selecting a language
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "languagetest3@gmail.com",
+  "username": "languagetest3",
+  "password": "testpass123"
+}
+
+### 24. Log in as user without a selected language
+
+# @name loginUser3
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "languagetest3@gmail.com",
+  "password": "testpass123"
+}
+###
+@token3 = {{loginUser3.response.body.$.token}}
+
+### 25. Get selected language when none was selected -> expect 200 and language: null
+GET {{PSI1.Api_HostAddress}}/api/languages/selected
+Authorization: Bearer {{token3}}
+
+### 26. Get selected language WITHOUT Authorization -> expect 401 Unauthorized
+GET {{PSI1.Api_HostAddress}}/api/languages/selected
