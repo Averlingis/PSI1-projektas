@@ -8,4 +8,5 @@ public class User
 	public string Username { get; set; } = "";
 	public string ProfilePictureFilename { get; set; } = "default.jpg";
 	public Language? LearningLanguage { get; set; } // default null 
+	public Category? SelectedCategory { get; set;} // default null
 }
