@@ -229,3 +229,141 @@ Authorization: Bearer {{token3}}
 
 ### 26. Get selected language WITHOUT Authorization -> expect 401 Unauthorized
 GET {{PSI1.Api_HostAddress}}/api/languages/selected
+
+### 27. Register first category test user
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "categorytest1@gmail.com",
+  "username": "categorytest1",
+  "password": "testpass123"
+}
+
+### 28. Register second category test user
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "categorytest2@gmail.com",
+  "username": "categorytest2",
+  "password": "testpass123"
+}
+
+### 29. Log in as first category test user
+
+# @name loginCatUser1
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "categorytest1@gmail.com",
+  "password": "testpass123"
+}
+###
+@catToken1 = {{loginCatUser1.response.body.$.token}}
+
+### 30. Log in as second category test user
+
+# @name loginCatUser2
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "categorytest2@gmail.com",
+  "password": "testpass123"
+}
+###
+@catToken2 = {{loginCatUser2.response.body.$.token}}
+
+### 31. List available categories (anonymous, no token needed) -> expect 200 + JSON array
+GET {{PSI1.Api_HostAddress}}/api/categories
+
+### 32. Select a category WITHOUT a token -> expect 401 Unauthorized
+PUT {{PSI1.Api_HostAddress}}/api/categories/select
+Content-Type: application/json
+
+{
+  "category": "Nature"
+}
+
+### 33. Select Nature for first user
+PUT {{PSI1.Api_HostAddress}}/api/categories/select
+Content-Type: application/json
+Authorization: Bearer {{catToken1}}
+
+{
+  "category": "Nature"
+}
+
+### 34. Select Food for second user
+PUT {{PSI1.Api_HostAddress}}/api/categories/select
+Content-Type: application/json
+Authorization: Bearer {{catToken2}}
+
+{
+  "category": "Food"
+}
+
+### 35. Change first user's category to Travel
+PUT {{PSI1.Api_HostAddress}}/api/categories/select
+Content-Type: application/json
+Authorization: Bearer {{catToken1}}
+
+{
+  "category": "Travel"
+}
+
+### 36. Check second user's category -> expect Food
+# changing one user's category does not affect another user.
+GET {{PSI1.Api_HostAddress}}/api/categories/selected
+Authorization: Bearer {{catToken2}}
+
+### 37. Check first user's saved category -> expect Travel
+# selected category is persisted and returned by GET.
+GET {{PSI1.Api_HostAddress}}/api/categories/selected
+Authorization: Bearer {{catToken1}}
+
+### 38. Change first user's category from Travel to Sports
+PUT {{PSI1.Api_HostAddress}}/api/categories/select
+Content-Type: application/json
+Authorization: Bearer {{catToken1}}
+
+{
+  "category": "Sports"
+}
+
+### 39. Check first user's category again -> expect Sports
+# new category replaces the previous selection.
+GET {{PSI1.Api_HostAddress}}/api/categories/selected
+Authorization: Bearer {{catToken1}}
+
+### 40. Register user without selecting a category
+POST {{PSI1.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "categorytest3@gmail.com",
+  "username": "categorytest3",
+  "password": "testpass123"
+}
+
+### 41. Log in as user without a selected category
+
+# @name loginCatUser3
+POST {{PSI1.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "categorytest3@gmail.com",
+  "password": "testpass123"
+}
+###
+@catToken3 = {{loginCatUser3.response.body.$.token}}
+
+### 42. Get selected category when none was selected -> expect 200 and category: null
+GET {{PSI1.Api_HostAddress}}/api/categories/selected
+Authorization: Bearer {{catToken3}}
+
+### 43. Get selected category WITHOUT Authorization -> expect 401 Unauthorized
+GET {{PSI1.Api_HostAddress}}/api/categories/selected
