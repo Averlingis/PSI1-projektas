@@ -40,8 +40,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// Allow the React server to call this API from the browser.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 //Finalises config and builds obj
 var app = builder.Build();
+
+app.UseCors("AllowReactDev");
 
 app.UseAuthentication();
 app.UseAuthorization();
