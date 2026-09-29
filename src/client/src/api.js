@@ -59,9 +59,14 @@ async function authFetch(path, options = {}) {
     },
   });
 
-  const data = await response.json();
+  // Some error responses (e.g. 401 from the JWT middleware) have an empty body,
+  // so parsing must not throw.
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (response.status === 401 && !data.message) {
+      throw new Error("Your session has expired. Please log in again.");
+    }
     throw new Error(extractErrorMessage(data, "Request failed."));
   }
 
@@ -74,10 +79,44 @@ export async function getLanguages() {
   return response.json();
 }
 
+// Gets the language the user has already saved, if any.
+export async function getSelectedLanguage() {
+  return authFetch("/api/languages/selected"); // { language: "Italian" | null }
+}
+
 // Sets the user's selected learning language.
 export async function selectLanguage(language) {
   return authFetch("/api/languages/select", {
     method: "PUT",
     body: JSON.stringify({ language }),
+  });
+}
+
+// Fetches the categories the user can choose from (public endpoint).
+export async function getCategories() {
+  let response;
+  try {
+    response = await fetch(`${API_BASE}/api/categories`);
+  } catch {
+    throw new Error("Could not reach the server. Please try again.");
+  }
+
+  if (!response.ok) {
+    throw new Error("Could not load categories.");
+  }
+
+  return response.json(); // ["Nature", "Culture", ...]
+}
+
+// Gets the category the user has already saved, if any.
+export async function getSelectedCategory() {
+  return authFetch("/api/categories/selected"); // { category: "Food" | null }
+}
+
+// Sends the user's selected category to the backend.
+export async function selectCategory(category) {
+  return authFetch("/api/categories/select", {
+    method: "PUT",
+    body: JSON.stringify({ category }),
   });
 }
