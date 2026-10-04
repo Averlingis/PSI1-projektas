@@ -107,6 +107,27 @@ body {
   text-decoration: underline;
 }
 
+.status-card {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.status-card h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.status-card p {
+  margin: 0;
+}
+
 .status-card button {
   padding: 10px 20px;
   border: none;
@@ -117,8 +138,44 @@ body {
   cursor: pointer;
 }
 
-.status-card button:hover {
+.status-card button:hover:not(:disabled) {
   background: #3d8a63;
+}
+
+.status-card button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.status-card button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.status-card .secondary-button {
+  background: white;
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+.status-card .secondary-button:hover:not(:disabled) {
+  background: var(--accent-soft);
+}
+
+.status-card .logout {
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+.status-card .link-button {
+  padding: 0;
+  background: none;
+  color: var(--error);
+  border: none;
+}
+
+.status-card .link-button:hover:not(:disabled) {
+  background: none;
 }
 
 .language-buttons {
@@ -126,4 +183,88 @@ body {
   gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.language-buttons button.selected {
+  outline: 3px solid var(--accent-soft);
+  background: #245a3f;
+}
+
+.step-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ---- category selection ---- */
+
+.category-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.category-selector h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.category-hint {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.category-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.category-option:hover {
+  background: var(--accent-soft);
+}
+
+.category-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+/* native radio stays in the DOM for keyboard + screen reader support */
+.category-option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.category-option:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.category-check {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.auth-error p {
+  margin: 0 0 6px;
 }
