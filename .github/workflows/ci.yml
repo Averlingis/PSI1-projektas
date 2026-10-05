@@ -32,4 +32,13 @@ jobs:
         working-directory: src/PSI1.Api
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore --configuration Release
+        working-directory: src/PSI1.Api
+
+      - name: Check formatting
+        run: dotnet format --verify-no-changes
+        working-directory: src/PSI1.Api
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity normal
+        working-directory: src/PSI1.Api
