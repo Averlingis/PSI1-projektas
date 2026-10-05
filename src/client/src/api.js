@@ -50,14 +50,19 @@ export async function login(email, password) {
 async function authFetch(path, options = {}) {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    },
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+  } catch {
+    throw new Error("Could not reach the server. Please try again.");
+  }
 
   // Some error responses (e.g. 401 from the JWT middleware) have an empty body,
   // so parsing must not throw.
