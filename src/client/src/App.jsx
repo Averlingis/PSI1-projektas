@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import RegisterForm from "./components/registerForm";
-import LoginForm from "./components/loginForm";
-import CategorySelector from "./components/categorySelector";
+import RegisterForm from "./components/RegisterForm";
+import LoginForm from "./components/LoginForm";
+import CategorySelector from "./components/CategorySelector";
 import { getLanguages, getSelectedLanguage, selectLanguage } from "./api";
 import "./App.css";
 
