@@ -1,9 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using PSI1.Api.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
+using PSI1.Api.Data;
 
 
 //Creates builder object that is used to configure the app before start

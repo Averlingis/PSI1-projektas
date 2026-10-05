@@ -21,7 +21,7 @@ export async function register(email, username, password) {
     body: JSON.stringify({ email, username, password }),
   });
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(extractErrorMessage(data, "Registration failed."));
@@ -37,7 +37,7 @@ export async function login(email, password) {
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(extractErrorMessage(data, "Login failed."));
@@ -50,14 +50,19 @@ export async function login(email, password) {
 async function authFetch(path, options = {}) {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    },
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+  } catch {
+    throw new Error("Could not reach the server. Please try again.");
+  }
 
   // Some error responses (e.g. 401 from the JWT middleware) have an empty body,
   // so parsing must not throw.
@@ -75,7 +80,17 @@ async function authFetch(path, options = {}) {
 
 // Fetches the languages the user can choose from.
 export async function getLanguages() {
-  const response = await fetch(`${API_BASE}/api/languages`);
+  let response;
+  try {
+    response = await fetch(`${API_BASE}/api/languages`);
+  } catch {
+    throw new Error("Could not reach the server. Please try again.");
+  }
+
+  if (!response.ok) {
+    throw new Error("Could not load languages.");
+  }
+
   return response.json();
 }
 

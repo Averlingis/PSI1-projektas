@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import RegisterForm from "./components/registerForm";
-import LoginForm from "./components/loginForm";
-import CategorySelector from "./components/categorySelector";
+import RegisterForm from "./components/RegisterForm";
+import LoginForm from "./components/LoginForm";
+import CategorySelector from "./components/CategorySelector";
 import { getLanguages, getSelectedLanguage, selectLanguage } from "./api";
 import "./App.css";
 
@@ -34,8 +34,11 @@ export default function App() {
       .then((data) => {
         if (!cancelled && data.language) setSelected(data.language);
       })
-      // a failure here shouldn't block choosing a language
-      .catch(() => {});
+      .catch((err) => {
+        if (!cancelled && err.message === "Your session has expired. Please log in again.") {
+          handleLogout();
+        } 
+      });
 
     return () => {
       cancelled = true;
