@@ -75,7 +75,17 @@ async function authFetch(path, options = {}) {
 
 // Fetches the languages the user can choose from.
 export async function getLanguages() {
-  const response = await fetch(`${API_BASE}/api/languages`);
+  let response;
+  try {
+    response = await fetch(`${API_BASE}/api/languages`);
+  } catch {
+    throw new Error("Could not reach the server. Please try again.");
+  }
+
+  if (!response.ok) {
+    throw new Error("Could not load languages.");
+  }
+
   return response.json();
 }
 
