@@ -21,7 +21,7 @@ public class CategoriesController : ControllerBase
     }
 
     // Returns all available categories defined in the Category enum.
-	// Left open to anonymous users.
+    // Left open to anonymous users.
     [HttpGet]
     public IActionResult GetCategories()
     {
@@ -37,20 +37,20 @@ public class CategoriesController : ControllerBase
 
     public async Task<IActionResult> SelectCategory(CategorySelectionRequest request)
     {
-		var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-		    ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-		{
-			return Unauthorized(new { message = "Invalid or missing token." });
-		}
+        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new { message = "Invalid or missing token." });
+        }
 
-		var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-		if (user is null)
-		{
-			return NotFound(new { message = "User not found." });
-		}
+        if (user is null)
+        {
+            return NotFound(new { message = "User not found." });
+        }
 
         user.SelectedCategory = request.Category;
 
@@ -58,29 +58,29 @@ public class CategoriesController : ControllerBase
 
         return Ok(new
         {
-			message = $"Learning category changed to: {request.Category}.",
-			category = request.Category.ToString()
-		});  
+            message = $"Learning category changed to: {request.Category}.",
+            category = request.Category.ToString()
+        });
     }
 
     [Authorize]
     [HttpGet("selected")]
     public async Task<IActionResult> GetSelectedCategory()
     {
-		var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-		    ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-		{
-			return Unauthorized(new { message = "Invalid or missing token." });
-		}
+        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new { message = "Invalid or missing token." });
+        }
 
-		var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-		if (user is null)
-		{
-			return NotFound(new { message = "User not found." });
-		}
+        if (user is null)
+        {
+            return NotFound(new { message = "User not found." });
+        }
 
         return Ok(new { category = user.SelectedCategory?.ToString() });
     }

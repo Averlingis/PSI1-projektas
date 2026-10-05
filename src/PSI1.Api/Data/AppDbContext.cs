@@ -5,20 +5,20 @@ namespace PSI1.Api.Data;
 
 public class AppDbContext : DbContext
 {
-	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-	{
-	}
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
 
-	public DbSet<User> Users => Set<User>();
+    public DbSet<User> Users => Set<User>();
 
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
-	{
-		// email must be unique - also lets Register() check for duplicates efficiently
-		modelBuilder.Entity<User>()
-		    .HasIndex(u => u.Email)
-		    .IsUnique();
-		modelBuilder.Entity<User>()
-			.HasIndex(u => u.Username)
-			.IsUnique();
-	}
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // email must be unique - also lets Register() check for duplicates efficiently
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+    }
 }
