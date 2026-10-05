@@ -21,7 +21,7 @@ export async function register(email, username, password) {
     body: JSON.stringify({ email, username, password }),
   });
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(extractErrorMessage(data, "Registration failed."));
@@ -37,7 +37,7 @@ export async function login(email, password) {
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(extractErrorMessage(data, "Login failed."));
