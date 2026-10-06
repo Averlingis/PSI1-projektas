@@ -22,7 +22,7 @@ public class ProfileController : ControllerBase
     public ProfileController(AppDbContext db, IWebHostEnvironment environment)
     {
         _db = db;
-        _picturesDirectory = Path.Combine(environment.ContentRootPath, "uploads");
+        _picturesDirectory = Path.Combine(environment.ContentRootPath, "Uploads");
     }
 
     [HttpGet("picture")]
