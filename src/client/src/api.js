@@ -50,12 +50,17 @@ export async function login(email, password) {
 async function authFetch(path, options = {}) {
   const token = localStorage.getItem("token");
 
+  // File uploads are sent as FormData. The browser must set that Content-Type
+  // itself (it includes a generated boundary), so JSON is only the default
+  // for everything else.
+  const isFormData = options.body instanceof FormData;
+
   let response;
   try {
     response = await fetch(`${API_BASE}${path}`, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         Authorization: `Bearer ${token}`,
         ...options.headers,
       },
@@ -134,4 +139,46 @@ export async function selectCategory(category) {
     method: "PUT",
     body: JSON.stringify({ category }),
   });
+}
+
+// Uploads a new profile picture as multipart/form-data.
+// The backend expects the file under the field name "file".
+export async function uploadProfilePicture(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return authFetch("/api/profile/picture", {
+    method: "POST",
+    body: formData,
+  });
+}
+
+// Gets the user's profile picture as a Blob, or null if none was uploaded yet.
+// An <img> tag can't send the Authorization header, so the image is fetched
+// here and shown through an object URL instead.
+export async function getProfilePicture() {
+  const token = localStorage.getItem("token");
+
+  let response;
+  try {
+    response = await fetch(`${API_BASE}/api/profile/picture`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch {
+    throw new Error("Could not reach the server. Please try again.");
+  }
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (response.status === 401) {
+    throw new Error("Your session has expired. Please log in again.");
+  }
+
+  if (!response.ok) {
+    throw new Error("Could not load profile picture.");
+  }
+
+  return response.blob();
 }
