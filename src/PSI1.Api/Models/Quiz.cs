@@ -7,12 +7,14 @@ public class Quiz
     public const int MinQuestions = 3;
     public const int MaxQuestions = 100;
 
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string? Description { get; set; }
-    public Category Category { get; set; }
-    public Language Language { get; set; }
-    public List<Question> Questions { get; set; }
+    private readonly List<Question> questions;
+
+    public int Id { get; private set; }
+    public string Title { get; private set; }
+    public string? Description { get; private set; }
+    public Category Category { get; private set; }
+    public Language Language { get; private set; }
+    public IReadOnlyList<Question> Questions => questions.AsReadOnly();
 
     public Quiz(string title, Category category, Language language, List<Question> questions, string? description = null)
     {
@@ -45,6 +47,6 @@ public class Quiz
         Description = description;
         Category = category;
         Language = language;
-        Questions = [.. questions];
+        this.questions = [.. questions];
     }
 }
