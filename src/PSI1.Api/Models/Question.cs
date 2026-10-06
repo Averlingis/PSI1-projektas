@@ -6,8 +6,10 @@ public class Question
     public const int MaxOptions = 8;
     public const int MaxQuestionTextLength = 200;
 
-    public string QuestionText { get; set; }
-    public List<AnswerOption> Options { get; set; }
+    private readonly List<AnswerOption> options;
+
+    public string QuestionText { get; private set; }
+    public IReadOnlyList<AnswerOption> Options => options.AsReadOnly();
 
     public Question(string questionText, List<AnswerOption> options)
     {
@@ -37,6 +39,6 @@ public class Question
         }
 
         QuestionText = questionText;
-        Options = [.. options]; // copy
+        this.options = [.. options]; // copy
     }
 }
