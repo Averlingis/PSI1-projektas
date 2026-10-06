@@ -18,7 +18,7 @@ public readonly struct AnswerOption
         {
             throw new ArgumentException($"Max option text length is {MaxOptionTextLength} symbols.", nameof(optionText));
         }
-        
+
         OptionText = optionText;
         IsCorrect = isCorrect;
     }
