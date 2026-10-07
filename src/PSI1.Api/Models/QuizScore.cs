@@ -2,13 +2,17 @@ namespace PSI1.Api.Models;
 
 public class QuizScore
 {
-    private readonly Dictionary<int, bool> answers = new();
+    private readonly List<QuestionAnswer> answerRows = new();
 
     public int Id { get; private set; }
     public int UserId { get; private set; }
     public int QuizId { get; private set; }
 
-    public IReadOnlyDictionary<int, bool> Answers => answers.AsReadOnly();
+    public IReadOnlyDictionary<int, bool> Answers => answerRows.ToDictionary(a => a.QuestionIndex, a => a.IsCorrect);
+
+    private QuizScore()
+    {
+    }
 
     public QuizScore(int userId, int quizId)
     {
@@ -23,9 +27,11 @@ public class QuizScore
     {
         ArgumentOutOfRangeException.ThrowIfNegative(questionIndex);
 
-        if (!answers.TryAdd(questionIndex, isCorrect))
+        if (answerRows.Any(a => a.QuestionIndex == questionIndex))
         {
             throw new InvalidOperationException($"Question {questionIndex} has already been answered.");
         }
+
+        answerRows.Add(new QuestionAnswer(questionIndex, isCorrect));
     }
 }
