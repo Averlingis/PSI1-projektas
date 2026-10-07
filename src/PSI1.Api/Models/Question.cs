@@ -6,11 +6,16 @@ public class Question
     public const int MaxOptions = 8;
     public const int MaxQuestionTextLength = 200;
 
-    private readonly List<AnswerOption> options;
+    private readonly List<AnswerOptionRow> optionRows = new();
 
+    public int Id { get; private set; }
     public string QuestionText { get; private set; }
-    public IReadOnlyList<AnswerOption> Options => options.AsReadOnly();
+    public IReadOnlyList<AnswerOption> Options => optionRows.Select(row => new AnswerOption(row.OptionText, row.IsCorrect)).ToList();
 
+    private Question()
+    {
+        QuestionText = string.Empty;
+    }
     public Question(string questionText, List<AnswerOption> options)
     {
         if (string.IsNullOrWhiteSpace(questionText))
@@ -39,6 +44,6 @@ public class Question
         }
 
         QuestionText = questionText;
-        this.options = [.. options]; // copy
+        optionRows.AddRange(options.Select(option => new AnswerOptionRow(option.OptionText, option.IsCorrect)));
     }
 }

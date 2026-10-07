@@ -7,7 +7,7 @@ public class Quiz
     public const int MinQuestions = 3;
     public const int MaxQuestions = 100;
 
-    private readonly List<Question> questions;
+    private readonly List<Question> questions = new();
 
     public int Id { get; private set; }
     public string Title { get; private set; }
@@ -16,6 +16,10 @@ public class Quiz
     public Language Language { get; private set; }
     public IReadOnlyList<Question> Questions => questions.AsReadOnly();
 
+    private Quiz()
+    {
+        Title = string.Empty;
+    }
     public Quiz(string title, Category category, Language language, List<Question> questions, string? description = null)
     {
         // Title validation
