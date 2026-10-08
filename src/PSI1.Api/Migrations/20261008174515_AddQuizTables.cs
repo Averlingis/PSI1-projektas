@@ -18,8 +18,8 @@ namespace PSI1.Api.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Category = table.Column<int>(type: "integer", nullable: false),
                     Language = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -29,19 +29,20 @@ namespace PSI1.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Question",
+                name: "Questions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    QuestionText = table.Column<string>(type: "text", nullable: false),
+                    QuestionText = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: false),
                     QuizId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Question", x => x.Id);
+                    table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Question_Quizzes_QuizId",
+                        name: "FK_Questions_Quizzes_QuizId",
                         column: x => x.QuizId,
                         principalTable: "Quizzes",
                         principalColumn: "Id",
@@ -66,31 +67,37 @@ namespace PSI1.Api.Migrations
                         principalTable: "Quizzes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AnswerOptionRow",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OptionText = table.Column<string>(type: "text", nullable: false),
-                    IsCorrect = table.Column<bool>(type: "boolean", nullable: false),
-                    QuestionId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnswerOptionRow", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AnswerOptionRow_Question_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Question",
+                        name: "FK_QuizScores_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuestionAnswer",
+                name: "AnswerOptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OptionText = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    IsCorrect = table.Column<bool>(type: "boolean", nullable: false),
+                    QuestionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnswerOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AnswerOptions_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuestionAnswers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -101,9 +108,9 @@ namespace PSI1.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuestionAnswer", x => x.Id);
+                    table.PrimaryKey("PK_QuestionAnswers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_QuestionAnswer_QuizScores_QuizScoreId",
+                        name: "FK_QuestionAnswers_QuizScores_QuizScoreId",
                         column: x => x.QuizScoreId,
                         principalTable: "QuizScores",
                         principalColumn: "Id",
@@ -111,19 +118,20 @@ namespace PSI1.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnswerOptionRow_QuestionId",
-                table: "AnswerOptionRow",
+                name: "IX_AnswerOptions_QuestionId",
+                table: "AnswerOptions",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Question_QuizId",
-                table: "Question",
-                column: "QuizId");
+                name: "IX_QuestionAnswers_QuizScoreId_QuestionIndex",
+                table: "QuestionAnswers",
+                columns: new[] { "QuizScoreId", "QuestionIndex" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionAnswer_QuizScoreId_QuestionIndex",
-                table: "QuestionAnswer",
-                columns: new[] { "QuizScoreId", "QuestionIndex" },
+                name: "IX_Questions_QuizId_Position",
+                table: "Questions",
+                columns: new[] { "QuizId", "Position" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -142,13 +150,13 @@ namespace PSI1.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AnswerOptionRow");
+                name: "AnswerOptions");
 
             migrationBuilder.DropTable(
-                name: "QuestionAnswer");
+                name: "QuestionAnswers");
 
             migrationBuilder.DropTable(
-                name: "Question");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "QuizScores");

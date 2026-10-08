@@ -11,7 +11,7 @@ using PSI1.Api.Data;
 namespace PSI1.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261007191856_AddQuizTables")]
+    [Migration("20261008174515_AddQuizTables")]
     partial class AddQuizTables
     {
         /// <inheritdoc />
@@ -37,7 +37,8 @@ namespace PSI1.Api.Migrations
 
                     b.Property<string>("OptionText")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("QuestionId")
                         .HasColumnType("integer");
@@ -46,7 +47,7 @@ namespace PSI1.Api.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("AnswerOptionRow");
+                    b.ToTable("AnswerOptions", (string)null);
                 });
 
             modelBuilder.Entity("PSI1.Api.Models.Question", b =>
@@ -57,18 +58,23 @@ namespace PSI1.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Position")
+                        .HasColumnType("integer");
+
                     b.Property<string>("QuestionText")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("QuizId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizId");
+                    b.HasIndex("QuizId", "Position")
+                        .IsUnique();
 
-                    b.ToTable("Question");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("PSI1.Api.Models.QuestionAnswer", b =>
@@ -93,7 +99,7 @@ namespace PSI1.Api.Migrations
                     b.HasIndex("QuizScoreId", "QuestionIndex")
                         .IsUnique();
 
-                    b.ToTable("QuestionAnswer");
+                    b.ToTable("QuestionAnswers", (string)null);
                 });
 
             modelBuilder.Entity("PSI1.Api.Models.Quiz", b =>
@@ -108,14 +114,16 @@ namespace PSI1.Api.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("Language")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -199,7 +207,7 @@ namespace PSI1.Api.Migrations
             modelBuilder.Entity("PSI1.Api.Models.Question", b =>
                 {
                     b.HasOne("PSI1.Api.Models.Quiz", null)
-                        .WithMany("Questions")
+                        .WithMany("questions")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -221,6 +229,12 @@ namespace PSI1.Api.Migrations
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PSI1.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PSI1.Api.Models.Question", b =>
@@ -230,7 +244,7 @@ namespace PSI1.Api.Migrations
 
             modelBuilder.Entity("PSI1.Api.Models.Quiz", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("questions");
                 });
 
             modelBuilder.Entity("PSI1.Api.Models.QuizScore", b =>
