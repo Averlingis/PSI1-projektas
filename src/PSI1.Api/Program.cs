@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using PSI1.Api.Data;
+using PSI1.Api.Models;
 
 
 //Creates builder object that is used to configure the app before start
@@ -62,5 +63,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// one time used block to add something to db, normal integration of posting quizes is another task
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    if (!db.Quizzes.Any())
+    {
+        db.Quizzes.Add(new Quiz("Italian food", Category.Food, Language.Italian,
+        [
+            new Question("Which pasta is long and thin?", [new AnswerOption("Spaghetti", true), new AnswerOption("Penne", false)]),
+            new Question("Where is pizza from?", [new AnswerOption("Naples", true), new AnswerOption("Paris", false)]),
+            new Question("Main ingredient of pesto?", [new AnswerOption("Basil", true), new AnswerOption("Mint", false)]),
+        ]));
+        db.SaveChanges();
+    }
+}
 
 app.Run();
