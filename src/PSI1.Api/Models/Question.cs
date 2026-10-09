@@ -6,10 +6,21 @@ public class Question
     public const int MaxOptions = 8;
     public const int MaxQuestionTextLength = 200;
 
-    private readonly List<AnswerOption> options;
+    private readonly List<AnswerOptionRow> optionRows = new();
 
+    public int Id { get; private set; }
     public string QuestionText { get; private set; }
-    public IReadOnlyList<AnswerOption> Options => options.AsReadOnly();
+    public IReadOnlyList<AnswerOption> Options => optionRows.Select(row => new AnswerOption(row.OptionText, row.IsCorrect)).ToList();
+    public int Position { get; private set; }
+
+    internal void AssignPosition(int position)
+    {
+        Position = position;
+    }
+    private Question()
+    {
+        QuestionText = string.Empty;
+    }
 
     public Question(string questionText, List<AnswerOption> options)
     {
@@ -32,6 +43,14 @@ public class Question
                 nameof(options));
         }
 
+        foreach (var option in options)
+        {
+            if (string.IsNullOrWhiteSpace(option.OptionText))
+            {
+                throw new ArgumentException("Every option must have text.", nameof(options));
+            }
+        }
+
         if (options.Count(option => option.IsCorrect) != 1)
         {
             throw new ArgumentException(
@@ -39,6 +58,6 @@ public class Question
         }
 
         QuestionText = questionText;
-        this.options = [.. options]; // copy
+        optionRows.AddRange(options.Select(option => new AnswerOptionRow(option.OptionText, option.IsCorrect)));
     }
 }

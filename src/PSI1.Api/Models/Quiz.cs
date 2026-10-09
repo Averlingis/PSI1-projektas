@@ -7,15 +7,19 @@ public class Quiz
     public const int MinQuestions = 3;
     public const int MaxQuestions = 100;
 
-    private readonly List<Question> questions;
+    private readonly List<Question> questions = new();
 
     public int Id { get; private set; }
     public string Title { get; private set; }
     public string? Description { get; private set; }
     public Category Category { get; private set; }
     public Language Language { get; private set; }
-    public IReadOnlyList<Question> Questions => questions.AsReadOnly();
+    public IReadOnlyList<Question> Questions => questions.OrderBy(q => q.Position).ToList();
 
+    private Quiz()
+    {
+        Title = string.Empty;
+    }
     public Quiz(string title, Category category, Language language, List<Question> questions, string? description = null)
     {
         // Title validation
@@ -37,6 +41,14 @@ public class Quiz
         // Questions validation
         ArgumentNullException.ThrowIfNull(questions);
 
+        foreach (var question in questions)
+        {
+            if (question is null)
+            {
+                throw new ArgumentException("Questions cannot contain null items.", nameof(questions));
+            }
+        }
+
         if (questions.Count < MinQuestions || questions.Count > MaxQuestions)
         {
             throw new ArgumentException(
@@ -48,5 +60,10 @@ public class Quiz
         Category = category;
         Language = language;
         this.questions = [.. questions];
+
+        for (var i = 0; i < this.questions.Count; i++)
+        {
+            this.questions[i].AssignPosition(i);
+        }
     }
 }
