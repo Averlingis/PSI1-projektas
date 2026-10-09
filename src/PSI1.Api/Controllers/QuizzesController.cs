@@ -20,7 +20,6 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<List<QuizSummaryResponse>>> GetAll()
     {
         var quizzes = await _db.Quizzes
