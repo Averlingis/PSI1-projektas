@@ -1,9 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 
-using Microsoft.AspNetCore.Mvc;
-
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace PSI1.Api.Tests.Controllers;
 
@@ -45,7 +42,7 @@ public class LanguagesControllerTests : IClassFixture<ApiFactory>
     [Fact]
     public async Task SelectLanguage_WithoutToken_ReturnsUnauthorized()
     {
-        var response = await _client.PutAsJsonAsync("api/languages/select", new {language = "Lithuanian" });
+        var response = await _client.PutAsJsonAsync("api/languages/select", new { language = "Lithuanian" });
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -89,11 +86,11 @@ public class LanguagesControllerTests : IClassFixture<ApiFactory>
     {
         var client = await _factory.CreateAuthenticatedClientAsync();
         await client.PutAsJsonAsync("api/languages/select", new { language = "Lithuanian" });
-        
+
         var response = await client.GetAsync("api/languages/selected");
 
         var body = await response.Content.ReadFromJsonAsync<SelectedLanguageResponse>();
-        Assert.Equal("Lithuanian", body!.Language);    
+        Assert.Equal("Lithuanian", body!.Language);
     }
 
     [Fact]
@@ -102,9 +99,9 @@ public class LanguagesControllerTests : IClassFixture<ApiFactory>
         var clientA = await _factory.CreateAuthenticatedClientAsync();
         var putResponse = await clientA.PutAsJsonAsync("api/languages/select", new { language = "Lithuanian" });
         putResponse.EnsureSuccessStatusCode();
-        
+
         var clientB = await _factory.CreateAuthenticatedClientAsync();
-        
+
         var response = await clientB.GetAsync("api/languages/selected");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
