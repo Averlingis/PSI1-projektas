@@ -36,4 +36,33 @@ public class QuizzesController : ControllerBase
 
         return Ok(quizzes);
     }
+
+    [Authorize]
+    [HttpGet("{quizId}/questions/{index}")]
+    public async Task<ActionResult<QuestionPlayResponse>> GetQuestion(int quizId, int index)
+    {
+        if (index < 0)
+            return NotFound();
+
+        var quiz = await _db.Quizzes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(q => q.Id == quizId);
+
+        if (quiz is null)
+            return NotFound();
+
+        var question = quiz.Questions.FirstOrDefault(q => q.Position == index);
+
+        if (question is null)
+            return NotFound();
+
+        var response = new QuestionPlayResponse(
+            question.Id,
+            question.Position,
+            question.QuestionText,
+            question.Options.Select(o => o.OptionText).ToList()
+        );
+
+        return Ok(response);
+    }
 }
