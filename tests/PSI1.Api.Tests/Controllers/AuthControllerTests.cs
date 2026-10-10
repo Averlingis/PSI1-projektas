@@ -123,8 +123,6 @@ public class AuthControllerTests : IClassFixture<ApiFactory>
 
     // ---------- Login ----------
 
-    private record LoginResponse(string Token);
-
     [Fact]
     public async Task Login_ValidCredentials_ReturnsOkWithToken()
     {

@@ -1,3 +1,6 @@
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using PSI1.Api.Data;
+using PSI1.Api.DTOs;
 
 using Testcontainers.PostgreSql;
 
@@ -44,5 +48,22 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 
         return host;
+    }
+
+    public async Task<HttpClient> CreateAuthenticatedClientAsync()
+    {
+        var client = CreateClient();
+        var email = $"{Guid.NewGuid():N}@test.com";
+        var username = Guid.NewGuid().ToString("N")[..12];
+        var password = "password123";
+
+        await client.PostAsJsonAsync("api/auth/register", new RegisterRequest(email, username, password));
+        var response = await client.PostAsJsonAsync("api/auth/login", new LoginRequest(email, password));
+        response.EnsureSuccessStatusCode();
+
+        var body = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", body!.Token);
+
+        return client;
     }
 }
