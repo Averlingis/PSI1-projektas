@@ -20,7 +20,6 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         _client = factory.CreateClient();
     }
 
-    // Creates sample language quiz in the test database
     private async Task<int> CreateTestQuizAsync()
     {
         var questions = new List<Question>
@@ -52,7 +51,6 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
             questions
         );
 
-        // Saves quiz so the endpoint can retrieve it
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
@@ -62,15 +60,17 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         return quiz.Id;
     }
 
-
-    // Returns requested question without exposing the correct answer
-    [Fact]
-    public async Task GetQuestion_ValidIndex_ReturnsQuestionWithoutCorrectAnswer()
+    [Theory]
+    [InlineData(0, "How do you say 'Mother' in Lithuanian?", new string[] { "Sesuo", "Mama", "Močiutė" })]
+    [InlineData(1, "What does 'Brolis' mean in English?", new string[] { "Father", "Brother", "Uncle" })]
+    public async Task GetQuestion_ValidIndex_ReturnsQuestionWithoutCorrectAnswer(
+        int index, string expectedText, string[] expectedOptions)
     {
         var quizId = await CreateTestQuizAsync();
         using var client = await _factory.CreateAuthenticatedClientAsync();
 
-        var response = await client.GetAsync($"api/quizzes/{quizId}/questions/0");
+        var response = await client.GetAsync(
+            $"api/quizzes/{quizId}/questions/{index}");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -78,35 +78,14 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.NotNull(question);
         Assert.True(question.QuestionId > 0);
-        Assert.Equal(0, question.Position);
-        Assert.Equal("How do you say 'Mother' in Lithuanian?", question.QuestionText);
-        Assert.Equal(new[] { "Sesuo", "Mama", "Močiutė" }, question.Options);
+        Assert.Equal(index, question.Position);
+        Assert.Equal(expectedText, question.QuestionText);
+        Assert.Equal(expectedOptions, question.Options);
 
-        // The API must not reveal which answer is correct.
         var json = await response.Content.ReadAsStringAsync();
         Assert.DoesNotContain("isCorrect", json, StringComparison.OrdinalIgnoreCase);
     }
 
-    // Returns correct question when requesting another position
-    [Fact]
-    public async Task GetQuestion_SecondIndex_ReturnsSecondQuestion()
-    {
-        var quizId = await CreateTestQuizAsync();
-        using var client = await _factory.CreateAuthenticatedClientAsync();
-
-        var response = await client.GetAsync($"api/quizzes/{quizId}/questions/1");
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        var question = await response.Content.ReadFromJsonAsync<QuestionPlayResponse>();
-
-        Assert.NotNull(question);
-        Assert.Equal(1, question.Position);
-        Assert.Equal("What does 'Brolis' mean in English?", question.QuestionText);
-        Assert.Equal(new[] { "Father", "Brother", "Uncle" }, question.Options);
-    }
-
-    // Returns 404 when the quiz does not exist
     [Fact]
     public async Task GetQuestion_NonexistentQuiz_ReturnsNotFound()
     {
@@ -119,7 +98,6 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    // Returns 404 when the question index is outside quiz range
     [Theory]
     [InlineData(-1)]
     [InlineData(3)]
@@ -136,7 +114,6 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    // Only authenticated users can access
     [Fact]
     public async Task GetQuestion_WithoutToken_ReturnsUnauthorized()
     {
