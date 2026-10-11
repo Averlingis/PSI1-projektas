@@ -20,19 +20,42 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<QuizSummaryResponse>>> GetAll()
+    public async Task<ActionResult<List<QuizSummaryResponse>>> GetAll(
+    [FromQuery] Category? category,
+    [FromQuery] Language? language)
     {
-        var quizzes = await _db.Quizzes
-            .AsNoTracking()
-            .OrderBy(q => q.Id)
-            .Select(q => new QuizSummaryResponse(
-                q.Id,
-                q.Title,
-                q.Description,
-                q.Category,
-                q.Language,
-                EF.Property<ICollection<Question>>(q, "questions").Count))
-            .ToListAsync();
+        //validation
+        if (category.HasValue && !Enum.IsDefined(category.Value))
+        {
+            return BadRequest(new { message = "Unknown category." });
+        }
+        if (language.HasValue && !Enum.IsDefined(language.Value))
+        {
+            return BadRequest(new { message = "Unknown language." });
+        }
+
+        var query = _db.Quizzes.AsNoTracking();
+
+        // filters are independent: each one only applies if it was provided
+        if (category.HasValue)
+        {
+            query = query.Where(q => q.Category == category.Value);
+        }
+        if (language.HasValue)
+        {
+            query = query.Where(q => q.Language == language.Value);
+        }
+
+        var quizzes = await query
+         .OrderBy(q => q.Id)
+         .Select(q => new QuizSummaryResponse(
+             q.Id,
+             q.Title,
+             q.Description,
+             q.Category,
+             q.Language,
+             EF.Property<ICollection<Question>>(q, "questions").Count))
+         .ToListAsync();
 
         return Ok(quizzes);
     }
@@ -55,7 +78,6 @@ public class QuizzesController : ControllerBase
             return NotFound(new { message = "Question not found." });
 
         var response = new QuestionPlayResponse(
-            question.Id,
             question.Position,
             question.QuestionText,
             question.Options.Select(o => o.OptionText).ToList()
