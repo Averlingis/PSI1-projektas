@@ -10,7 +10,10 @@ public class Question
 
     public int Id { get; private set; }
     public string QuestionText { get; private set; }
-    public IReadOnlyList<AnswerOption> Options => optionRows.Select(row => new AnswerOption(row.OptionText, row.IsCorrect)).ToList();
+    public IReadOnlyList<AnswerOption> Options => optionRows
+        .OrderBy(row => row.Id)
+        .Select(row => new AnswerOption(row.OptionText, row.IsCorrect))
+        .ToList();
     public int Position { get; private set; }
 
     internal void AssignPosition(int position)
