@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -84,5 +88,61 @@ public class QuizzesController : ControllerBase
         );
 
         return Ok(response);
+    }
+
+    [Authorize]
+    [HttpPost("{quizId}/questions/{index}/answer")]
+    public async Task<ActionResult<AnswerResultResponse>> AnswerQuestion(int quizId, int index, AnswerRequest request)
+    {
+        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new { message = "Invalid or missing token." });
+        }
+
+        var quiz = await _db.Quizzes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(q => q.Id == quizId);
+
+        if (quiz is null)
+            return NotFound(new { message = "Quiz not found." });
+
+        var question = quiz.Questions.FirstOrDefault(q => q.Position == index);
+
+        if (question is null)
+            return NotFound(new { message = "Question not found." });
+
+        var options = question.Options;
+        if (request.SelectedOptionIndex < 0 || request.SelectedOptionIndex >= options.Count)
+        {
+            return BadRequest(new { message = "Invalid option index."});
+        }
+
+        var isCorrect = options[request.SelectedOptionIndex].IsCorrect;
+        var correctOptionText = options.Single(o => o.IsCorrect).OptionText;
+
+        var score = await _db.QuizScores
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
+
+        if(score is null)
+        {
+            score = new QuizScore(userId, quizId);
+            _db.QuizScores.Add(score);
+        }
+
+        try
+        {
+            score.RecordAnswer(index, isCorrect);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+
+        await _db.SaveChangesAsync();
+
+        return Ok(new AnswerResultResponse(isCorrect, correctOptionText));
     }
 }
