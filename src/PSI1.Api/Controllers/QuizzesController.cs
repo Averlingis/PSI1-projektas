@@ -117,7 +117,7 @@ public class QuizzesController : ControllerBase
         var options = question.Options;
         if (request.SelectedOptionIndex < 0 || request.SelectedOptionIndex >= options.Count)
         {
-            return BadRequest(new { message = "Invalid option index."});
+            return BadRequest(new { message = "Invalid option index." });
         }
 
         var isCorrect = options[request.SelectedOptionIndex].IsCorrect;
@@ -126,7 +126,7 @@ public class QuizzesController : ControllerBase
         var score = await _db.QuizScores
             .FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
 
-        if(score is null)
+        if (score is null)
         {
             score = new QuizScore(userId, quizId);
             _db.QuizScores.Add(score);

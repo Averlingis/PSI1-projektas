@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using PSI1.Api.Data;
@@ -262,5 +263,155 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         var response = await _client.GetAsync(url);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(1, true)]
+    [InlineData(0, false)]
+    [InlineData(2, false)]
+    public async Task AnswerQuestion_SelectedOption_ReturnsCorrectnessAndCorrectText(int selectedOptionIndex, bool expectedIsCorrect)
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(selectedOptionIndex));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<AnswerResultResponse>();
+
+        Assert.NotNull(result);
+        Assert.Equal(expectedIsCorrect, result.IsCorrect);
+        Assert.Equal("Mama", result.CorrectOptionText);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_TwoQuestions_UsesSingleQuizScore()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(1));
+        await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/1/answer", new AnswerRequest(0));
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var scores = await db.QuizScores
+            .Where(s => s.QuizId == quizId)
+            .ToListAsync();
+
+        var score = Assert.Single(scores);
+        Assert.Equal(2, score.Answers.Count);
+        Assert.True(score.Answers[0]);
+        Assert.False(score.Answers[1]);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_SameQuestionTwice_ReturnsConflict()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response1 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(1));
+        var response2 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_SameQuestionTwice_KeepsFirstAnswer()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(1));
+        await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var scores = await db.QuizScores
+            .Where(s => s.QuizId == quizId)
+            .ToListAsync();
+
+        var score = Assert.Single(scores);
+        var answer = Assert.Single(score.Answers);
+
+        Assert.Equal(0, answer.Key);
+        Assert.True(answer.Value);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_WithoutToken_ReturnsUnauthorized()
+    {
+        var quizId = await CreateTestQuizAsync();
+
+        var response = await _client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_NonexistentQuiz_ReturnsNotFound()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync("api/quizzes/12345678/questions/0/answer", new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(3)]
+    public async Task AnswerQuestion_InvalidQuestionIndex_ReturnsNotFound(int index)
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/{index}/answer", new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(3)]
+    public async Task AnswerQuestion_InvalidOptionIndex_ReturnsBadRequest(int optionIndex)
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(optionIndex));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_DifferentUsers_HaveSeparateScores()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client1 = await _factory.CreateAuthenticatedClientAsync();
+        using var client2 = await _factory.CreateAuthenticatedClientAsync();
+
+        var response1 = await client1.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        var response2 = await client2.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var scores = await db.QuizScores
+            .Where(s => s.QuizId == quizId)
+            .ToListAsync();
+
+        Assert.Equal(2, scores.Count);
+        Assert.NotEqual(scores[0].UserId, scores[1].UserId);
     }
 }
