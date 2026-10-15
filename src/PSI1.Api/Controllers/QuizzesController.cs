@@ -145,4 +145,31 @@ public class QuizzesController : ControllerBase
 
         return Ok(new AnswerResultResponse(isCorrect, correctOptionText));
     }
+
+    [Authorize]
+    [HttpGet("{quizId}/score")]
+    public async Task<ActionResult<QuizScoreResponse>> GetScore(int quizId)
+    {
+        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new { message = "Invalid or missing token." });
+        }
+
+        var score = await _db.QuizScores
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
+
+        if (score is null)
+        {
+            return NotFound(new { message = "Quiz score not found." });
+        }
+
+        var correctAnswers = score.Answers.Count(a => a.Value);
+        var totalAnswered = score.Answers.Count;
+
+        return Ok(new QuizScoreResponse(correctAnswers, totalAnswered));
+    }
 }
