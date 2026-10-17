@@ -1,6 +1,8 @@
+using PSI1.Api.Extensions;
+
 namespace PSI1.Api.Models;
 
-public class Quiz
+public class Quiz : IEquatable<Quiz>
 {
     public const int MaxTitleLength = 100;
     public const int MaxDescriptionLength = 500;
@@ -65,5 +67,33 @@ public class Quiz
         {
             this.questions[i].AssignPosition(i);
         }
+    }
+    /// comparing title(case-insensitive) + category + language
+    public bool Equals(Quiz? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Title.ToLowerTrimmed() == other.Title.ToLowerTrimmed()
+            && Category == other.Category
+            && Language == other.Language;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        // if obj isnt Quiz -> as Quiz return null
+        return Equals(obj as Quiz);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title.ToLowerTrimmed(), Category, Language);
     }
 }
