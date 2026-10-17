@@ -2,16 +2,25 @@ import { useState, useEffect } from "react";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import CategorySelector from "./components/CategorySelector";
-import { getLanguages, getSelectedLanguage, selectLanguage } from "./api";
+import ProfilePicture from "./components/ProfilePicture";
+import {
+  getLanguages,
+  getSelectedLanguage,
+  getSelectedCategory,
+  selectLanguage,
+} from "./api";
 import "./App.css";
+
+const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please log in again.";
 
 export default function App() {
   // tracks which screen the user is on before log in
   const [screen, setScreen] = useState("register");
   // jw token is saved into localstorage so it doesn't disappear on refresh
   const [token, setToken] = useState(localStorage.getItem("token"));
-  // after log in the user goes through: "language" -> "category" -> "ready"
-  const [step, setStep] = useState("language");
+  // after log in the user goes through: "loading" -> "language" -> "category" -> "ready"
+  // "loading" checks the saved choices first, so returning users go straight to "ready"
+  const [step, setStep] = useState("loading");
   // list of languages fetched from the backend, and whichever one is selected
   const [languages, setLanguages] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -22,22 +31,33 @@ export default function App() {
   // once logged in, load the list of languages to choose from
   useEffect(() => {
     if (!token) return;
-    getLanguages().then(setLanguages);
+    getLanguages()
+      .then(setLanguages)
+      .catch((err) => setLanguageError(err.message));
   }, [token]);
 
-  // also load the language the user saved earlier, so it shows as selected
+  // load the language and category the user saved earlier,
+  // and skip the setup steps if both are already saved
   useEffect(() => {
     if (!token) return;
     let cancelled = false;
 
-    getSelectedLanguage()
-      .then((data) => {
-        if (!cancelled && data.language) setSelected(data.language);
+    Promise.all([getSelectedLanguage(), getSelectedCategory()])
+      .then(([languageData, categoryData]) => {
+        if (cancelled) return;
+        setSelected(languageData.language ?? null);
+        setCategory(categoryData.category ?? null);
+        setStep(languageData.language && categoryData.category ? "ready" : "language");
       })
       .catch((err) => {
-        if (!cancelled && err.message === "Your session has expired. Please log in again.") {
+        if (cancelled) return;
+        if (err.message === SESSION_EXPIRED_MESSAGE) {
           handleLogout();
-        } 
+        } else {
+          // saved choices couldn't be checked, so let the user pick them again
+          setLanguageError(err.message);
+          setStep("language");
+        }
       });
 
     return () => {
@@ -57,9 +77,10 @@ export default function App() {
     localStorage.removeItem("token");
     setToken(null);
     setScreen("login");
-    setStep("language");
+    setStep("loading");
     setSelected(null);
     setCategory(null);
+    setLanguageError("");
   }
 
   // sends the chosen language to the backend, using the saved jw token
@@ -78,6 +99,8 @@ export default function App() {
     return (
       <div className="app-shell">
         <div className="status-card">
+          {step === "loading" && <p>Loading your settings...</p>}
+
           {step === "language" && (
             <>
               <h2>Choose a language</h2>
@@ -118,11 +141,19 @@ export default function App() {
 
           {step === "ready" && (
             <>
+              <ProfilePicture />
+
               <h2>You're all set</h2>
               <p>Language: {selected || "none yet"}</p>
               <p>Category: {category}</p>
 
               <div className="step-actions">
+                <button
+                  className="secondary-button"
+                  onClick={() => setStep("language")}
+                >
+                  Change language
+                </button>
                 <button
                   className="secondary-button"
                   onClick={() => setStep("category")}
