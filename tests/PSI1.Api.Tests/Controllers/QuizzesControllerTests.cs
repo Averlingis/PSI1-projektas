@@ -416,22 +416,28 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetScore_ThreeAnswers_ReturnsCorrectScore()
+    public async Task GetScore_ThreeAnswers_ReturnsCorrectCountAndTotal()
     {
         var quizId = await CreateTestQuizAsync();
         using var client = await _factory.CreateAuthenticatedClientAsync();
 
-        await client.PostAsJsonAsync(
+        var answerResponse1 = await client.PostAsJsonAsync(
             $"api/quizzes/{quizId}/questions/0/answer",
             new AnswerRequest(1));
 
-        await client.PostAsJsonAsync(
+        Assert.Equal(HttpStatusCode.OK, answerResponse1.StatusCode);
+
+        var answerResponse2 = await client.PostAsJsonAsync(
             $"api/quizzes/{quizId}/questions/1/answer",
             new AnswerRequest(0));
 
-        await client.PostAsJsonAsync(
+        Assert.Equal(HttpStatusCode.OK, answerResponse2.StatusCode);
+
+        var answerResponse3 = await client.PostAsJsonAsync(
             $"api/quizzes/{quizId}/questions/2/answer",
             new AnswerRequest(0));
+
+        Assert.Equal(HttpStatusCode.OK, answerResponse3.StatusCode);
 
         var response = await client.GetAsync($"api/quizzes/{quizId}/score");
 
