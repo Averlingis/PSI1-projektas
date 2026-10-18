@@ -123,7 +123,10 @@ export default function App() {
               {languageError && <p className="auth-error">{languageError}</p>}
 
               <div className="step-actions">
-                <button disabled={!selected} onClick={() => setStep("category")}>
+                <button
+                  disabled={!selected}
+                  onClick={() => setStep(category ? "ready" : "category")}
+                >
                   Continue
                 </button>
               </div>
