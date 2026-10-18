@@ -3,6 +3,7 @@ import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
+import QuizList from "./components/QuizList";
 import {
   getLanguages,
   getSelectedLanguage,
@@ -161,6 +162,8 @@ export default function App() {
                   Change category
                 </button>
               </div>
+
+              <QuizList initialLanguage={selected} initialCategory={category} />
             </>
           )}
 
