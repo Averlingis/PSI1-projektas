@@ -308,3 +308,43 @@ body {
   padding: 6px 14px;
   font-size: 0.9rem;
 }
+
+/* quiz list */
+
+.quiz-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.quiz-filters {
+  display: flex;
+  gap: 8px;
+}
+
+.quiz-filters select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.quiz-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.quiz-item h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.status-card .quiz-meta {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #52606d;
+}

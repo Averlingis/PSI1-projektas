@@ -3,6 +3,7 @@ import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
+import QuizList from "./components/QuizList";
 import {
   getLanguages,
   getSelectedLanguage,
@@ -122,7 +123,10 @@ export default function App() {
               {languageError && <p className="auth-error">{languageError}</p>}
 
               <div className="step-actions">
-                <button disabled={!selected} onClick={() => setStep("category")}>
+                <button
+                  disabled={!selected}
+                  onClick={() => setStep(category ? "ready" : "category")}
+                >
                   Continue
                 </button>
               </div>
@@ -161,6 +165,8 @@ export default function App() {
                   Change category
                 </button>
               </div>
+
+              <QuizList initialLanguage={selected} initialCategory={category} />
             </>
           )}
 
