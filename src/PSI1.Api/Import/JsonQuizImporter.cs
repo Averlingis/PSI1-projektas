@@ -43,10 +43,16 @@ public class JsonQuizImporter
         for (var i = 0; i < questionDtos.Count; i++)
         {
             var questionDto = questionDtos[i];
+            if (questionDto is null)
+            {
+                errors.Add(new ImportError(i + 1, "Question cannot be null."));
+                continue;
+            }
 
             try
             {
                 var options = (questionDto.Options ?? [])
+                    .Select(o => o ?? throw new ArgumentException("Options cannot contain null items."))
                     .Select(o => new AnswerOption(o.Text!, o.IsCorrect))
                     .ToList();
 

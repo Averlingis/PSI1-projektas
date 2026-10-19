@@ -407,4 +407,88 @@ public class JsonQuizImporterTests
         Assert.Null(error.Location);
         Assert.Contains("title", error.Message, StringComparison.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public async Task ImportAsync_NullQuestion_ReturnsErrorWithQuestionNumber()
+    {
+        var json = """
+          {
+            "title": "Family Vocabulary",
+            "description": "Basic family words in Lithuanian",
+            "category": "Family",
+            "language": "Lithuanian",
+            "questions": [
+              {
+                "text": "How do you say 'Mother' in Lithuanian?",
+                "options": [
+                  { "text": "Sesuo", "isCorrect": false },
+                  { "text": "Mama", "isCorrect": true },
+                  { "text": "Močiutė", "isCorrect": false }
+                ]
+              },
+              {
+                "text": "What does 'Brolis' mean in English?",
+                "options": [
+                  { "text": "Father", "isCorrect": false },
+                  { "text": "Brother", "isCorrect": true }
+                ]
+              },
+              null
+            ]
+          }
+          """;
+
+        var importer = new JsonQuizImporter();
+
+        var result = await importer.ImportAsync(ToStream(json));
+
+        Assert.False(result.IsSuccess);
+        var error = Assert.Single(result.Errors);
+        Assert.Equal(3, error.Location);
+    }
+
+    [Fact]
+    public async Task ImportAsync_NullOption_ReturnsErrorWithQuestionNumber()
+    {
+        var json = """
+          {
+            "title": "Family Vocabulary",
+            "description": "Basic family words in Lithuanian",
+            "category": "Family",
+            "language": "Lithuanian",
+            "questions": [
+              {
+                "text": "How do you say 'Mother' in Lithuanian?",
+                "options": [
+                  { "text": "Sesuo", "isCorrect": false },
+                  { "text": "Mama", "isCorrect": true },
+                  { "text": "Močiutė", "isCorrect": false }
+                ]
+              },
+              {
+                "text": "What does 'Brolis' mean in English?",
+                "options": [
+                  { "text": "Father", "isCorrect": false },
+                  { "text": "Brother", "isCorrect": true }
+                ]
+              },
+              {
+                "text": "How do you say 'Grandmother' in Lithuanian?",
+                "options": [
+                  { "text": "Močiutė", "isCorrect": true },
+                  { "text": "Teta", "isCorrect": false },
+                  null
+                ]
+              }
+            ]
+          }
+          """;
+        var importer = new JsonQuizImporter();
+
+        var result = await importer.ImportAsync(ToStream(json));
+
+        Assert.False(result.IsSuccess);
+        var error = Assert.Single(result.Errors);
+        Assert.Equal(3, error.Location);
+    }
 }

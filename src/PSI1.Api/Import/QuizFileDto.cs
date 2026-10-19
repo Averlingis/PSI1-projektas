@@ -7,5 +7,5 @@ public record QuizFileDto(
     string? Description,
     string? Category,
     string? Language,
-    IReadOnlyList<QuestionFileDto>? Questions
+    IReadOnlyList<QuestionFileDto?>? Questions
 );
