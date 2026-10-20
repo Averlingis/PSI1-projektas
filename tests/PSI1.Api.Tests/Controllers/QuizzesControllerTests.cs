@@ -414,4 +414,100 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(2, scores.Count);
         Assert.NotEqual(scores[0].UserId, scores[1].UserId);
     }
+
+    [Fact]
+    public async Task GetScore_ThreeAnswers_ReturnsCorrectCountAndTotal()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var answerResponse1 = await client.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.OK, answerResponse1.StatusCode);
+
+        var answerResponse2 = await client.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/1/answer",
+            new AnswerRequest(0));
+
+        Assert.Equal(HttpStatusCode.OK, answerResponse2.StatusCode);
+
+        var answerResponse3 = await client.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/2/answer",
+            new AnswerRequest(0));
+
+        Assert.Equal(HttpStatusCode.OK, answerResponse3.StatusCode);
+
+        var response = await client.GetAsync($"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<QuizScoreResponse>();
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.CorrectAnswers);
+        Assert.Equal(3, result.TotalAnswered);
+    }
+
+    [Fact]
+    public async Task GetScore_NoAnswers_ReturnsNotFound()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.GetAsync(
+            $"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetScore_WithoutToken_ReturnsUnauthorized()
+    {
+        var quizId = await CreateTestQuizAsync();
+
+        var response = await _client.GetAsync(
+            $"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetScore_DifferentUsers_ReturnsOwnScore()
+    {
+        var quizId = await CreateTestQuizAsync();
+
+        using var client1 = await _factory.CreateAuthenticatedClientAsync();
+        using var client2 = await _factory.CreateAuthenticatedClientAsync();
+
+        var answer1 = await client1.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        var answer2 = await client2.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(0));
+
+        Assert.Equal(HttpStatusCode.OK, answer1.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, answer2.StatusCode);
+
+        var response1 = await client1.GetAsync($"api/quizzes/{quizId}/score");
+        var response2 = await client2.GetAsync($"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+
+        var score1 = await response1.Content.ReadFromJsonAsync<QuizScoreResponse>();
+        var score2 = await response2.Content.ReadFromJsonAsync<QuizScoreResponse>();
+
+        Assert.NotNull(score1);
+        Assert.NotNull(score2);
+
+        Assert.Equal(1, score1.CorrectAnswers);
+        Assert.Equal(1, score1.TotalAnswered);
+
+        Assert.Equal(0, score2.CorrectAnswers);
+        Assert.Equal(1, score2.TotalAnswered);
+    }
 }

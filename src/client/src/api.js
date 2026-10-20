@@ -182,3 +182,20 @@ export async function getProfilePicture() {
 
   return response.blob();
 }
+
+
+  // Fetches quizzes, optionally filtered by category and/or language (public endpoint).
+export async function getQuizzes({ category, language }) {
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if (language) params.set("language", language);
+
+  const response = await fetch(`${API_BASE}/api/quizzes?${params}`);
+
+  if (!response.ok) {
+    throw new Error("Could not load quizzes.");
+  }
+
+  return response.json();
+}
+
