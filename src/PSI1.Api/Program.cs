@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using PSI1.Api.Data;
+using PSI1.Api.Import;
 using PSI1.Api.Models;
 
 
@@ -42,6 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<JsonQuizImporter>();
 
 // Allow the React server to call this API from the browser.
 builder.Services.AddCors(options =>

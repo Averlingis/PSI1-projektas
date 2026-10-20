@@ -510,4 +510,172 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(0, score2.CorrectAnswers);
         Assert.Equal(1, score2.TotalAnswered);
     }
+
+    // Import tests
+
+    private static MultipartFormDataContent ToFormContent(string json)
+    {
+        var content = new MultipartFormDataContent();
+        content.Add(new StringContent(json), "file", "quiz.json");
+        return content;
+    }
+
+    [Fact]
+    public async Task ImportQuiz_WithoutToken_ReturnsUnauthorized()
+    {
+        var content = new MultipartFormDataContent();
+
+        var response = await _client.PostAsync("api/quizzes/import", content);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ImportQuiz_ValidFile_ReturnsCreatedAndSavesQuiz()
+    {
+        var json = """
+        {
+            "title": "Imported Quiz",
+            "category": "Family",
+            "language": "Lithuanian",
+            "questions": [
+            {
+                "text": "How do you say 'Mother' in Lithuanian?",
+                "options": [
+                { "text": "Sesuo", "isCorrect": false },
+                { "text": "Mama", "isCorrect": true }
+                ]
+            },
+            {
+                "text": "What does 'Brolis' mean in English?",
+                "options": [
+                { "text": "Father", "isCorrect": false },
+                { "text": "Brother", "isCorrect": true }
+                ]
+            },
+            {
+                "text": "How do you say 'Grandmother' in Lithuanian?",
+                "options": [
+                { "text": "Močiutė", "isCorrect": true },
+                { "text": "Teta", "isCorrect": false }
+                ]
+            }
+            ]
+        }
+        """;
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsync("api/quizzes/import", ToFormContent(json));
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var quizzes = await client.GetFromJsonAsync<List<QuizSummaryResponse>>("api/quizzes", Json);
+        Assert.Contains(quizzes!, q => q.Title == "Imported Quiz");
+    }
+
+    [Fact]
+    public async Task ImportQuiz_MalformedJson_ReturnsBadRequest()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsync("api/quizzes/import", ToFormContent("{ \"title\": "));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ImportQuiz_QuestionWithoutText_ReturnsBadRequestWithQuestionNumber()
+    {
+        var json = """
+            {
+                "title": "Family Vocabulary",
+                "description": "Basic family words in Lithuanian",
+                "category": "Family",
+                "language": "Lithuanian",
+                "questions": [
+                {
+                    "text": "How do you say 'Mother' in Lithuanian?",
+                    "options": [
+                    { "text": "Sesuo", "isCorrect": false },
+                    { "text": "Mama", "isCorrect": true },
+                    { "text": "Močiutė", "isCorrect": false }
+                    ]
+                },
+                {
+                    "text": "What does 'Brolis' mean in English?",
+                    "options": [
+                    { "text": "Father", "isCorrect": false },
+                    { "text": "Brother", "isCorrect": true }
+                    ]
+                },
+                {
+                    "options": [
+                    { "text": "Močiutė", "isCorrect": true },
+                    { "text": "Teta", "isCorrect": false }
+                    ]
+                }
+                ]
+            }
+            """;
+
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsync("api/quizzes/import", ToFormContent(json));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var body = await response.Content.ReadAsStringAsync();
+        Assert.Contains("\"location\":3", body);
+    }
+
+    [Fact]
+    public async Task ImportQuiz_DuplicateQuiz_ReturnsConflict()
+    {
+        var json = """
+        {
+            "title": "Duplicate Quiz",
+            "category": "Family",
+            "language": "Lithuanian",
+            "questions": [
+            {
+                "text": "How do you say 'Mother' in Lithuanian?",
+                "options": [
+                { "text": "Sesuo", "isCorrect": false },
+                { "text": "Mama", "isCorrect": true }
+                ]
+            },
+            {
+                "text": "What does 'Brolis' mean in English?",
+                "options": [
+                { "text": "Father", "isCorrect": false },
+                { "text": "Brother", "isCorrect": true }
+                ]
+            },
+            {
+                "text": "How do you say 'Grandmother' in Lithuanian?",
+                "options": [
+                { "text": "Močiutė", "isCorrect": true },
+                { "text": "Teta", "isCorrect": false }
+                ]
+            }
+            ]
+        }
+        """;
+
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response1 = await client.PostAsync("api/quizzes/import", ToFormContent(json));
+        Assert.Equal(HttpStatusCode.Created, response1.StatusCode);
+
+        var response2 = await client.PostAsync("api/quizzes/import", ToFormContent(json));
+        Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
+    }
+
+    [Fact]
+    public async Task ImportQuiz_NoFile_ReturnsBadRequest()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsync("api/quizzes/import", new MultipartFormDataContent());
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

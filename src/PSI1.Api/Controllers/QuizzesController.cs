@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -8,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
+using PSI1.Api.Import;
 using PSI1.Api.Models;
 
 namespace PSI1.Api.Controllers;
@@ -17,10 +17,12 @@ namespace PSI1.Api.Controllers;
 public class QuizzesController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly JsonQuizImporter _importer;
 
-    public QuizzesController(AppDbContext db)
+    public QuizzesController(AppDbContext db, JsonQuizImporter importer)
     {
         _db = db;
+        _importer = importer;
     }
 
     [HttpGet]
@@ -171,5 +173,40 @@ public class QuizzesController : ControllerBase
         var totalAnswered = score.Answers.Count;
 
         return Ok(new QuizScoreResponse(correctAnswers, totalAnswered));
+    }
+
+    [Authorize]
+    [HttpPost("import")]
+    [RequestSizeLimit(1_000_000)]
+    public async Task<ActionResult<QuizSummaryResponse>> ImportQuiz(IFormFile file)
+    {
+        await using var stream = file.OpenReadStream();
+        var result = await _importer.ImportAsync(stream);
+
+        var quiz = result.Quiz;
+
+        if (quiz is null)
+        {
+            return BadRequest(new { errors = result.Errors });
+        }
+
+        var existing = await _db.Quizzes.AsNoTracking().ToListAsync();
+
+        if (existing.Contains(quiz))
+        {
+            return Conflict(new { message = "A quiz with the same title, category and language already exists." });
+        }
+
+        _db.Quizzes.Add(quiz);
+        await _db.SaveChangesAsync();
+
+        return StatusCode(StatusCodes.Status201Created, new QuizSummaryResponse(
+            quiz.Id,
+            quiz.Title,
+            quiz.Description,
+            quiz.Category,
+            quiz.Language,
+            quiz.Questions.Count)
+        );
     }
 }
