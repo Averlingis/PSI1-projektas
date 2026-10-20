@@ -177,6 +177,7 @@ public class QuizzesController : ControllerBase
 
     [Authorize]
     [HttpPost("import")]
+    [RequestSizeLimit(1_000_000)]
     public async Task<ActionResult<QuizSummaryResponse>> ImportQuiz(IFormFile file)
     {
         await using var stream = file.OpenReadStream();
