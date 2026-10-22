@@ -348,3 +348,47 @@ body {
   font-size: 0.85rem;
   color: #52606d;
 }
+
+/* quiz detail */
+
+.quiz-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quiz-detail h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.quiz-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+}
+
+/* clickable quiz cards */
+
+.status-card .quiz-item-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+.status-card .quiz-item-button:hover {
+  background: transparent;
+}
+
+.quiz-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  cursor: pointer;
+}

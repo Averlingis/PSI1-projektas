@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getCategories, getLanguages, getQuizzes } from "../api";
 
 // List of quizzes with language and category filters
-export default function QuizList({ initialLanguage, initialCategory }) {
+export default function QuizList({ initialLanguage, initialCategory, onSelectQuiz }) {
   const [language, setLanguage] = useState(initialLanguage ?? "");
   const [category, setCategory] = useState(initialCategory ?? "");
   const [languages, setLanguages] = useState([]);
@@ -13,8 +13,8 @@ export default function QuizList({ initialLanguage, initialCategory }) {
 
   // options for the dropdowns, loaded once
   useEffect(() => {
-    getLanguages().then(setLanguages).catch(() => {});
-    getCategories().then(setCategories).catch(() => {});
+    getLanguages().then(setLanguages).catch(() => { });
+    getCategories().then(setCategories).catch(() => { });
   }, []);
 
   // reload the list whenever a filter change
@@ -53,13 +53,20 @@ export default function QuizList({ initialLanguage, initialCategory }) {
 
       {quizzes?.length === 0 && <p>No quizzes match these filters.</p>}
 
+
       {quizzes?.map((quiz) => (
         <div key={quiz.id} className="quiz-item">
-          <h3>{quiz.title}</h3>
-          {quiz.description && <p>{quiz.description}</p>}
-          <p className="quiz-meta">
-            {quiz.language} · {quiz.category} · {quiz.questionCount} questions
-          </p>
+          <button
+            type="button"
+            className="quiz-item-button"
+            onClick={() => onSelectQuiz(quiz)}
+          >
+            <h3>{quiz.title}</h3>
+            {quiz.description && <p>{quiz.description}</p>}
+            <p className="quiz-meta">
+              {quiz.language} · {quiz.category} · {quiz.questionCount} questions
+            </p>
+          </button>
         </div>
       ))}
     </div>
