@@ -1,12 +1,10 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
+using PSI1.Api.Extensions;
 using PSI1.Api.Import;
 using PSI1.Api.Models;
 
@@ -96,13 +94,7 @@ public class QuizzesController : ControllerBase
     [HttpPost("{quizId}/questions/{index}/answer")]
     public async Task<ActionResult<AnswerResultResponse>> AnswerQuestion(int quizId, int index, AnswerRequest request)
     {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
+        var userId = User.GetUserId();
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
@@ -152,13 +144,7 @@ public class QuizzesController : ControllerBase
     [HttpGet("{quizId}/score")]
     public async Task<ActionResult<QuizScoreResponse>> GetScore(int quizId)
     {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
+        var userId = User.GetUserId();
 
         var score = await _db.QuizScores
             .AsNoTracking()
