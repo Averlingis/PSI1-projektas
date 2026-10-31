@@ -162,6 +162,23 @@ public class QuizzesController : ControllerBase
     }
 
     [Authorize]
+    [HttpDelete("{quizId}/score")]
+    public async Task<IActionResult> ResetScore(int quizId)
+    {
+        var userId = User.GetUserId();
+
+        var score = await _db.QuizScores.FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
+
+        if (score is not null)
+        {
+            _db.QuizScores.Remove(score);
+            await _db.SaveChangesAsync();
+        }
+
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpPost("import")]
     [RequestSizeLimit(1_000_000)]
     public async Task<ActionResult<QuizSummaryResponse>> ImportQuiz(IFormFile file)
