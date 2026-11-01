@@ -1,12 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
+using PSI1.Api.Extensions;
 using PSI1.Api.Models;
 
 namespace PSI1.Api.Controllers;
@@ -34,28 +31,12 @@ public class LanguagesController : ControllerBase
         return Ok(languages);
     }
 
-
     // Updates and saves the selected learning language for the authenticated user.
-    // Requires a valid JWT (see AuthController.Login); the target user comes from
-    // the token's "sub" claim rather than from the request body.
     [Authorize]
     [HttpPut("select")]
     public async Task<IActionResult> SelectLanguage(LanguageSelectionRequest request)
     {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
-
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-        if (user is null)
-        {
-            return NotFound(new { message = "User not found." });
-        }
+        var user = await _db.GetCurrentUserAsync(User);
 
         user.LearningLanguage = request.Language;
 
@@ -75,20 +56,7 @@ public class LanguagesController : ControllerBase
     [HttpGet("selected")]
     public async Task<IActionResult> GetSelectedLanguage()
     {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-        ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
-
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-        if (user is null)
-        {
-            return NotFound(new { message = "User not found." });
-        }
+        var user = await _db.GetCurrentUserAsync(User);
 
         return Ok(new
         {

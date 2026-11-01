@@ -1,12 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
+using PSI1.Api.Extensions;
 using PSI1.Api.Models;
 
 namespace PSI1.Api.Controllers;
@@ -36,23 +33,9 @@ public class CategoriesController : ControllerBase
 
     [Authorize]
     [HttpPut("select")]
-
     public async Task<IActionResult> SelectCategory(CategorySelectionRequest request)
     {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
-
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-        if (user is null)
-        {
-            return NotFound(new { message = "User not found." });
-        }
+        var user = await _db.GetCurrentUserAsync(User);
 
         user.SelectedCategory = request.Category;
 
@@ -69,20 +52,7 @@ public class CategoriesController : ControllerBase
     [HttpGet("selected")]
     public async Task<IActionResult> GetSelectedCategory()
     {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null || !int.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
-
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-        if (user is null)
-        {
-            return NotFound(new { message = "User not found." });
-        }
+        var user = await _db.GetCurrentUserAsync(User);
 
         return Ok(new { category = user.SelectedCategory?.ToString() });
     }

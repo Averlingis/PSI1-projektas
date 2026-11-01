@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using PSI1.Api.Data;
+using PSI1.Api.Exceptions;
 using PSI1.Api.Import;
-using PSI1.Api.Models;
 
 
 //Creates builder object that is used to configure the app before start
@@ -44,6 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<JsonQuizImporter>();
+builder.Services.AddExceptionHandler<AuthExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // Allow the React server to call this API from the browser.
 builder.Services.AddCors(options =>
@@ -59,6 +61,7 @@ builder.Services.AddCors(options =>
 //Finalises config and builds obj
 var app = builder.Build();
 
+app.UseExceptionHandler();
 app.UseCors("AllowReactDev");
 
 app.UseAuthentication();

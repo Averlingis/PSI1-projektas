@@ -1,11 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using PSI1.Api.Data;
+using PSI1.Api.Extensions;
 
 namespace PSI1.Api.Controllers;
 
@@ -31,11 +28,7 @@ public class ProfileController : ControllerBase
     [HttpGet("picture")]
     public async Task<IActionResult> GetPicture()
     {
-        var user = await GetCurrentUserAsync();
-        if (user is null)
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
+        var user = await _db.GetCurrentUserAsync(User);
 
         var path = Path.Combine(_picturesDirectory, user.ProfilePictureFilename);
         if (!System.IO.File.Exists(path))
@@ -55,11 +48,7 @@ public class ProfileController : ControllerBase
     [RequestSizeLimit(3 * 1024 * 1024)]
     public async Task<IActionResult> UploadPicture(IFormFile file)
     {
-        var user = await GetCurrentUserAsync();
-        if (user is null)
-        {
-            return Unauthorized(new { message = "Invalid or missing token." });
-        }
+        var user = await _db.GetCurrentUserAsync(User);
 
         // size is checked on the server
         if (file is null || file.Length == 0)
@@ -119,18 +108,5 @@ public class ProfileController : ControllerBase
             return ".jpg";
         }
         return null;
-    }
-
-    private async Task<Models.User?> GetCurrentUserAsync()
-    {
-        var userIdClaim = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (!int.TryParse(userIdClaim, out var userId))
-        {
-            return null;
-        }
-
-        return await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
     }
 }
