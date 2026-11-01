@@ -1,0 +1,197 @@
+{
+  "title": "Italian Culture and Traditions",
+  "description": "Famous places, people and traditions of Italy. A mix of questions about Italian history, art and everyday life.",
+  "category": "Culture",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What is the capital of Italy?",
+      "options": [
+        {
+          "text": "Milan",
+          "isCorrect": false
+        },
+        {
+          "text": "Naples",
+          "isCorrect": false
+        },
+        {
+          "text": "Rome",
+          "isCorrect": true
+        },
+        {
+          "text": "Florence",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "In which Italian city can you travel by gondola along the canals?",
+      "options": [
+        {
+          "text": "Turin",
+          "isCorrect": false
+        },
+        {
+          "text": "Pisa",
+          "isCorrect": false
+        },
+        {
+          "text": "Bologna",
+          "isCorrect": false
+        },
+        {
+          "text": "Venice",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which Italian city is famous for its leaning tower?",
+      "options": [
+        {
+          "text": "Pisa",
+          "isCorrect": true
+        },
+        {
+          "text": "Genoa",
+          "isCorrect": false
+        },
+        {
+          "text": "Siena",
+          "isCorrect": false
+        },
+        {
+          "text": "Verona",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Who painted the Mona Lisa?",
+      "options": [
+        {
+          "text": "Michelangelo",
+          "isCorrect": false
+        },
+        {
+          "text": "Leonardo da Vinci",
+          "isCorrect": true
+        },
+        {
+          "text": "Raphael",
+          "isCorrect": false
+        },
+        {
+          "text": "Caravaggio",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which poet wrote the Divine Comedy?",
+      "options": [
+        {
+          "text": "Boccaccio",
+          "isCorrect": false
+        },
+        {
+          "text": "Virgil",
+          "isCorrect": false
+        },
+        {
+          "text": "Petrarch",
+          "isCorrect": false
+        },
+        {
+          "text": "Dante Alighieri",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which independent state lies entirely inside the city of Rome?",
+      "options": [
+        {
+          "text": "Vatican City",
+          "isCorrect": true
+        },
+        {
+          "text": "San Marino",
+          "isCorrect": false
+        },
+        {
+          "text": "Monaco",
+          "isCorrect": false
+        },
+        {
+          "text": "Malta",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What is the name of the famous opera house in Milan?",
+      "options": [
+        {
+          "text": "La Fenice",
+          "isCorrect": false
+        },
+        {
+          "text": "San Carlo",
+          "isCorrect": false
+        },
+        {
+          "text": "La Scala",
+          "isCorrect": true
+        },
+        {
+          "text": "Teatro Massimo",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which ancient Roman amphitheatre was used for gladiator fights?",
+      "options": [
+        {
+          "text": "The Spanish Steps",
+          "isCorrect": false
+        },
+        {
+          "text": "The Pantheon",
+          "isCorrect": false
+        },
+        {
+          "text": "The Trevi Fountain",
+          "isCorrect": false
+        },
+        {
+          "text": "The Colosseum",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "On which date is Ferragosto, the mid-summer holiday, celebrated?",
+      "options": [
+        {
+          "text": "25 December",
+          "isCorrect": false
+        },
+        {
+          "text": "24 June",
+          "isCorrect": false
+        },
+        {
+          "text": "15 August",
+          "isCorrect": true
+        },
+        {
+          "text": "1 May",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

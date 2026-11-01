@@ -1,0 +1,154 @@
+{
+  "title": "Italian Tech Words",
+  "category": "Technology",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'cellulare' mean in English?",
+      "options": [
+        {
+          "text": "network",
+          "isCorrect": false
+        },
+        {
+          "text": "screen",
+          "isCorrect": false
+        },
+        {
+          "text": "keyboard",
+          "isCorrect": false
+        },
+        {
+          "text": "mobile phone",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'keyboard' in Italian?",
+      "options": [
+        {
+          "text": "stampante",
+          "isCorrect": false
+        },
+        {
+          "text": "tastiera",
+          "isCorrect": true
+        },
+        {
+          "text": "sito web",
+          "isCorrect": false
+        },
+        {
+          "text": "portatile",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'schermo' mean in English?",
+      "options": [
+        {
+          "text": "screen",
+          "isCorrect": true
+        },
+        {
+          "text": "to download",
+          "isCorrect": false
+        },
+        {
+          "text": "keyboard",
+          "isCorrect": false
+        },
+        {
+          "text": "network",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'email' in Italian?",
+      "options": [
+        {
+          "text": "scaricare",
+          "isCorrect": false
+        },
+        {
+          "text": "rete",
+          "isCorrect": false
+        },
+        {
+          "text": "schermo",
+          "isCorrect": false
+        },
+        {
+          "text": "posta elettronica",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'scaricare' mean in English?",
+      "options": [
+        {
+          "text": "network",
+          "isCorrect": false
+        },
+        {
+          "text": "to download",
+          "isCorrect": true
+        },
+        {
+          "text": "email",
+          "isCorrect": false
+        },
+        {
+          "text": "charger",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'website' in Italian?",
+      "options": [
+        {
+          "text": "scaricare",
+          "isCorrect": false
+        },
+        {
+          "text": "sito web",
+          "isCorrect": true
+        },
+        {
+          "text": "rete",
+          "isCorrect": false
+        },
+        {
+          "text": "posta elettronica",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'caricabatterie' mean in English?",
+      "options": [
+        {
+          "text": "screen",
+          "isCorrect": false
+        },
+        {
+          "text": "charger",
+          "isCorrect": true
+        },
+        {
+          "text": "printer",
+          "isCorrect": false
+        },
+        {
+          "text": "laptop",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

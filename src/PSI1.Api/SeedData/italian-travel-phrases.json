@@ -1,0 +1,155 @@
+{
+  "title": "Italian Travel Phrases",
+  "description": "Useful phrases for getting around Italy: stations, tickets, hotels and directions.",
+  "category": "Travel",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'Dov'è la stazione?' mean in English?",
+      "options": [
+        {
+          "text": "To the right",
+          "isCorrect": false
+        },
+        {
+          "text": "Do you speak English?",
+          "isCorrect": false
+        },
+        {
+          "text": "Where is the train station?",
+          "isCorrect": true
+        },
+        {
+          "text": "One ticket, please.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'One ticket, please.' in Italian?",
+      "options": [
+        {
+          "text": "Un biglietto, per favore.",
+          "isCorrect": true
+        },
+        {
+          "text": "Dov'è la stazione?",
+          "isCorrect": false
+        },
+        {
+          "text": "A sinistra",
+          "isCorrect": false
+        },
+        {
+          "text": "Quanto costa?",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Quanto costa?' mean in English?",
+      "options": [
+        {
+          "text": "I would like a room.",
+          "isCorrect": false
+        },
+        {
+          "text": "The bill, please.",
+          "isCorrect": false
+        },
+        {
+          "text": "How much does it cost?",
+          "isCorrect": true
+        },
+        {
+          "text": "To the left",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'I would like a room.' in Italian?",
+      "options": [
+        {
+          "text": "Parla inglese?",
+          "isCorrect": false
+        },
+        {
+          "text": "Il conto, per favore.",
+          "isCorrect": false
+        },
+        {
+          "text": "Vorrei una camera.",
+          "isCorrect": true
+        },
+        {
+          "text": "Un biglietto, per favore.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'A destra' mean in English?",
+      "options": [
+        {
+          "text": "One ticket, please.",
+          "isCorrect": false
+        },
+        {
+          "text": "To the left",
+          "isCorrect": false
+        },
+        {
+          "text": "To the right",
+          "isCorrect": true
+        },
+        {
+          "text": "Do you speak English?",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'To the left' in Italian?",
+      "options": [
+        {
+          "text": "A sinistra",
+          "isCorrect": true
+        },
+        {
+          "text": "Parla inglese?",
+          "isCorrect": false
+        },
+        {
+          "text": "Il conto, per favore.",
+          "isCorrect": false
+        },
+        {
+          "text": "Un biglietto, per favore.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'L'aeroporto' mean in English?",
+      "options": [
+        {
+          "text": "Do you speak English?",
+          "isCorrect": false
+        },
+        {
+          "text": "To the left",
+          "isCorrect": false
+        },
+        {
+          "text": "How much does it cost?",
+          "isCorrect": false
+        },
+        {
+          "text": "The airport",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "title": "Russian at Work",
+  "description": "Words for the office: colleagues, meetings and salaries.",
+  "category": "Work",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'работа' mean in English?",
+      "options": [
+        {
+          "text": "meeting",
+          "isCorrect": false
+        },
+        {
+          "text": "work",
+          "isCorrect": true
+        },
+        {
+          "text": "office",
+          "isCorrect": false
+        },
+        {
+          "text": "contract",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'office' in Russian?",
+      "options": [
+        {
+          "text": "офис",
+          "isCorrect": true
+        },
+        {
+          "text": "начальник",
+          "isCorrect": false
+        },
+        {
+          "text": "договор",
+          "isCorrect": false
+        },
+        {
+          "text": "компания",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'коллега' mean in English?",
+      "options": [
+        {
+          "text": "salary",
+          "isCorrect": false
+        },
+        {
+          "text": "colleague",
+          "isCorrect": true
+        },
+        {
+          "text": "office",
+          "isCorrect": false
+        },
+        {
+          "text": "company",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'salary' in Russian?",
+      "options": [
+        {
+          "text": "договор",
+          "isCorrect": false
+        },
+        {
+          "text": "работа",
+          "isCorrect": false
+        },
+        {
+          "text": "зарплата",
+          "isCorrect": true
+        },
+        {
+          "text": "совещание",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'совещание' mean in English?",
+      "options": [
+        {
+          "text": "holiday",
+          "isCorrect": false
+        },
+        {
+          "text": "contract",
+          "isCorrect": false
+        },
+        {
+          "text": "meeting",
+          "isCorrect": true
+        },
+        {
+          "text": "company",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'boss' in Russian?",
+      "options": [
+        {
+          "text": "коллега",
+          "isCorrect": false
+        },
+        {
+          "text": "офис",
+          "isCorrect": false
+        },
+        {
+          "text": "зарплата",
+          "isCorrect": false
+        },
+        {
+          "text": "начальник",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'отпуск' mean in English?",
+      "options": [
+        {
+          "text": "office",
+          "isCorrect": false
+        },
+        {
+          "text": "salary",
+          "isCorrect": false
+        },
+        {
+          "text": "boss",
+          "isCorrect": false
+        },
+        {
+          "text": "holiday",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "title": "Russian Sports",
+  "description": "Sports, teams and match vocabulary, including chess, a national passion.",
+  "category": "Sports",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'футбол' mean in English?",
+      "options": [
+        {
+          "text": "swimming",
+          "isCorrect": false
+        },
+        {
+          "text": "hockey",
+          "isCorrect": false
+        },
+        {
+          "text": "coach",
+          "isCorrect": false
+        },
+        {
+          "text": "football",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'hockey' in Russian?",
+      "options": [
+        {
+          "text": "бег",
+          "isCorrect": false
+        },
+        {
+          "text": "футбол",
+          "isCorrect": false
+        },
+        {
+          "text": "матч",
+          "isCorrect": false
+        },
+        {
+          "text": "хоккей",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'плавание' mean in English?",
+      "options": [
+        {
+          "text": "team",
+          "isCorrect": false
+        },
+        {
+          "text": "swimming",
+          "isCorrect": true
+        },
+        {
+          "text": "chess",
+          "isCorrect": false
+        },
+        {
+          "text": "basketball",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'coach' in Russian?",
+      "options": [
+        {
+          "text": "тренер",
+          "isCorrect": true
+        },
+        {
+          "text": "волейбол",
+          "isCorrect": false
+        },
+        {
+          "text": "плавание",
+          "isCorrect": false
+        },
+        {
+          "text": "бег",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'команда' mean in English?",
+      "options": [
+        {
+          "text": "chess",
+          "isCorrect": false
+        },
+        {
+          "text": "basketball",
+          "isCorrect": false
+        },
+        {
+          "text": "swimming",
+          "isCorrect": false
+        },
+        {
+          "text": "team",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'match' in Russian?",
+      "options": [
+        {
+          "text": "шахматы",
+          "isCorrect": false
+        },
+        {
+          "text": "лыжи",
+          "isCorrect": false
+        },
+        {
+          "text": "баскетбол",
+          "isCorrect": false
+        },
+        {
+          "text": "матч",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'шахматы' mean in English?",
+      "options": [
+        {
+          "text": "match",
+          "isCorrect": false
+        },
+        {
+          "text": "skiing",
+          "isCorrect": false
+        },
+        {
+          "text": "chess",
+          "isCorrect": true
+        },
+        {
+          "text": "volleyball",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

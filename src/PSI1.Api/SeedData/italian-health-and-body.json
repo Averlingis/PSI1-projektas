@@ -1,0 +1,197 @@
+{
+  "title": "Italian Health and Body",
+  "description": "Parts of the body and the words you need at the doctor or the pharmacy.",
+  "category": "Health",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'testa' mean in English?",
+      "options": [
+        {
+          "text": "heart",
+          "isCorrect": false
+        },
+        {
+          "text": "hospital",
+          "isCorrect": false
+        },
+        {
+          "text": "leg",
+          "isCorrect": false
+        },
+        {
+          "text": "head",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'hand' in Italian?",
+      "options": [
+        {
+          "text": "schiena",
+          "isCorrect": false
+        },
+        {
+          "text": "mano",
+          "isCorrect": true
+        },
+        {
+          "text": "bocca",
+          "isCorrect": false
+        },
+        {
+          "text": "gamba",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'occhio' mean in English?",
+      "options": [
+        {
+          "text": "headache",
+          "isCorrect": false
+        },
+        {
+          "text": "eye",
+          "isCorrect": true
+        },
+        {
+          "text": "hand",
+          "isCorrect": false
+        },
+        {
+          "text": "back",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'headache' in Italian?",
+      "options": [
+        {
+          "text": "farmacia",
+          "isCorrect": false
+        },
+        {
+          "text": "mal di testa",
+          "isCorrect": true
+        },
+        {
+          "text": "medico",
+          "isCorrect": false
+        },
+        {
+          "text": "mano",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'medico' mean in English?",
+      "options": [
+        {
+          "text": "heart",
+          "isCorrect": false
+        },
+        {
+          "text": "head",
+          "isCorrect": false
+        },
+        {
+          "text": "doctor",
+          "isCorrect": true
+        },
+        {
+          "text": "mouth",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'pharmacy' in Italian?",
+      "options": [
+        {
+          "text": "cuore",
+          "isCorrect": false
+        },
+        {
+          "text": "farmacia",
+          "isCorrect": true
+        },
+        {
+          "text": "mano",
+          "isCorrect": false
+        },
+        {
+          "text": "medico",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'schiena' mean in English?",
+      "options": [
+        {
+          "text": "back",
+          "isCorrect": true
+        },
+        {
+          "text": "heart",
+          "isCorrect": false
+        },
+        {
+          "text": "eye",
+          "isCorrect": false
+        },
+        {
+          "text": "hospital",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'heart' in Italian?",
+      "options": [
+        {
+          "text": "gamba",
+          "isCorrect": false
+        },
+        {
+          "text": "schiena",
+          "isCorrect": false
+        },
+        {
+          "text": "cuore",
+          "isCorrect": true
+        },
+        {
+          "text": "mano",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'gamba' mean in English?",
+      "options": [
+        {
+          "text": "leg",
+          "isCorrect": true
+        },
+        {
+          "text": "hospital",
+          "isCorrect": false
+        },
+        {
+          "text": "back",
+          "isCorrect": false
+        },
+        {
+          "text": "pharmacy",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

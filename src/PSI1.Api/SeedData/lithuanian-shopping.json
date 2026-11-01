@@ -1,0 +1,133 @@
+{
+  "title": "Lithuanian Shopping",
+  "category": "Shopping",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'parduotuvė' mean in English?",
+      "options": [
+        {
+          "text": "customer",
+          "isCorrect": false
+        },
+        {
+          "text": "shop",
+          "isCorrect": true
+        },
+        {
+          "text": "market",
+          "isCorrect": false
+        },
+        {
+          "text": "checkout",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'market' in Lithuanian?",
+      "options": [
+        {
+          "text": "turgus",
+          "isCorrect": true
+        },
+        {
+          "text": "kaina",
+          "isCorrect": false
+        },
+        {
+          "text": "čekis",
+          "isCorrect": false
+        },
+        {
+          "text": "parduotuvė",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'nuolaida' mean in English?",
+      "options": [
+        {
+          "text": "size",
+          "isCorrect": false
+        },
+        {
+          "text": "checkout",
+          "isCorrect": false
+        },
+        {
+          "text": "receipt",
+          "isCorrect": false
+        },
+        {
+          "text": "discount",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'receipt' in Lithuanian?",
+      "options": [
+        {
+          "text": "turgus",
+          "isCorrect": false
+        },
+        {
+          "text": "čekis",
+          "isCorrect": true
+        },
+        {
+          "text": "kaina",
+          "isCorrect": false
+        },
+        {
+          "text": "dydis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'kaina' mean in English?",
+      "options": [
+        {
+          "text": "price",
+          "isCorrect": true
+        },
+        {
+          "text": "discount",
+          "isCorrect": false
+        },
+        {
+          "text": "size",
+          "isCorrect": false
+        },
+        {
+          "text": "receipt",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'checkout' in Lithuanian?",
+      "options": [
+        {
+          "text": "kaina",
+          "isCorrect": false
+        },
+        {
+          "text": "kasa",
+          "isCorrect": true
+        },
+        {
+          "text": "dydis",
+          "isCorrect": false
+        },
+        {
+          "text": "čekis",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

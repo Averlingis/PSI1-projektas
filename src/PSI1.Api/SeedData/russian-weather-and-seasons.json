@@ -1,0 +1,112 @@
+{
+  "title": "Russian Weather and Seasons",
+  "category": "Nature",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'зима' mean in English?",
+      "options": [
+        {
+          "text": "winter",
+          "isCorrect": true
+        },
+        {
+          "text": "spring",
+          "isCorrect": false
+        },
+        {
+          "text": "wind",
+          "isCorrect": false
+        },
+        {
+          "text": "snow",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'summer' in Russian?",
+      "options": [
+        {
+          "text": "лето",
+          "isCorrect": true
+        },
+        {
+          "text": "снег",
+          "isCorrect": false
+        },
+        {
+          "text": "осень",
+          "isCorrect": false
+        },
+        {
+          "text": "дождь",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'дождь' mean in English?",
+      "options": [
+        {
+          "text": "spring",
+          "isCorrect": false
+        },
+        {
+          "text": "sun",
+          "isCorrect": false
+        },
+        {
+          "text": "wind",
+          "isCorrect": false
+        },
+        {
+          "text": "rain",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'snow' in Russian?",
+      "options": [
+        {
+          "text": "весна",
+          "isCorrect": false
+        },
+        {
+          "text": "зима",
+          "isCorrect": false
+        },
+        {
+          "text": "осень",
+          "isCorrect": false
+        },
+        {
+          "text": "снег",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'солнце' mean in English?",
+      "options": [
+        {
+          "text": "spring",
+          "isCorrect": false
+        },
+        {
+          "text": "cloud",
+          "isCorrect": false
+        },
+        {
+          "text": "winter",
+          "isCorrect": false
+        },
+        {
+          "text": "sun",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

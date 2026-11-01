@@ -1,0 +1,176 @@
+{
+  "title": "Russian Around the House",
+  "description": "Rooms and furniture: name everything in a Russian home.",
+  "category": "Home",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'дом' mean in English?",
+      "options": [
+        {
+          "text": "table",
+          "isCorrect": false
+        },
+        {
+          "text": "bathroom",
+          "isCorrect": false
+        },
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        },
+        {
+          "text": "house",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'kitchen' in Russian?",
+      "options": [
+        {
+          "text": "кровать",
+          "isCorrect": false
+        },
+        {
+          "text": "окно",
+          "isCorrect": false
+        },
+        {
+          "text": "кухня",
+          "isCorrect": true
+        },
+        {
+          "text": "спальня",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'спальня' mean in English?",
+      "options": [
+        {
+          "text": "window",
+          "isCorrect": false
+        },
+        {
+          "text": "bedroom",
+          "isCorrect": true
+        },
+        {
+          "text": "sofa",
+          "isCorrect": false
+        },
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'bathroom' in Russian?",
+      "options": [
+        {
+          "text": "кухня",
+          "isCorrect": false
+        },
+        {
+          "text": "стул",
+          "isCorrect": false
+        },
+        {
+          "text": "ванная",
+          "isCorrect": true
+        },
+        {
+          "text": "окно",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'окно' mean in English?",
+      "options": [
+        {
+          "text": "bathroom",
+          "isCorrect": false
+        },
+        {
+          "text": "bed",
+          "isCorrect": false
+        },
+        {
+          "text": "table",
+          "isCorrect": false
+        },
+        {
+          "text": "window",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'door' in Russian?",
+      "options": [
+        {
+          "text": "стол",
+          "isCorrect": false
+        },
+        {
+          "text": "дверь",
+          "isCorrect": true
+        },
+        {
+          "text": "диван",
+          "isCorrect": false
+        },
+        {
+          "text": "окно",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'стол' mean in English?",
+      "options": [
+        {
+          "text": "chair",
+          "isCorrect": false
+        },
+        {
+          "text": "table",
+          "isCorrect": true
+        },
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        },
+        {
+          "text": "house",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'chair' in Russian?",
+      "options": [
+        {
+          "text": "кровать",
+          "isCorrect": false
+        },
+        {
+          "text": "стул",
+          "isCorrect": true
+        },
+        {
+          "text": "кухня",
+          "isCorrect": false
+        },
+        {
+          "text": "окно",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

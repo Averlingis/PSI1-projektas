@@ -1,0 +1,70 @@
+{
+  "title": "Italian Greetings",
+  "category": "Culture",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'Buongiorno' mean?",
+      "options": [
+        {
+          "text": "Goodbye",
+          "isCorrect": false
+        },
+        {
+          "text": "Good morning",
+          "isCorrect": true
+        },
+        {
+          "text": "Good night",
+          "isCorrect": false
+        },
+        {
+          "text": "Thank you",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'Thank you' in Italian?",
+      "options": [
+        {
+          "text": "Ciao",
+          "isCorrect": false
+        },
+        {
+          "text": "Prego",
+          "isCorrect": false
+        },
+        {
+          "text": "Grazie",
+          "isCorrect": true
+        },
+        {
+          "text": "Scusi",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Arrivederci' mean?",
+      "options": [
+        {
+          "text": "Goodbye",
+          "isCorrect": true
+        },
+        {
+          "text": "Sorry",
+          "isCorrect": false
+        },
+        {
+          "text": "Welcome",
+          "isCorrect": false
+        },
+        {
+          "text": "Please",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

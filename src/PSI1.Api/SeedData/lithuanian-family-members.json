@@ -1,0 +1,175 @@
+{
+  "title": "Lithuanian Family Members",
+  "category": "Family",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'mama' mean in English?",
+      "options": [
+        {
+          "text": "son",
+          "isCorrect": false
+        },
+        {
+          "text": "uncle",
+          "isCorrect": false
+        },
+        {
+          "text": "wife",
+          "isCorrect": false
+        },
+        {
+          "text": "mum",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'dad' in Lithuanian?",
+      "options": [
+        {
+          "text": "tėtis",
+          "isCorrect": true
+        },
+        {
+          "text": "močiutė",
+          "isCorrect": false
+        },
+        {
+          "text": "sesuo",
+          "isCorrect": false
+        },
+        {
+          "text": "dėdė",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'brolis' mean in English?",
+      "options": [
+        {
+          "text": "son",
+          "isCorrect": false
+        },
+        {
+          "text": "brother",
+          "isCorrect": true
+        },
+        {
+          "text": "sister",
+          "isCorrect": false
+        },
+        {
+          "text": "daughter",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'sister' in Lithuanian?",
+      "options": [
+        {
+          "text": "teta",
+          "isCorrect": false
+        },
+        {
+          "text": "sesuo",
+          "isCorrect": true
+        },
+        {
+          "text": "dėdė",
+          "isCorrect": false
+        },
+        {
+          "text": "tėtis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'močiutė' mean in English?",
+      "options": [
+        {
+          "text": "wife",
+          "isCorrect": false
+        },
+        {
+          "text": "sister",
+          "isCorrect": false
+        },
+        {
+          "text": "grandmother",
+          "isCorrect": true
+        },
+        {
+          "text": "dad",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'grandfather' in Lithuanian?",
+      "options": [
+        {
+          "text": "teta",
+          "isCorrect": false
+        },
+        {
+          "text": "sūnus",
+          "isCorrect": false
+        },
+        {
+          "text": "močiutė",
+          "isCorrect": false
+        },
+        {
+          "text": "senelis",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'dėdė' mean in English?",
+      "options": [
+        {
+          "text": "wife",
+          "isCorrect": false
+        },
+        {
+          "text": "brother",
+          "isCorrect": false
+        },
+        {
+          "text": "uncle",
+          "isCorrect": true
+        },
+        {
+          "text": "grandfather",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'aunt' in Lithuanian?",
+      "options": [
+        {
+          "text": "vyras",
+          "isCorrect": false
+        },
+        {
+          "text": "teta",
+          "isCorrect": true
+        },
+        {
+          "text": "sesuo",
+          "isCorrect": false
+        },
+        {
+          "text": "sūnus",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

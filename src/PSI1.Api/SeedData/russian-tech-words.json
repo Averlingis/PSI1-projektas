@@ -1,0 +1,133 @@
+{
+  "title": "Russian Tech Words",
+  "category": "Technology",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'телефон' mean in English?",
+      "options": [
+        {
+          "text": "phone",
+          "isCorrect": true
+        },
+        {
+          "text": "screen",
+          "isCorrect": false
+        },
+        {
+          "text": "laptop",
+          "isCorrect": false
+        },
+        {
+          "text": "keyboard",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'screen' in Russian?",
+      "options": [
+        {
+          "text": "ноутбук",
+          "isCorrect": false
+        },
+        {
+          "text": "экран",
+          "isCorrect": true
+        },
+        {
+          "text": "пароль",
+          "isCorrect": false
+        },
+        {
+          "text": "зарядное устройство",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'клавиатура' mean in English?",
+      "options": [
+        {
+          "text": "mouse",
+          "isCorrect": false
+        },
+        {
+          "text": "to download",
+          "isCorrect": false
+        },
+        {
+          "text": "charger",
+          "isCorrect": false
+        },
+        {
+          "text": "keyboard",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'password' in Russian?",
+      "options": [
+        {
+          "text": "зарядное устройство",
+          "isCorrect": false
+        },
+        {
+          "text": "ноутбук",
+          "isCorrect": false
+        },
+        {
+          "text": "пароль",
+          "isCorrect": true
+        },
+        {
+          "text": "экран",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'скачать' mean in English?",
+      "options": [
+        {
+          "text": "to download",
+          "isCorrect": true
+        },
+        {
+          "text": "screen",
+          "isCorrect": false
+        },
+        {
+          "text": "phone",
+          "isCorrect": false
+        },
+        {
+          "text": "laptop",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'laptop' in Russian?",
+      "options": [
+        {
+          "text": "ноутбук",
+          "isCorrect": true
+        },
+        {
+          "text": "скачать",
+          "isCorrect": false
+        },
+        {
+          "text": "пароль",
+          "isCorrect": false
+        },
+        {
+          "text": "экран",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

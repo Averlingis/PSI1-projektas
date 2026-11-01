@@ -1,0 +1,176 @@
+{
+  "title": "Lithuanian Animals and Nature",
+  "description": "Learn the Lithuanian names of common animals and natural places. Lithuania has plenty of forests and lakes.",
+  "category": "Nature",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'šuo' mean in English?",
+      "options": [
+        {
+          "text": "lake",
+          "isCorrect": false
+        },
+        {
+          "text": "river",
+          "isCorrect": false
+        },
+        {
+          "text": "flower",
+          "isCorrect": false
+        },
+        {
+          "text": "dog",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'cat' in Lithuanian?",
+      "options": [
+        {
+          "text": "miškas",
+          "isCorrect": false
+        },
+        {
+          "text": "arklys",
+          "isCorrect": false
+        },
+        {
+          "text": "katė",
+          "isCorrect": true
+        },
+        {
+          "text": "medis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'paukštis' mean in English?",
+      "options": [
+        {
+          "text": "tree",
+          "isCorrect": false
+        },
+        {
+          "text": "wolf",
+          "isCorrect": false
+        },
+        {
+          "text": "bird",
+          "isCorrect": true
+        },
+        {
+          "text": "lake",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'horse' in Lithuanian?",
+      "options": [
+        {
+          "text": "vilkas",
+          "isCorrect": false
+        },
+        {
+          "text": "miškas",
+          "isCorrect": false
+        },
+        {
+          "text": "arklys",
+          "isCorrect": true
+        },
+        {
+          "text": "lokys",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'lokys' mean in English?",
+      "options": [
+        {
+          "text": "bird",
+          "isCorrect": false
+        },
+        {
+          "text": "mountain",
+          "isCorrect": false
+        },
+        {
+          "text": "bear",
+          "isCorrect": true
+        },
+        {
+          "text": "forest",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'tree' in Lithuanian?",
+      "options": [
+        {
+          "text": "arklys",
+          "isCorrect": false
+        },
+        {
+          "text": "katė",
+          "isCorrect": false
+        },
+        {
+          "text": "paukštis",
+          "isCorrect": false
+        },
+        {
+          "text": "medis",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'upė' mean in English?",
+      "options": [
+        {
+          "text": "forest",
+          "isCorrect": false
+        },
+        {
+          "text": "river",
+          "isCorrect": true
+        },
+        {
+          "text": "dog",
+          "isCorrect": false
+        },
+        {
+          "text": "tree",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'flower' in Lithuanian?",
+      "options": [
+        {
+          "text": "paukštis",
+          "isCorrect": false
+        },
+        {
+          "text": "ežeras",
+          "isCorrect": false
+        },
+        {
+          "text": "kalnas",
+          "isCorrect": false
+        },
+        {
+          "text": "gėlė",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

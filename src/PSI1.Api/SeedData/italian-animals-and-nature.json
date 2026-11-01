@@ -1,0 +1,155 @@
+{
+  "title": "Italian Animals and Nature",
+  "description": "Learn the Italian names of common animals and natural places.",
+  "category": "Nature",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'cane' mean in English?",
+      "options": [
+        {
+          "text": "cat",
+          "isCorrect": false
+        },
+        {
+          "text": "dog",
+          "isCorrect": true
+        },
+        {
+          "text": "mountain",
+          "isCorrect": false
+        },
+        {
+          "text": "flower",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'cat' in Italian?",
+      "options": [
+        {
+          "text": "cane",
+          "isCorrect": false
+        },
+        {
+          "text": "gatto",
+          "isCorrect": true
+        },
+        {
+          "text": "pesce",
+          "isCorrect": false
+        },
+        {
+          "text": "uccello",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'uccello' mean in English?",
+      "options": [
+        {
+          "text": "sea",
+          "isCorrect": false
+        },
+        {
+          "text": "tree",
+          "isCorrect": false
+        },
+        {
+          "text": "cat",
+          "isCorrect": false
+        },
+        {
+          "text": "bird",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'fish' in Italian?",
+      "options": [
+        {
+          "text": "uccello",
+          "isCorrect": false
+        },
+        {
+          "text": "cavallo",
+          "isCorrect": false
+        },
+        {
+          "text": "pesce",
+          "isCorrect": true
+        },
+        {
+          "text": "albero",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'cavallo' mean in English?",
+      "options": [
+        {
+          "text": "fish",
+          "isCorrect": false
+        },
+        {
+          "text": "horse",
+          "isCorrect": true
+        },
+        {
+          "text": "lake",
+          "isCorrect": false
+        },
+        {
+          "text": "mountain",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'tree' in Italian?",
+      "options": [
+        {
+          "text": "mare",
+          "isCorrect": false
+        },
+        {
+          "text": "gatto",
+          "isCorrect": false
+        },
+        {
+          "text": "albero",
+          "isCorrect": true
+        },
+        {
+          "text": "cane",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'fiore' mean in English?",
+      "options": [
+        {
+          "text": "fish",
+          "isCorrect": false
+        },
+        {
+          "text": "mountain",
+          "isCorrect": false
+        },
+        {
+          "text": "flower",
+          "isCorrect": true
+        },
+        {
+          "text": "tree",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

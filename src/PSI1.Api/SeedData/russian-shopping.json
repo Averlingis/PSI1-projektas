@@ -1,0 +1,134 @@
+{
+  "title": "Russian Shopping",
+  "description": "Words for shops, markets and paying at the checkout.",
+  "category": "Shopping",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'магазин' mean in English?",
+      "options": [
+        {
+          "text": "customer",
+          "isCorrect": false
+        },
+        {
+          "text": "receipt",
+          "isCorrect": false
+        },
+        {
+          "text": "shop",
+          "isCorrect": true
+        },
+        {
+          "text": "checkout",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'market' in Russian?",
+      "options": [
+        {
+          "text": "скидка",
+          "isCorrect": false
+        },
+        {
+          "text": "сумка",
+          "isCorrect": false
+        },
+        {
+          "text": "рынок",
+          "isCorrect": true
+        },
+        {
+          "text": "покупатель",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'скидка' mean in English?",
+      "options": [
+        {
+          "text": "receipt",
+          "isCorrect": false
+        },
+        {
+          "text": "checkout",
+          "isCorrect": false
+        },
+        {
+          "text": "discount",
+          "isCorrect": true
+        },
+        {
+          "text": "shop",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'receipt' in Russian?",
+      "options": [
+        {
+          "text": "чек",
+          "isCorrect": true
+        },
+        {
+          "text": "цена",
+          "isCorrect": false
+        },
+        {
+          "text": "размер",
+          "isCorrect": false
+        },
+        {
+          "text": "магазин",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'цена' mean in English?",
+      "options": [
+        {
+          "text": "bag",
+          "isCorrect": false
+        },
+        {
+          "text": "receipt",
+          "isCorrect": false
+        },
+        {
+          "text": "price",
+          "isCorrect": true
+        },
+        {
+          "text": "shop",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'checkout' in Russian?",
+      "options": [
+        {
+          "text": "касса",
+          "isCorrect": true
+        },
+        {
+          "text": "магазин",
+          "isCorrect": false
+        },
+        {
+          "text": "рынок",
+          "isCorrect": false
+        },
+        {
+          "text": "скидка",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

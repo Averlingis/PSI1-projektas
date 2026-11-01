@@ -1,0 +1,218 @@
+{
+  "title": "Italian Food Vocabulary",
+  "description": "Everyday Italian food and drink words, from bread and cheese to rice and tomatoes.",
+  "category": "Food",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'pane' mean in English?",
+      "options": [
+        {
+          "text": "apple",
+          "isCorrect": false
+        },
+        {
+          "text": "milk",
+          "isCorrect": false
+        },
+        {
+          "text": "bread",
+          "isCorrect": true
+        },
+        {
+          "text": "butter",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'cheese' in Italian?",
+      "options": [
+        {
+          "text": "riso",
+          "isCorrect": false
+        },
+        {
+          "text": "latte",
+          "isCorrect": false
+        },
+        {
+          "text": "pane",
+          "isCorrect": false
+        },
+        {
+          "text": "formaggio",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'mela' mean in English?",
+      "options": [
+        {
+          "text": "cheese",
+          "isCorrect": false
+        },
+        {
+          "text": "bread",
+          "isCorrect": false
+        },
+        {
+          "text": "apple",
+          "isCorrect": true
+        },
+        {
+          "text": "meat",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'water' in Italian?",
+      "options": [
+        {
+          "text": "sale",
+          "isCorrect": false
+        },
+        {
+          "text": "pane",
+          "isCorrect": false
+        },
+        {
+          "text": "burro",
+          "isCorrect": false
+        },
+        {
+          "text": "acqua",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'burro' mean in English?",
+      "options": [
+        {
+          "text": "bread",
+          "isCorrect": false
+        },
+        {
+          "text": "sugar",
+          "isCorrect": false
+        },
+        {
+          "text": "butter",
+          "isCorrect": true
+        },
+        {
+          "text": "chicken",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'egg' in Italian?",
+      "options": [
+        {
+          "text": "acqua",
+          "isCorrect": false
+        },
+        {
+          "text": "zucchero",
+          "isCorrect": false
+        },
+        {
+          "text": "uovo",
+          "isCorrect": true
+        },
+        {
+          "text": "formaggio",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'latte' mean in English?",
+      "options": [
+        {
+          "text": "meat",
+          "isCorrect": false
+        },
+        {
+          "text": "water",
+          "isCorrect": false
+        },
+        {
+          "text": "milk",
+          "isCorrect": true
+        },
+        {
+          "text": "bread",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'meat' in Italian?",
+      "options": [
+        {
+          "text": "pollo",
+          "isCorrect": false
+        },
+        {
+          "text": "riso",
+          "isCorrect": false
+        },
+        {
+          "text": "acqua",
+          "isCorrect": false
+        },
+        {
+          "text": "carne",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'riso' mean in English?",
+      "options": [
+        {
+          "text": "water",
+          "isCorrect": false
+        },
+        {
+          "text": "rice",
+          "isCorrect": true
+        },
+        {
+          "text": "egg",
+          "isCorrect": false
+        },
+        {
+          "text": "salt",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'sugar' in Italian?",
+      "options": [
+        {
+          "text": "riso",
+          "isCorrect": false
+        },
+        {
+          "text": "sale",
+          "isCorrect": false
+        },
+        {
+          "text": "zucchero",
+          "isCorrect": true
+        },
+        {
+          "text": "carne",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

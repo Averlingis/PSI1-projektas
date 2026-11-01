@@ -1,0 +1,176 @@
+{
+  "title": "Russian Animals and Nature",
+  "description": "Learn the Russian names of common animals and natural places.",
+  "category": "Nature",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'собака' mean in English?",
+      "options": [
+        {
+          "text": "flower",
+          "isCorrect": false
+        },
+        {
+          "text": "bird",
+          "isCorrect": false
+        },
+        {
+          "text": "dog",
+          "isCorrect": true
+        },
+        {
+          "text": "river",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'cat' in Russian?",
+      "options": [
+        {
+          "text": "собака",
+          "isCorrect": false
+        },
+        {
+          "text": "птица",
+          "isCorrect": false
+        },
+        {
+          "text": "волк",
+          "isCorrect": false
+        },
+        {
+          "text": "кошка",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'птица' mean in English?",
+      "options": [
+        {
+          "text": "wolf",
+          "isCorrect": false
+        },
+        {
+          "text": "tree",
+          "isCorrect": false
+        },
+        {
+          "text": "bird",
+          "isCorrect": true
+        },
+        {
+          "text": "bear",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'horse' in Russian?",
+      "options": [
+        {
+          "text": "медведь",
+          "isCorrect": false
+        },
+        {
+          "text": "цветок",
+          "isCorrect": false
+        },
+        {
+          "text": "лошадь",
+          "isCorrect": true
+        },
+        {
+          "text": "кошка",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'медведь' mean in English?",
+      "options": [
+        {
+          "text": "bear",
+          "isCorrect": true
+        },
+        {
+          "text": "cat",
+          "isCorrect": false
+        },
+        {
+          "text": "horse",
+          "isCorrect": false
+        },
+        {
+          "text": "river",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'tree' in Russian?",
+      "options": [
+        {
+          "text": "дерево",
+          "isCorrect": true
+        },
+        {
+          "text": "медведь",
+          "isCorrect": false
+        },
+        {
+          "text": "лошадь",
+          "isCorrect": false
+        },
+        {
+          "text": "птица",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'река' mean in English?",
+      "options": [
+        {
+          "text": "bear",
+          "isCorrect": false
+        },
+        {
+          "text": "horse",
+          "isCorrect": false
+        },
+        {
+          "text": "bird",
+          "isCorrect": false
+        },
+        {
+          "text": "river",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'flower' in Russian?",
+      "options": [
+        {
+          "text": "река",
+          "isCorrect": false
+        },
+        {
+          "text": "цветок",
+          "isCorrect": true
+        },
+        {
+          "text": "дерево",
+          "isCorrect": false
+        },
+        {
+          "text": "гора",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "title": "Italian at Work",
+  "description": "Words for the office: colleagues, meetings and salaries.",
+  "category": "Work",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'ufficio' mean in English?",
+      "options": [
+        {
+          "text": "colleague",
+          "isCorrect": false
+        },
+        {
+          "text": "salary",
+          "isCorrect": false
+        },
+        {
+          "text": "meeting",
+          "isCorrect": false
+        },
+        {
+          "text": "office",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'meeting' in Italian?",
+      "options": [
+        {
+          "text": "ufficio",
+          "isCorrect": false
+        },
+        {
+          "text": "scrivania",
+          "isCorrect": false
+        },
+        {
+          "text": "riunione",
+          "isCorrect": true
+        },
+        {
+          "text": "azienda",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'collega' mean in English?",
+      "options": [
+        {
+          "text": "meeting",
+          "isCorrect": false
+        },
+        {
+          "text": "colleague",
+          "isCorrect": true
+        },
+        {
+          "text": "holiday",
+          "isCorrect": false
+        },
+        {
+          "text": "boss",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'salary' in Italian?",
+      "options": [
+        {
+          "text": "ferie",
+          "isCorrect": false
+        },
+        {
+          "text": "scrivania",
+          "isCorrect": false
+        },
+        {
+          "text": "contratto",
+          "isCorrect": false
+        },
+        {
+          "text": "stipendio",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'capo' mean in English?",
+      "options": [
+        {
+          "text": "desk",
+          "isCorrect": false
+        },
+        {
+          "text": "boss",
+          "isCorrect": true
+        },
+        {
+          "text": "meeting",
+          "isCorrect": false
+        },
+        {
+          "text": "work",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'work' in Italian?",
+      "options": [
+        {
+          "text": "lavoro",
+          "isCorrect": true
+        },
+        {
+          "text": "azienda",
+          "isCorrect": false
+        },
+        {
+          "text": "ufficio",
+          "isCorrect": false
+        },
+        {
+          "text": "contratto",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'scrivania' mean in English?",
+      "options": [
+        {
+          "text": "desk",
+          "isCorrect": true
+        },
+        {
+          "text": "company",
+          "isCorrect": false
+        },
+        {
+          "text": "salary",
+          "isCorrect": false
+        },
+        {
+          "text": "colleague",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

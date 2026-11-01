@@ -1,0 +1,197 @@
+{
+  "title": "Lithuanian Culture and History",
+  "description": "Landmarks, history and traditions of Lithuania.",
+  "category": "Culture",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What is the capital of Lithuania?",
+      "options": [
+        {
+          "text": "Šiauliai",
+          "isCorrect": false
+        },
+        {
+          "text": "Klaipėda",
+          "isCorrect": false
+        },
+        {
+          "text": "Vilnius",
+          "isCorrect": true
+        },
+        {
+          "text": "Kaunas",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which currency has Lithuania used since 2015?",
+      "options": [
+        {
+          "text": "Zloty",
+          "isCorrect": false
+        },
+        {
+          "text": "Lat",
+          "isCorrect": false
+        },
+        {
+          "text": "Litas",
+          "isCorrect": false
+        },
+        {
+          "text": "Euro",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Who was crowned the first and only King of Lithuania in 1253?",
+      "options": [
+        {
+          "text": "Gediminas",
+          "isCorrect": false
+        },
+        {
+          "text": "Vytautas",
+          "isCorrect": false
+        },
+        {
+          "text": "Mindaugas",
+          "isCorrect": true
+        },
+        {
+          "text": "Jogaila",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which sport is often called the 'second religion' of Lithuania?",
+      "options": [
+        {
+          "text": "Volleyball",
+          "isCorrect": false
+        },
+        {
+          "text": "Ice hockey",
+          "isCorrect": false
+        },
+        {
+          "text": "Football",
+          "isCorrect": false
+        },
+        {
+          "text": "Basketball",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which date marks the Day of Restoration of Independence (1990)?",
+      "options": [
+        {
+          "text": "11 March",
+          "isCorrect": true
+        },
+        {
+          "text": "6 July",
+          "isCorrect": false
+        },
+        {
+          "text": "16 February",
+          "isCorrect": false
+        },
+        {
+          "text": "1 May",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which medieval castle on an island in a lake near Vilnius is a famous landmark?",
+      "options": [
+        {
+          "text": "Medininkai Castle",
+          "isCorrect": false
+        },
+        {
+          "text": "Kaunas Castle",
+          "isCorrect": false
+        },
+        {
+          "text": "Panemunė Castle",
+          "isCorrect": false
+        },
+        {
+          "text": "Trakai Island Castle",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What is the Hill of Crosses near Šiauliai?",
+      "options": [
+        {
+          "text": "A national park",
+          "isCorrect": false
+        },
+        {
+          "text": "A medieval fortress",
+          "isCorrect": false
+        },
+        {
+          "text": "A ski resort",
+          "isCorrect": false
+        },
+        {
+          "text": "A pilgrimage site covered with thousands of crosses",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which traditional summer festival is celebrated on 24 June?",
+      "options": [
+        {
+          "text": "Joninės (Midsummer)",
+          "isCorrect": true
+        },
+        {
+          "text": "Kaziukas",
+          "isCorrect": false
+        },
+        {
+          "text": "Kūčios",
+          "isCorrect": false
+        },
+        {
+          "text": "Užgavėnės",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "To which language branch does Lithuanian belong?",
+      "options": [
+        {
+          "text": "Baltic",
+          "isCorrect": true
+        },
+        {
+          "text": "Slavic",
+          "isCorrect": false
+        },
+        {
+          "text": "Romance",
+          "isCorrect": false
+        },
+        {
+          "text": "Germanic",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

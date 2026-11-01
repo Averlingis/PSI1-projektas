@@ -1,0 +1,176 @@
+{
+  "title": "Italian Around the House",
+  "description": "Rooms and furniture: name everything in an Italian home.",
+  "category": "Home",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'casa' mean in English?",
+      "options": [
+        {
+          "text": "sofa",
+          "isCorrect": false
+        },
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        },
+        {
+          "text": "table",
+          "isCorrect": false
+        },
+        {
+          "text": "house",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'kitchen' in Italian?",
+      "options": [
+        {
+          "text": "bagno",
+          "isCorrect": false
+        },
+        {
+          "text": "cucina",
+          "isCorrect": true
+        },
+        {
+          "text": "finestra",
+          "isCorrect": false
+        },
+        {
+          "text": "porta",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'camera da letto' mean in English?",
+      "options": [
+        {
+          "text": "house",
+          "isCorrect": false
+        },
+        {
+          "text": "chair",
+          "isCorrect": false
+        },
+        {
+          "text": "bedroom",
+          "isCorrect": true
+        },
+        {
+          "text": "door",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'bathroom' in Italian?",
+      "options": [
+        {
+          "text": "bagno",
+          "isCorrect": true
+        },
+        {
+          "text": "camera da letto",
+          "isCorrect": false
+        },
+        {
+          "text": "sedia",
+          "isCorrect": false
+        },
+        {
+          "text": "divano",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'finestra' mean in English?",
+      "options": [
+        {
+          "text": "window",
+          "isCorrect": true
+        },
+        {
+          "text": "bathroom",
+          "isCorrect": false
+        },
+        {
+          "text": "bedroom",
+          "isCorrect": false
+        },
+        {
+          "text": "bed",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'door' in Italian?",
+      "options": [
+        {
+          "text": "casa",
+          "isCorrect": false
+        },
+        {
+          "text": "cucina",
+          "isCorrect": false
+        },
+        {
+          "text": "porta",
+          "isCorrect": true
+        },
+        {
+          "text": "finestra",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'tavolo' mean in English?",
+      "options": [
+        {
+          "text": "bedroom",
+          "isCorrect": false
+        },
+        {
+          "text": "sofa",
+          "isCorrect": false
+        },
+        {
+          "text": "table",
+          "isCorrect": true
+        },
+        {
+          "text": "window",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'chair' in Italian?",
+      "options": [
+        {
+          "text": "porta",
+          "isCorrect": false
+        },
+        {
+          "text": "sedia",
+          "isCorrect": true
+        },
+        {
+          "text": "divano",
+          "isCorrect": false
+        },
+        {
+          "text": "cucina",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

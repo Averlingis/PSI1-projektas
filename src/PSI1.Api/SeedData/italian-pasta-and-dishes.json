@@ -1,0 +1,260 @@
+{
+  "title": "Italian Pasta and Dishes",
+  "description": "Test what you know about classic Italian dishes, ingredients and cooking terms.",
+  "category": "Food",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What is the main ingredient of risotto?",
+      "options": [
+        {
+          "text": "Pasta",
+          "isCorrect": false
+        },
+        {
+          "text": "Potatoes",
+          "isCorrect": false
+        },
+        {
+          "text": "Rice",
+          "isCorrect": true
+        },
+        {
+          "text": "Barley",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which toppings make a classic Margherita pizza?",
+      "options": [
+        {
+          "text": "Anchovies, capers and onions",
+          "isCorrect": false
+        },
+        {
+          "text": "Tomato, mozzarella and basil",
+          "isCorrect": true
+        },
+        {
+          "text": "Spinach, ricotta and egg",
+          "isCorrect": false
+        },
+        {
+          "text": "Ham, mushrooms and olives",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'al dente' mean when cooking pasta?",
+      "options": [
+        {
+          "text": "Firm to the bite",
+          "isCorrect": true
+        },
+        {
+          "text": "Cooked with cheese",
+          "isCorrect": false
+        },
+        {
+          "text": "Very soft",
+          "isCorrect": false
+        },
+        {
+          "text": "Served cold",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "In which city did pizza originate?",
+      "options": [
+        {
+          "text": "Turin",
+          "isCorrect": false
+        },
+        {
+          "text": "Naples",
+          "isCorrect": true
+        },
+        {
+          "text": "Rome",
+          "isCorrect": false
+        },
+        {
+          "text": "Palermo",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What is tiramisù?",
+      "options": [
+        {
+          "text": "A tomato soup",
+          "isCorrect": false
+        },
+        {
+          "text": "A cheese from Sicily",
+          "isCorrect": false
+        },
+        {
+          "text": "A coffee-flavoured dessert",
+          "isCorrect": true
+        },
+        {
+          "text": "A type of bread",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What is 'gelato'?",
+      "options": [
+        {
+          "text": "Italian ice cream",
+          "isCorrect": true
+        },
+        {
+          "text": "Italian bread",
+          "isCorrect": false
+        },
+        {
+          "text": "A sparkling wine",
+          "isCorrect": false
+        },
+        {
+          "text": "A cold soup",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which herb is the main ingredient of pesto genovese?",
+      "options": [
+        {
+          "text": "Oregano",
+          "isCorrect": false
+        },
+        {
+          "text": "Parsley",
+          "isCorrect": false
+        },
+        {
+          "text": "Basil",
+          "isCorrect": true
+        },
+        {
+          "text": "Rosemary",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What do you usually get if you order 'un caffè' in an Italian bar?",
+      "options": [
+        {
+          "text": "An iced coffee",
+          "isCorrect": false
+        },
+        {
+          "text": "An espresso",
+          "isCorrect": true
+        },
+        {
+          "text": "A latte",
+          "isCorrect": false
+        },
+        {
+          "text": "A cappuccino",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which dish is made of layers of pasta sheets, ragù and béchamel?",
+      "options": [
+        {
+          "text": "Lasagne",
+          "isCorrect": true
+        },
+        {
+          "text": "Gnocchi",
+          "isCorrect": false
+        },
+        {
+          "text": "Minestrone",
+          "isCorrect": false
+        },
+        {
+          "text": "Ravioli",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What is bruschetta?",
+      "options": [
+        {
+          "text": "Fried dough balls",
+          "isCorrect": false
+        },
+        {
+          "text": "Toasted bread with toppings",
+          "isCorrect": true
+        },
+        {
+          "text": "A meat sauce",
+          "isCorrect": false
+        },
+        {
+          "text": "Stuffed pasta",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which cheese is a traditional ingredient of tiramisù?",
+      "options": [
+        {
+          "text": "Provolone",
+          "isCorrect": false
+        },
+        {
+          "text": "Mascarpone",
+          "isCorrect": true
+        },
+        {
+          "text": "Gorgonzola",
+          "isCorrect": false
+        },
+        {
+          "text": "Pecorino",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What are gnocchi usually made from?",
+      "options": [
+        {
+          "text": "Rice flour",
+          "isCorrect": false
+        },
+        {
+          "text": "Potato dough",
+          "isCorrect": true
+        },
+        {
+          "text": "Bread crumbs",
+          "isCorrect": false
+        },
+        {
+          "text": "Chickpeas",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

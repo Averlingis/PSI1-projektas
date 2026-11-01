@@ -1,0 +1,133 @@
+{
+  "title": "Lithuanian Tech Words",
+  "category": "Technology",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'telefonas' mean in English?",
+      "options": [
+        {
+          "text": "printer",
+          "isCorrect": false
+        },
+        {
+          "text": "phone",
+          "isCorrect": true
+        },
+        {
+          "text": "keyboard",
+          "isCorrect": false
+        },
+        {
+          "text": "mouse",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'screen' in Lithuanian?",
+      "options": [
+        {
+          "text": "ekranas",
+          "isCorrect": true
+        },
+        {
+          "text": "telefonas",
+          "isCorrect": false
+        },
+        {
+          "text": "klaviatūra",
+          "isCorrect": false
+        },
+        {
+          "text": "įkroviklis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'klaviatūra' mean in English?",
+      "options": [
+        {
+          "text": "to download",
+          "isCorrect": false
+        },
+        {
+          "text": "screen",
+          "isCorrect": false
+        },
+        {
+          "text": "keyboard",
+          "isCorrect": true
+        },
+        {
+          "text": "phone",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'password' in Lithuanian?",
+      "options": [
+        {
+          "text": "pelė",
+          "isCorrect": false
+        },
+        {
+          "text": "spausdintuvas",
+          "isCorrect": false
+        },
+        {
+          "text": "nešiojamas kompiuteris",
+          "isCorrect": false
+        },
+        {
+          "text": "slaptažodis",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'atsisiųsti' mean in English?",
+      "options": [
+        {
+          "text": "laptop",
+          "isCorrect": false
+        },
+        {
+          "text": "mouse",
+          "isCorrect": false
+        },
+        {
+          "text": "charger",
+          "isCorrect": false
+        },
+        {
+          "text": "to download",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'laptop' in Lithuanian?",
+      "options": [
+        {
+          "text": "telefonas",
+          "isCorrect": false
+        },
+        {
+          "text": "įkroviklis",
+          "isCorrect": false
+        },
+        {
+          "text": "slaptažodis",
+          "isCorrect": false
+        },
+        {
+          "text": "nešiojamas kompiuteris",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

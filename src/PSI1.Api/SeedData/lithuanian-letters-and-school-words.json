@@ -1,0 +1,218 @@
+{
+  "title": "Lithuanian Letters and School Words",
+  "description": "The Lithuanian alphabet with its special letters, plus the first words you need at school.",
+  "category": "Education",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "How many letters does the Lithuanian alphabet have?",
+      "options": [
+        {
+          "text": "26",
+          "isCorrect": false
+        },
+        {
+          "text": "30",
+          "isCorrect": false
+        },
+        {
+          "text": "32",
+          "isCorrect": true
+        },
+        {
+          "text": "33",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which of these letters is NOT part of the Lithuanian alphabet?",
+      "options": [
+        {
+          "text": "Š",
+          "isCorrect": false
+        },
+        {
+          "text": "W",
+          "isCorrect": true
+        },
+        {
+          "text": "Ž",
+          "isCorrect": false
+        },
+        {
+          "text": "Č",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter makes the 'sh' sound as in 'ship'?",
+      "options": [
+        {
+          "text": "Č",
+          "isCorrect": false
+        },
+        {
+          "text": "Š",
+          "isCorrect": true
+        },
+        {
+          "text": "S",
+          "isCorrect": false
+        },
+        {
+          "text": "Ž",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter makes the 'ch' sound as in 'chair'?",
+      "options": [
+        {
+          "text": "Č",
+          "isCorrect": true
+        },
+        {
+          "text": "C",
+          "isCorrect": false
+        },
+        {
+          "text": "Ž",
+          "isCorrect": false
+        },
+        {
+          "text": "Š",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter makes the 'zh' sound as in 'measure'?",
+      "options": [
+        {
+          "text": "Z",
+          "isCorrect": false
+        },
+        {
+          "text": "Ž",
+          "isCorrect": true
+        },
+        {
+          "text": "Č",
+          "isCorrect": false
+        },
+        {
+          "text": "Š",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'mokykla' mean in English?",
+      "options": [
+        {
+          "text": "School",
+          "isCorrect": true
+        },
+        {
+          "text": "Hospital",
+          "isCorrect": false
+        },
+        {
+          "text": "Shop",
+          "isCorrect": false
+        },
+        {
+          "text": "Library",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'mokytojas' mean in English?",
+      "options": [
+        {
+          "text": "Student",
+          "isCorrect": false
+        },
+        {
+          "text": "Driver",
+          "isCorrect": false
+        },
+        {
+          "text": "Teacher",
+          "isCorrect": true
+        },
+        {
+          "text": "Director",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'book' in Lithuanian?",
+      "options": [
+        {
+          "text": "rašiklis",
+          "isCorrect": false
+        },
+        {
+          "text": "pamoka",
+          "isCorrect": false
+        },
+        {
+          "text": "sąsiuvinis",
+          "isCorrect": false
+        },
+        {
+          "text": "knyga",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'pamoka' mean in English?",
+      "options": [
+        {
+          "text": "Lesson",
+          "isCorrect": true
+        },
+        {
+          "text": "Break",
+          "isCorrect": false
+        },
+        {
+          "text": "Exam",
+          "isCorrect": false
+        },
+        {
+          "text": "Homework",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'notebook' in Lithuanian?",
+      "options": [
+        {
+          "text": "knyga",
+          "isCorrect": false
+        },
+        {
+          "text": "sąsiuvinis",
+          "isCorrect": true
+        },
+        {
+          "text": "kėdė",
+          "isCorrect": false
+        },
+        {
+          "text": "rašiklis",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

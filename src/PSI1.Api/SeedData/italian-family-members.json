@@ -1,0 +1,133 @@
+{
+  "title": "Italian Family Members",
+  "category": "Family",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'madre' mean in English?",
+      "options": [
+        {
+          "text": "mother",
+          "isCorrect": true
+        },
+        {
+          "text": "daughter",
+          "isCorrect": false
+        },
+        {
+          "text": "uncle",
+          "isCorrect": false
+        },
+        {
+          "text": "grandfather",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'father' in Italian?",
+      "options": [
+        {
+          "text": "figlio",
+          "isCorrect": false
+        },
+        {
+          "text": "cugino",
+          "isCorrect": false
+        },
+        {
+          "text": "nonno",
+          "isCorrect": false
+        },
+        {
+          "text": "padre",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'fratello' mean in English?",
+      "options": [
+        {
+          "text": "daughter",
+          "isCorrect": false
+        },
+        {
+          "text": "mother",
+          "isCorrect": false
+        },
+        {
+          "text": "brother",
+          "isCorrect": true
+        },
+        {
+          "text": "son",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'sister' in Italian?",
+      "options": [
+        {
+          "text": "zia",
+          "isCorrect": false
+        },
+        {
+          "text": "sorella",
+          "isCorrect": true
+        },
+        {
+          "text": "marito",
+          "isCorrect": false
+        },
+        {
+          "text": "figlia",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'nonna' mean in English?",
+      "options": [
+        {
+          "text": "grandmother",
+          "isCorrect": true
+        },
+        {
+          "text": "wife",
+          "isCorrect": false
+        },
+        {
+          "text": "cousin",
+          "isCorrect": false
+        },
+        {
+          "text": "aunt",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'uncle' in Italian?",
+      "options": [
+        {
+          "text": "zio",
+          "isCorrect": true
+        },
+        {
+          "text": "fratello",
+          "isCorrect": false
+        },
+        {
+          "text": "figlio",
+          "isCorrect": false
+        },
+        {
+          "text": "moglie",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "title": "Italian Shopping",
+  "category": "Shopping",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'negozio' mean in English?",
+      "options": [
+        {
+          "text": "trolley",
+          "isCorrect": false
+        },
+        {
+          "text": "price",
+          "isCorrect": false
+        },
+        {
+          "text": "shop",
+          "isCorrect": true
+        },
+        {
+          "text": "checkout",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'market' in Italian?",
+      "options": [
+        {
+          "text": "prezzo",
+          "isCorrect": false
+        },
+        {
+          "text": "taglia",
+          "isCorrect": false
+        },
+        {
+          "text": "cassa",
+          "isCorrect": false
+        },
+        {
+          "text": "mercato",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'taglia' mean in English?",
+      "options": [
+        {
+          "text": "market",
+          "isCorrect": false
+        },
+        {
+          "text": "bag",
+          "isCorrect": false
+        },
+        {
+          "text": "size",
+          "isCorrect": true
+        },
+        {
+          "text": "checkout",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'discount' in Italian?",
+      "options": [
+        {
+          "text": "taglia",
+          "isCorrect": false
+        },
+        {
+          "text": "carrello",
+          "isCorrect": false
+        },
+        {
+          "text": "scontrino",
+          "isCorrect": false
+        },
+        {
+          "text": "sconto",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'scontrino' mean in English?",
+      "options": [
+        {
+          "text": "size",
+          "isCorrect": false
+        },
+        {
+          "text": "price",
+          "isCorrect": false
+        },
+        {
+          "text": "receipt",
+          "isCorrect": true
+        },
+        {
+          "text": "bag",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'price' in Italian?",
+      "options": [
+        {
+          "text": "cassa",
+          "isCorrect": false
+        },
+        {
+          "text": "borsa",
+          "isCorrect": false
+        },
+        {
+          "text": "prezzo",
+          "isCorrect": true
+        },
+        {
+          "text": "negozio",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

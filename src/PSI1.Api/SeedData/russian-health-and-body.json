@@ -1,0 +1,176 @@
+{
+  "title": "Russian Health and Body",
+  "description": "Parts of the body and the words you need at the doctor or the pharmacy.",
+  "category": "Health",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'голова' mean in English?",
+      "options": [
+        {
+          "text": "doctor",
+          "isCorrect": false
+        },
+        {
+          "text": "head",
+          "isCorrect": true
+        },
+        {
+          "text": "eye",
+          "isCorrect": false
+        },
+        {
+          "text": "heart",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'hand' in Russian?",
+      "options": [
+        {
+          "text": "нога",
+          "isCorrect": false
+        },
+        {
+          "text": "аптека",
+          "isCorrect": false
+        },
+        {
+          "text": "рука",
+          "isCorrect": true
+        },
+        {
+          "text": "спина",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'глаз' mean in English?",
+      "options": [
+        {
+          "text": "doctor",
+          "isCorrect": false
+        },
+        {
+          "text": "pharmacy",
+          "isCorrect": false
+        },
+        {
+          "text": "eye",
+          "isCorrect": true
+        },
+        {
+          "text": "nose",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'doctor' in Russian?",
+      "options": [
+        {
+          "text": "врач",
+          "isCorrect": true
+        },
+        {
+          "text": "голова",
+          "isCorrect": false
+        },
+        {
+          "text": "глаз",
+          "isCorrect": false
+        },
+        {
+          "text": "нос",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'аптека' mean in English?",
+      "options": [
+        {
+          "text": "mouth",
+          "isCorrect": false
+        },
+        {
+          "text": "hand",
+          "isCorrect": false
+        },
+        {
+          "text": "back",
+          "isCorrect": false
+        },
+        {
+          "text": "pharmacy",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'back' in Russian?",
+      "options": [
+        {
+          "text": "нос",
+          "isCorrect": false
+        },
+        {
+          "text": "голова",
+          "isCorrect": false
+        },
+        {
+          "text": "спина",
+          "isCorrect": true
+        },
+        {
+          "text": "больница",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'сердце' mean in English?",
+      "options": [
+        {
+          "text": "mouth",
+          "isCorrect": false
+        },
+        {
+          "text": "head",
+          "isCorrect": false
+        },
+        {
+          "text": "leg",
+          "isCorrect": false
+        },
+        {
+          "text": "heart",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'hospital' in Russian?",
+      "options": [
+        {
+          "text": "сердце",
+          "isCorrect": false
+        },
+        {
+          "text": "глаз",
+          "isCorrect": false
+        },
+        {
+          "text": "рука",
+          "isCorrect": false
+        },
+        {
+          "text": "больница",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

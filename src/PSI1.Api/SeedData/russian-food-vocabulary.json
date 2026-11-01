@@ -1,0 +1,218 @@
+{
+  "title": "Russian Food Vocabulary",
+  "description": "Everyday Russian food and drink words, including a few traditional dishes.",
+  "category": "Food",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'хлеб' mean in English?",
+      "options": [
+        {
+          "text": "bread",
+          "isCorrect": true
+        },
+        {
+          "text": "tea",
+          "isCorrect": false
+        },
+        {
+          "text": "potatoes",
+          "isCorrect": false
+        },
+        {
+          "text": "meat",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'milk' in Russian?",
+      "options": [
+        {
+          "text": "молоко",
+          "isCorrect": true
+        },
+        {
+          "text": "чай",
+          "isCorrect": false
+        },
+        {
+          "text": "борщ",
+          "isCorrect": false
+        },
+        {
+          "text": "яблоко",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'сыр' mean in English?",
+      "options": [
+        {
+          "text": "water",
+          "isCorrect": false
+        },
+        {
+          "text": "pancakes",
+          "isCorrect": false
+        },
+        {
+          "text": "tea",
+          "isCorrect": false
+        },
+        {
+          "text": "cheese",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'apple' in Russian?",
+      "options": [
+        {
+          "text": "картошка",
+          "isCorrect": false
+        },
+        {
+          "text": "рыба",
+          "isCorrect": false
+        },
+        {
+          "text": "яблоко",
+          "isCorrect": true
+        },
+        {
+          "text": "сыр",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'вода' mean in English?",
+      "options": [
+        {
+          "text": "milk",
+          "isCorrect": false
+        },
+        {
+          "text": "water",
+          "isCorrect": true
+        },
+        {
+          "text": "dumplings",
+          "isCorrect": false
+        },
+        {
+          "text": "meat",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'meat' in Russian?",
+      "options": [
+        {
+          "text": "мясо",
+          "isCorrect": true
+        },
+        {
+          "text": "борщ",
+          "isCorrect": false
+        },
+        {
+          "text": "чай",
+          "isCorrect": false
+        },
+        {
+          "text": "хлеб",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'рыба' mean in English?",
+      "options": [
+        {
+          "text": "water",
+          "isCorrect": false
+        },
+        {
+          "text": "fish",
+          "isCorrect": true
+        },
+        {
+          "text": "borscht (beetroot soup)",
+          "isCorrect": false
+        },
+        {
+          "text": "potatoes",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'borscht (beetroot soup)' in Russian?",
+      "options": [
+        {
+          "text": "сыр",
+          "isCorrect": false
+        },
+        {
+          "text": "борщ",
+          "isCorrect": true
+        },
+        {
+          "text": "вода",
+          "isCorrect": false
+        },
+        {
+          "text": "рыба",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'чай' mean in English?",
+      "options": [
+        {
+          "text": "milk",
+          "isCorrect": false
+        },
+        {
+          "text": "tea",
+          "isCorrect": true
+        },
+        {
+          "text": "borscht (beetroot soup)",
+          "isCorrect": false
+        },
+        {
+          "text": "bread",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'dumplings' in Russian?",
+      "options": [
+        {
+          "text": "молоко",
+          "isCorrect": false
+        },
+        {
+          "text": "чай",
+          "isCorrect": false
+        },
+        {
+          "text": "яблоко",
+          "isCorrect": false
+        },
+        {
+          "text": "пельмени",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}
