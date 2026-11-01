@@ -28,6 +28,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         _client = factory.CreateClient();
     }
 
+    // ---------- GET api/quizzes{quizId}/questions/{index} ----------
     private async Task<int> CreateTestQuizAsync()
     {
         var questions = new List<Question>
@@ -132,6 +133,8 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
+    // ---------- GET api/quizzes
     private async Task SeedAsync(string title, Category category, Language language)
     {
 
@@ -269,6 +272,8 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     [InlineData(1, true)]
     [InlineData(0, false)]
     [InlineData(2, false)]
+
+    // ---------- POST api/quizzes/{quizId}/questions/{index}/answer ----------
     public async Task AnswerQuestion_SelectedOption_ReturnsCorrectnessAndCorrectText(int selectedOptionIndex, bool expectedIsCorrect)
     {
         var quizId = await CreateTestQuizAsync();
@@ -415,6 +420,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.NotEqual(scores[0].UserId, scores[1].UserId);
     }
 
+    // ---------- GET api/quizzes/{quizId}/score
     [Fact]
     public async Task GetScore_ThreeAnswers_ReturnsCorrectCountAndTotal()
     {
@@ -511,7 +517,101 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(1, score2.TotalAnswered);
     }
 
-    // Import tests
+    // ---------- DELETE /api/quizzes/{quizId}/score ----------
+
+    [Fact]
+    public async Task ResetScore_AnsweredQuestion_CanBeAnsweredAgain()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response1 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        response1.EnsureSuccessStatusCode();
+
+        var response2 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
+
+        var deleteResponse = await client.DeleteAsync($"api/quizzes/{quizId}/score");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        var scoreResponse = await client.GetAsync($"api/quizzes/{quizId}/score");
+        Assert.Equal(HttpStatusCode.NotFound, scoreResponse.StatusCode);
+
+        var response3 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        Assert.Equal(HttpStatusCode.OK, response3.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResetScore_NoScore_ReturnsNoContent()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var deleteResponse = await client.DeleteAsync($"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResetScore_WithoutToken_ReturnsUnauthorized()
+    {
+        var quizId = await CreateTestQuizAsync();
+        var deleteResponse = await _client.DeleteAsync($"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, deleteResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResetScore_OtherUsersScore_IsKept()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client1 = await _factory.CreateAuthenticatedClientAsync();
+        using var client2 = await _factory.CreateAuthenticatedClientAsync();
+
+        var answer1 = await client1.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        var answer2 = await client2.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        Assert.Equal(HttpStatusCode.OK, answer1.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, answer2.StatusCode);
+
+        var deleteResponse = await client1.DeleteAsync($"api/quizzes/{quizId}/score");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        var score1 = await client1.GetAsync($"api/quizzes/{quizId}/score");
+        var score2 = await client2.GetAsync($"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NotFound, score1.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, score2.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResetScore_FinishedQuiz_StartsNewScore()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var answer1 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        var answer2 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/1/answer", new AnswerRequest(1));
+        var answer3 = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/2/answer", new AnswerRequest(2));
+
+        Assert.Equal(HttpStatusCode.OK, answer1.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, answer2.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, answer3.StatusCode);
+
+        var deleteResponse = await client.DeleteAsync($"api/quizzes/{quizId}/score");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        var replay = await client.PostAsJsonAsync($"api/quizzes/{quizId}/questions/0/answer", new AnswerRequest(0));
+        Assert.Equal(HttpStatusCode.OK, replay.StatusCode);
+
+        var scoreResponse = await client.GetAsync($"api/quizzes/{quizId}/score");
+        Assert.Equal(HttpStatusCode.OK, scoreResponse.StatusCode);
+
+        var score = await scoreResponse.Content.ReadFromJsonAsync<QuizScoreResponse>();
+        Assert.NotNull(score);
+        Assert.Equal(1, score.TotalAnswered);
+        Assert.Equal(0, score.CorrectAnswers);
+    }
+    // ---------- POST api/quizzes/import ----------
 
     private static MultipartFormDataContent ToFormContent(string json)
     {
@@ -678,4 +778,6 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+
+
 }
