@@ -70,4 +70,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<QuizSeeder>();
+    await seeder.SeedAsync(Path.Combine(app.Environment.ContentRootPath, "SeedData"));
+}
+
 app.Run();
