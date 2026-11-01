@@ -1,0 +1,197 @@
+{
+  "title": "Lithuanian Food Vocabulary",
+  "description": "Everyday Lithuanian food and drink words, including two national dishes.",
+  "category": "Food",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'duona' mean in English?",
+      "options": [
+        {
+          "text": "coffee",
+          "isCorrect": false
+        },
+        {
+          "text": "bread",
+          "isCorrect": true
+        },
+        {
+          "text": "tea",
+          "isCorrect": false
+        },
+        {
+          "text": "cold beetroot soup",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'milk' in Lithuanian?",
+      "options": [
+        {
+          "text": "pienas",
+          "isCorrect": true
+        },
+        {
+          "text": "mėsa",
+          "isCorrect": false
+        },
+        {
+          "text": "obuolys",
+          "isCorrect": false
+        },
+        {
+          "text": "arbata",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'sūris' mean in English?",
+      "options": [
+        {
+          "text": "potato dumplings",
+          "isCorrect": false
+        },
+        {
+          "text": "cheese",
+          "isCorrect": true
+        },
+        {
+          "text": "butter",
+          "isCorrect": false
+        },
+        {
+          "text": "tea",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'apple' in Lithuanian?",
+      "options": [
+        {
+          "text": "obuolys",
+          "isCorrect": true
+        },
+        {
+          "text": "sūris",
+          "isCorrect": false
+        },
+        {
+          "text": "šaltibarščiai",
+          "isCorrect": false
+        },
+        {
+          "text": "kava",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'vanduo' mean in English?",
+      "options": [
+        {
+          "text": "coffee",
+          "isCorrect": false
+        },
+        {
+          "text": "water",
+          "isCorrect": true
+        },
+        {
+          "text": "cheese",
+          "isCorrect": false
+        },
+        {
+          "text": "tea",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'meat' in Lithuanian?",
+      "options": [
+        {
+          "text": "žuvis",
+          "isCorrect": false
+        },
+        {
+          "text": "sviestas",
+          "isCorrect": false
+        },
+        {
+          "text": "arbata",
+          "isCorrect": false
+        },
+        {
+          "text": "mėsa",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'žuvis' mean in English?",
+      "options": [
+        {
+          "text": "coffee",
+          "isCorrect": false
+        },
+        {
+          "text": "cold beetroot soup",
+          "isCorrect": false
+        },
+        {
+          "text": "fish",
+          "isCorrect": true
+        },
+        {
+          "text": "potatoes",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'potato dumplings' in Lithuanian?",
+      "options": [
+        {
+          "text": "obuolys",
+          "isCorrect": false
+        },
+        {
+          "text": "cepelinai",
+          "isCorrect": true
+        },
+        {
+          "text": "duona",
+          "isCorrect": false
+        },
+        {
+          "text": "arbata",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'šaltibarščiai' mean in English?",
+      "options": [
+        {
+          "text": "potato dumplings",
+          "isCorrect": false
+        },
+        {
+          "text": "coffee",
+          "isCorrect": false
+        },
+        {
+          "text": "cold beetroot soup",
+          "isCorrect": true
+        },
+        {
+          "text": "cheese",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

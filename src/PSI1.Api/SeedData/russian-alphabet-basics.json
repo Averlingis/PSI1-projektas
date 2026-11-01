@@ -1,0 +1,218 @@
+{
+  "title": "Russian Alphabet Basics",
+  "description": "First steps with the Cyrillic alphabet: letters that look familiar but sound different, and the sounds that are new.",
+  "category": "Education",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "How many letters are there in the Russian alphabet?",
+      "options": [
+        {
+          "text": "36",
+          "isCorrect": false
+        },
+        {
+          "text": "26",
+          "isCorrect": false
+        },
+        {
+          "text": "30",
+          "isCorrect": false
+        },
+        {
+          "text": "33",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which letter makes the 'sh' sound as in 'ship'?",
+      "options": [
+        {
+          "text": "Ч",
+          "isCorrect": false
+        },
+        {
+          "text": "Ж",
+          "isCorrect": false
+        },
+        {
+          "text": "Ш",
+          "isCorrect": true
+        },
+        {
+          "text": "Ц",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter makes the 'ch' sound as in 'chair'?",
+      "options": [
+        {
+          "text": "Ч",
+          "isCorrect": true
+        },
+        {
+          "text": "Ц",
+          "isCorrect": false
+        },
+        {
+          "text": "Ш",
+          "isCorrect": false
+        },
+        {
+          "text": "Х",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter makes the 'zh' sound as in 'measure'?",
+      "options": [
+        {
+          "text": "Ш",
+          "isCorrect": false
+        },
+        {
+          "text": "Ц",
+          "isCorrect": false
+        },
+        {
+          "text": "З",
+          "isCorrect": false
+        },
+        {
+          "text": "Ж",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which letter looks like an English 'P' but sounds like 'r'?",
+      "options": [
+        {
+          "text": "П",
+          "isCorrect": false
+        },
+        {
+          "text": "Г",
+          "isCorrect": false
+        },
+        {
+          "text": "Р",
+          "isCorrect": true
+        },
+        {
+          "text": "Б",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter looks like an English 'H' but sounds like 'n'?",
+      "options": [
+        {
+          "text": "Н",
+          "isCorrect": true
+        },
+        {
+          "text": "И",
+          "isCorrect": false
+        },
+        {
+          "text": "К",
+          "isCorrect": false
+        },
+        {
+          "text": "Х",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter looks like an English 'B' but sounds like 'v'?",
+      "options": [
+        {
+          "text": "Б",
+          "isCorrect": false
+        },
+        {
+          "text": "Д",
+          "isCorrect": false
+        },
+        {
+          "text": "В",
+          "isCorrect": true
+        },
+        {
+          "text": "Я",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter looks like an English 'C' but sounds like 's'?",
+      "options": [
+        {
+          "text": "Э",
+          "isCorrect": false
+        },
+        {
+          "text": "Ц",
+          "isCorrect": false
+        },
+        {
+          "text": "Г",
+          "isCorrect": false
+        },
+        {
+          "text": "С",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which letter looks like an English 'Y' but sounds like 'oo' in 'moon'?",
+      "options": [
+        {
+          "text": "Ч",
+          "isCorrect": false
+        },
+        {
+          "text": "У",
+          "isCorrect": true
+        },
+        {
+          "text": "Ф",
+          "isCorrect": false
+        },
+        {
+          "text": "Й",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which letter is called the 'soft sign'?",
+      "options": [
+        {
+          "text": "Ъ",
+          "isCorrect": false
+        },
+        {
+          "text": "Ь",
+          "isCorrect": true
+        },
+        {
+          "text": "Ы",
+          "isCorrect": false
+        },
+        {
+          "text": "Э",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

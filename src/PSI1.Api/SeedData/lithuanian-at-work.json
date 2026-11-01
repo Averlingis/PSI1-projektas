@@ -1,0 +1,134 @@
+{
+  "title": "Lithuanian at Work",
+  "description": "Words for the office: colleagues, meetings and salaries.",
+  "category": "Work",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'darbas' mean in English?",
+      "options": [
+        {
+          "text": "salary",
+          "isCorrect": false
+        },
+        {
+          "text": "company",
+          "isCorrect": false
+        },
+        {
+          "text": "work",
+          "isCorrect": true
+        },
+        {
+          "text": "holiday",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'office' in Lithuanian?",
+      "options": [
+        {
+          "text": "viršininkas",
+          "isCorrect": false
+        },
+        {
+          "text": "kolega",
+          "isCorrect": false
+        },
+        {
+          "text": "įmonė",
+          "isCorrect": false
+        },
+        {
+          "text": "biuras",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'kolega' mean in English?",
+      "options": [
+        {
+          "text": "office",
+          "isCorrect": false
+        },
+        {
+          "text": "boss",
+          "isCorrect": false
+        },
+        {
+          "text": "work",
+          "isCorrect": false
+        },
+        {
+          "text": "colleague",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'salary' in Lithuanian?",
+      "options": [
+        {
+          "text": "viršininkas",
+          "isCorrect": false
+        },
+        {
+          "text": "kolega",
+          "isCorrect": false
+        },
+        {
+          "text": "biuras",
+          "isCorrect": false
+        },
+        {
+          "text": "atlyginimas",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'susitikimas' mean in English?",
+      "options": [
+        {
+          "text": "work",
+          "isCorrect": false
+        },
+        {
+          "text": "meeting",
+          "isCorrect": true
+        },
+        {
+          "text": "holiday",
+          "isCorrect": false
+        },
+        {
+          "text": "boss",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'boss' in Lithuanian?",
+      "options": [
+        {
+          "text": "darbas",
+          "isCorrect": false
+        },
+        {
+          "text": "kolega",
+          "isCorrect": false
+        },
+        {
+          "text": "biuras",
+          "isCorrect": false
+        },
+        {
+          "text": "viršininkas",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

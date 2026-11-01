@@ -1,0 +1,323 @@
+{
+  "title": "Lithuanian Days and Months",
+  "description": "The days of the week and some months in Lithuanian. A longer quiz to practise the calendar.",
+  "category": "Education",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'pirmadienis' mean in English?",
+      "options": [
+        {
+          "text": "Monday",
+          "isCorrect": true
+        },
+        {
+          "text": "Sunday",
+          "isCorrect": false
+        },
+        {
+          "text": "Tuesday",
+          "isCorrect": false
+        },
+        {
+          "text": "Wednesday",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'Tuesday' in Lithuanian?",
+      "options": [
+        {
+          "text": "trečiadienis",
+          "isCorrect": false
+        },
+        {
+          "text": "ketvirtadienis",
+          "isCorrect": false
+        },
+        {
+          "text": "penktadienis",
+          "isCorrect": false
+        },
+        {
+          "text": "antradienis",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'trečiadienis' mean in English?",
+      "options": [
+        {
+          "text": "Thursday",
+          "isCorrect": false
+        },
+        {
+          "text": "Wednesday",
+          "isCorrect": true
+        },
+        {
+          "text": "Friday",
+          "isCorrect": false
+        },
+        {
+          "text": "Saturday",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'Thursday' in Lithuanian?",
+      "options": [
+        {
+          "text": "antradienis",
+          "isCorrect": false
+        },
+        {
+          "text": "ketvirtadienis",
+          "isCorrect": true
+        },
+        {
+          "text": "sekmadienis",
+          "isCorrect": false
+        },
+        {
+          "text": "penktadienis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'penktadienis' mean in English?",
+      "options": [
+        {
+          "text": "Wednesday",
+          "isCorrect": false
+        },
+        {
+          "text": "Sunday",
+          "isCorrect": false
+        },
+        {
+          "text": "Friday",
+          "isCorrect": true
+        },
+        {
+          "text": "Thursday",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'Saturday' in Lithuanian?",
+      "options": [
+        {
+          "text": "šeštadienis",
+          "isCorrect": true
+        },
+        {
+          "text": "penktadienis",
+          "isCorrect": false
+        },
+        {
+          "text": "sekmadienis",
+          "isCorrect": false
+        },
+        {
+          "text": "ketvirtadienis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'sekmadienis' mean in English?",
+      "options": [
+        {
+          "text": "Sunday",
+          "isCorrect": true
+        },
+        {
+          "text": "Monday",
+          "isCorrect": false
+        },
+        {
+          "text": "Saturday",
+          "isCorrect": false
+        },
+        {
+          "text": "Tuesday",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'sausis' mean in English?",
+      "options": [
+        {
+          "text": "June",
+          "isCorrect": false
+        },
+        {
+          "text": "January",
+          "isCorrect": true
+        },
+        {
+          "text": "July",
+          "isCorrect": false
+        },
+        {
+          "text": "September",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'March' in Lithuanian?",
+      "options": [
+        {
+          "text": "gegužė",
+          "isCorrect": false
+        },
+        {
+          "text": "spalis",
+          "isCorrect": false
+        },
+        {
+          "text": "rugsėjis",
+          "isCorrect": false
+        },
+        {
+          "text": "kovas",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'gegužė' mean in English?",
+      "options": [
+        {
+          "text": "June",
+          "isCorrect": false
+        },
+        {
+          "text": "July",
+          "isCorrect": false
+        },
+        {
+          "text": "May",
+          "isCorrect": true
+        },
+        {
+          "text": "December",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'June' in Lithuanian?",
+      "options": [
+        {
+          "text": "gruodis",
+          "isCorrect": false
+        },
+        {
+          "text": "liepa",
+          "isCorrect": false
+        },
+        {
+          "text": "birželis",
+          "isCorrect": true
+        },
+        {
+          "text": "sausis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'liepa' mean in English?",
+      "options": [
+        {
+          "text": "July",
+          "isCorrect": true
+        },
+        {
+          "text": "September",
+          "isCorrect": false
+        },
+        {
+          "text": "June",
+          "isCorrect": false
+        },
+        {
+          "text": "December",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'September' in Lithuanian?",
+      "options": [
+        {
+          "text": "gruodis",
+          "isCorrect": false
+        },
+        {
+          "text": "sausis",
+          "isCorrect": false
+        },
+        {
+          "text": "liepa",
+          "isCorrect": false
+        },
+        {
+          "text": "rugsėjis",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'spalis' mean in English?",
+      "options": [
+        {
+          "text": "December",
+          "isCorrect": false
+        },
+        {
+          "text": "July",
+          "isCorrect": false
+        },
+        {
+          "text": "October",
+          "isCorrect": true
+        },
+        {
+          "text": "May",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'December' in Lithuanian?",
+      "options": [
+        {
+          "text": "liepa",
+          "isCorrect": false
+        },
+        {
+          "text": "sausis",
+          "isCorrect": false
+        },
+        {
+          "text": "gruodis",
+          "isCorrect": true
+        },
+        {
+          "text": "kovas",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

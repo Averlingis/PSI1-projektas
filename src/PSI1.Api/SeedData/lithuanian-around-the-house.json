@@ -1,0 +1,176 @@
+{
+  "title": "Lithuanian Around the House",
+  "description": "Rooms and furniture: name everything in a Lithuanian home.",
+  "category": "Home",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'namas' mean in English?",
+      "options": [
+        {
+          "text": "chair",
+          "isCorrect": false
+        },
+        {
+          "text": "window",
+          "isCorrect": false
+        },
+        {
+          "text": "bed",
+          "isCorrect": false
+        },
+        {
+          "text": "house",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'kitchen' in Lithuanian?",
+      "options": [
+        {
+          "text": "kėdė",
+          "isCorrect": false
+        },
+        {
+          "text": "lova",
+          "isCorrect": false
+        },
+        {
+          "text": "virtuvė",
+          "isCorrect": true
+        },
+        {
+          "text": "namas",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'miegamasis' mean in English?",
+      "options": [
+        {
+          "text": "bedroom",
+          "isCorrect": true
+        },
+        {
+          "text": "chair",
+          "isCorrect": false
+        },
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        },
+        {
+          "text": "house",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'bathroom' in Lithuanian?",
+      "options": [
+        {
+          "text": "langas",
+          "isCorrect": false
+        },
+        {
+          "text": "miegamasis",
+          "isCorrect": false
+        },
+        {
+          "text": "virtuvė",
+          "isCorrect": false
+        },
+        {
+          "text": "vonios kambarys",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'langas' mean in English?",
+      "options": [
+        {
+          "text": "bedroom",
+          "isCorrect": false
+        },
+        {
+          "text": "window",
+          "isCorrect": true
+        },
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        },
+        {
+          "text": "house",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'door' in Lithuanian?",
+      "options": [
+        {
+          "text": "vonios kambarys",
+          "isCorrect": false
+        },
+        {
+          "text": "namas",
+          "isCorrect": false
+        },
+        {
+          "text": "kėdė",
+          "isCorrect": false
+        },
+        {
+          "text": "durys",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'stalas' mean in English?",
+      "options": [
+        {
+          "text": "kitchen",
+          "isCorrect": false
+        },
+        {
+          "text": "chair",
+          "isCorrect": false
+        },
+        {
+          "text": "window",
+          "isCorrect": false
+        },
+        {
+          "text": "table",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'chair' in Lithuanian?",
+      "options": [
+        {
+          "text": "kėdė",
+          "isCorrect": true
+        },
+        {
+          "text": "stalas",
+          "isCorrect": false
+        },
+        {
+          "text": "virtuvė",
+          "isCorrect": false
+        },
+        {
+          "text": "lova",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

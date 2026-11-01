@@ -1,0 +1,176 @@
+{
+  "title": "Russian Family Members",
+  "description": "Mum, dad, grandparents and other relatives in Russian.",
+  "category": "Family",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'мама' mean in English?",
+      "options": [
+        {
+          "text": "grandfather",
+          "isCorrect": false
+        },
+        {
+          "text": "mum",
+          "isCorrect": true
+        },
+        {
+          "text": "husband",
+          "isCorrect": false
+        },
+        {
+          "text": "wife",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'dad' in Russian?",
+      "options": [
+        {
+          "text": "папа",
+          "isCorrect": true
+        },
+        {
+          "text": "дядя",
+          "isCorrect": false
+        },
+        {
+          "text": "жена",
+          "isCorrect": false
+        },
+        {
+          "text": "тётя",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'брат' mean in English?",
+      "options": [
+        {
+          "text": "brother",
+          "isCorrect": true
+        },
+        {
+          "text": "husband",
+          "isCorrect": false
+        },
+        {
+          "text": "grandfather",
+          "isCorrect": false
+        },
+        {
+          "text": "wife",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'sister' in Russian?",
+      "options": [
+        {
+          "text": "папа",
+          "isCorrect": false
+        },
+        {
+          "text": "муж",
+          "isCorrect": false
+        },
+        {
+          "text": "дочь",
+          "isCorrect": false
+        },
+        {
+          "text": "сестра",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'бабушка' mean in English?",
+      "options": [
+        {
+          "text": "grandmother",
+          "isCorrect": true
+        },
+        {
+          "text": "wife",
+          "isCorrect": false
+        },
+        {
+          "text": "aunt",
+          "isCorrect": false
+        },
+        {
+          "text": "daughter",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'grandfather' in Russian?",
+      "options": [
+        {
+          "text": "дочь",
+          "isCorrect": false
+        },
+        {
+          "text": "дедушка",
+          "isCorrect": true
+        },
+        {
+          "text": "брат",
+          "isCorrect": false
+        },
+        {
+          "text": "муж",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'дядя' mean in English?",
+      "options": [
+        {
+          "text": "uncle",
+          "isCorrect": true
+        },
+        {
+          "text": "wife",
+          "isCorrect": false
+        },
+        {
+          "text": "grandmother",
+          "isCorrect": false
+        },
+        {
+          "text": "brother",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'aunt' in Russian?",
+      "options": [
+        {
+          "text": "тётя",
+          "isCorrect": true
+        },
+        {
+          "text": "брат",
+          "isCorrect": false
+        },
+        {
+          "text": "муж",
+          "isCorrect": false
+        },
+        {
+          "text": "дочь",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "title": "Lithuanian Sports",
+  "description": "Sports, teams and match vocabulary. Basketball is the favourite sport in Lithuania.",
+  "category": "Sports",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'krepšinis' mean in English?",
+      "options": [
+        {
+          "text": "volleyball",
+          "isCorrect": false
+        },
+        {
+          "text": "basketball",
+          "isCorrect": true
+        },
+        {
+          "text": "running",
+          "isCorrect": false
+        },
+        {
+          "text": "coach",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'football' in Lithuanian?",
+      "options": [
+        {
+          "text": "dviračių sportas",
+          "isCorrect": false
+        },
+        {
+          "text": "komanda",
+          "isCorrect": false
+        },
+        {
+          "text": "futbolas",
+          "isCorrect": true
+        },
+        {
+          "text": "bėgimas",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'plaukimas' mean in English?",
+      "options": [
+        {
+          "text": "running",
+          "isCorrect": false
+        },
+        {
+          "text": "team",
+          "isCorrect": false
+        },
+        {
+          "text": "swimming",
+          "isCorrect": true
+        },
+        {
+          "text": "basketball",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'coach' in Lithuanian?",
+      "options": [
+        {
+          "text": "treneris",
+          "isCorrect": true
+        },
+        {
+          "text": "krepšinis",
+          "isCorrect": false
+        },
+        {
+          "text": "plaukimas",
+          "isCorrect": false
+        },
+        {
+          "text": "futbolas",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'komanda' mean in English?",
+      "options": [
+        {
+          "text": "cycling",
+          "isCorrect": false
+        },
+        {
+          "text": "coach",
+          "isCorrect": false
+        },
+        {
+          "text": "team",
+          "isCorrect": true
+        },
+        {
+          "text": "volleyball",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'match' in Lithuanian?",
+      "options": [
+        {
+          "text": "slidinėjimas",
+          "isCorrect": false
+        },
+        {
+          "text": "tinklinis",
+          "isCorrect": false
+        },
+        {
+          "text": "treneris",
+          "isCorrect": false
+        },
+        {
+          "text": "rungtynės",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'dviračių sportas' mean in English?",
+      "options": [
+        {
+          "text": "skiing",
+          "isCorrect": false
+        },
+        {
+          "text": "volleyball",
+          "isCorrect": false
+        },
+        {
+          "text": "team",
+          "isCorrect": false
+        },
+        {
+          "text": "cycling",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

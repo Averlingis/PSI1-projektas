@@ -1,0 +1,176 @@
+{
+  "title": "Lithuanian Health and Body",
+  "description": "Parts of the body and the words you need at the doctor or the pharmacy.",
+  "category": "Health",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'galva' mean in English?",
+      "options": [
+        {
+          "text": "head",
+          "isCorrect": true
+        },
+        {
+          "text": "nose",
+          "isCorrect": false
+        },
+        {
+          "text": "eye",
+          "isCorrect": false
+        },
+        {
+          "text": "back",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'hand' in Lithuanian?",
+      "options": [
+        {
+          "text": "gydytojas",
+          "isCorrect": false
+        },
+        {
+          "text": "akis",
+          "isCorrect": false
+        },
+        {
+          "text": "ranka",
+          "isCorrect": true
+        },
+        {
+          "text": "nugara",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'akis' mean in English?",
+      "options": [
+        {
+          "text": "hand",
+          "isCorrect": false
+        },
+        {
+          "text": "eye",
+          "isCorrect": true
+        },
+        {
+          "text": "back",
+          "isCorrect": false
+        },
+        {
+          "text": "head",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'doctor' in Lithuanian?",
+      "options": [
+        {
+          "text": "nosis",
+          "isCorrect": false
+        },
+        {
+          "text": "vaistinė",
+          "isCorrect": false
+        },
+        {
+          "text": "koja",
+          "isCorrect": false
+        },
+        {
+          "text": "gydytojas",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'vaistinė' mean in English?",
+      "options": [
+        {
+          "text": "hand",
+          "isCorrect": false
+        },
+        {
+          "text": "eye",
+          "isCorrect": false
+        },
+        {
+          "text": "pharmacy",
+          "isCorrect": true
+        },
+        {
+          "text": "head",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'back' in Lithuanian?",
+      "options": [
+        {
+          "text": "nugara",
+          "isCorrect": true
+        },
+        {
+          "text": "akis",
+          "isCorrect": false
+        },
+        {
+          "text": "gydytojas",
+          "isCorrect": false
+        },
+        {
+          "text": "širdis",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'širdis' mean in English?",
+      "options": [
+        {
+          "text": "heart",
+          "isCorrect": true
+        },
+        {
+          "text": "eye",
+          "isCorrect": false
+        },
+        {
+          "text": "hand",
+          "isCorrect": false
+        },
+        {
+          "text": "hospital",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'hospital' in Lithuanian?",
+      "options": [
+        {
+          "text": "ligoninė",
+          "isCorrect": true
+        },
+        {
+          "text": "nugara",
+          "isCorrect": false
+        },
+        {
+          "text": "nosis",
+          "isCorrect": false
+        },
+        {
+          "text": "burna",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

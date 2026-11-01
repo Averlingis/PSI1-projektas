@@ -1,0 +1,155 @@
+{
+  "title": "Lithuanian Travel Phrases",
+  "description": "Useful phrases for getting around Lithuania: stations, tickets, hotels and directions.",
+  "category": "Travel",
+  "language": "Lithuanian",
+  "questions": [
+    {
+      "text": "What does 'Kur yra traukinių stotis?' mean in English?",
+      "options": [
+        {
+          "text": "The airport",
+          "isCorrect": false
+        },
+        {
+          "text": "Where is the train station?",
+          "isCorrect": true
+        },
+        {
+          "text": "Do you have a free room?",
+          "isCorrect": false
+        },
+        {
+          "text": "The bill, please.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'How much is a ticket?' in Lithuanian?",
+      "options": [
+        {
+          "text": "Kiek kainuoja bilietas?",
+          "isCorrect": true
+        },
+        {
+          "text": "Kur yra traukinių stotis?",
+          "isCorrect": false
+        },
+        {
+          "text": "Oro uostas",
+          "isCorrect": false
+        },
+        {
+          "text": "Prašau sąskaitą.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Oro uostas' mean in English?",
+      "options": [
+        {
+          "text": "Where is the train station?",
+          "isCorrect": false
+        },
+        {
+          "text": "Do you speak English?",
+          "isCorrect": false
+        },
+        {
+          "text": "Do you have a free room?",
+          "isCorrect": false
+        },
+        {
+          "text": "The airport",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'Do you have a free room?' in Lithuanian?",
+      "options": [
+        {
+          "text": "Prašau sąskaitą.",
+          "isCorrect": false
+        },
+        {
+          "text": "Į dešinę",
+          "isCorrect": false
+        },
+        {
+          "text": "Ar turite laisvą kambarį?",
+          "isCorrect": true
+        },
+        {
+          "text": "Į kairę",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Į kairę' mean in English?",
+      "options": [
+        {
+          "text": "Do you have a free room?",
+          "isCorrect": false
+        },
+        {
+          "text": "The bill, please.",
+          "isCorrect": false
+        },
+        {
+          "text": "The airport",
+          "isCorrect": false
+        },
+        {
+          "text": "To the left",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'To the right' in Lithuanian?",
+      "options": [
+        {
+          "text": "Kur yra traukinių stotis?",
+          "isCorrect": false
+        },
+        {
+          "text": "Ar kalbate angliškai?",
+          "isCorrect": false
+        },
+        {
+          "text": "Oro uostas",
+          "isCorrect": false
+        },
+        {
+          "text": "Į dešinę",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'Ar kalbate angliškai?' mean in English?",
+      "options": [
+        {
+          "text": "Do you speak English?",
+          "isCorrect": true
+        },
+        {
+          "text": "To the right",
+          "isCorrect": false
+        },
+        {
+          "text": "To the left",
+          "isCorrect": false
+        },
+        {
+          "text": "Do you have a free room?",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

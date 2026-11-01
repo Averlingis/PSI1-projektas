@@ -1,0 +1,197 @@
+{
+  "title": "Russian Culture and History",
+  "description": "Writers, composers, landmarks and traditions of Russia.",
+  "category": "Culture",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What is the capital of Russia?",
+      "options": [
+        {
+          "text": "Kazan",
+          "isCorrect": false
+        },
+        {
+          "text": "Moscow",
+          "isCorrect": true
+        },
+        {
+          "text": "Saint Petersburg",
+          "isCorrect": false
+        },
+        {
+          "text": "Novosibirsk",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Who wrote the novel 'War and Peace'?",
+      "options": [
+        {
+          "text": "Leo Tolstoy",
+          "isCorrect": true
+        },
+        {
+          "text": "Anton Chekhov",
+          "isCorrect": false
+        },
+        {
+          "text": "Fyodor Dostoevsky",
+          "isCorrect": false
+        },
+        {
+          "text": "Alexander Pushkin",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which alphabet is used to write Russian?",
+      "options": [
+        {
+          "text": "Greek",
+          "isCorrect": false
+        },
+        {
+          "text": "Arabic",
+          "isCorrect": false
+        },
+        {
+          "text": "Latin",
+          "isCorrect": false
+        },
+        {
+          "text": "Cyrillic",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which colourful cathedral with onion domes stands on Red Square?",
+      "options": [
+        {
+          "text": "Church of the Savior on Blood",
+          "isCorrect": false
+        },
+        {
+          "text": "Cathedral of Christ the Saviour",
+          "isCorrect": false
+        },
+        {
+          "text": "Saint Basil's Cathedral",
+          "isCorrect": true
+        },
+        {
+          "text": "Saint Isaac's Cathedral",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Which Russian composer wrote the ballet 'Swan Lake'?",
+      "options": [
+        {
+          "text": "Dmitri Shostakovich",
+          "isCorrect": false
+        },
+        {
+          "text": "Sergei Rachmaninoff",
+          "isCorrect": false
+        },
+        {
+          "text": "Igor Stravinsky",
+          "isCorrect": false
+        },
+        {
+          "text": "Pyotr Tchaikovsky",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "In the Soviet era Saint Petersburg was renamed after Lenin. What was it called?",
+      "options": [
+        {
+          "text": "Stalingrad",
+          "isCorrect": false
+        },
+        {
+          "text": "Gorky",
+          "isCorrect": false
+        },
+        {
+          "text": "Sverdlovsk",
+          "isCorrect": false
+        },
+        {
+          "text": "Leningrad",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What are matryoshka?",
+      "options": [
+        {
+          "text": "Fur hats",
+          "isCorrect": false
+        },
+        {
+          "text": "Tea urns",
+          "isCorrect": false
+        },
+        {
+          "text": "Painted eggs",
+          "isCorrect": false
+        },
+        {
+          "text": "Nested wooden dolls",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which Russian lake is the deepest lake in the world?",
+      "options": [
+        {
+          "text": "Lake Seliger",
+          "isCorrect": false
+        },
+        {
+          "text": "Lake Ladoga",
+          "isCorrect": false
+        },
+        {
+          "text": "Lake Onega",
+          "isCorrect": false
+        },
+        {
+          "text": "Lake Baikal",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "Which railway connects Moscow with Vladivostok?",
+      "options": [
+        {
+          "text": "The Eurostar",
+          "isCorrect": false
+        },
+        {
+          "text": "The Trans-Siberian Railway",
+          "isCorrect": true
+        },
+        {
+          "text": "The Blue Train",
+          "isCorrect": false
+        },
+        {
+          "text": "The Orient Express",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

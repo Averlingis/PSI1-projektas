@@ -1,0 +1,155 @@
+{
+  "title": "Russian Travel Phrases",
+  "description": "Useful phrases for getting around Russia: stations, tickets, hotels and directions.",
+  "category": "Travel",
+  "language": "Russian",
+  "questions": [
+    {
+      "text": "What does 'Где вокзал?' mean in English?",
+      "options": [
+        {
+          "text": "How much is a ticket?",
+          "isCorrect": false
+        },
+        {
+          "text": "Where is the train station?",
+          "isCorrect": true
+        },
+        {
+          "text": "To the right",
+          "isCorrect": false
+        },
+        {
+          "text": "Do you speak English?",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'How much is a ticket?' in Russian?",
+      "options": [
+        {
+          "text": "У вас есть свободный номер?",
+          "isCorrect": false
+        },
+        {
+          "text": "Сколько стоит билет?",
+          "isCorrect": true
+        },
+        {
+          "text": "Вы говорите по-английски?",
+          "isCorrect": false
+        },
+        {
+          "text": "Налево",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Аэропорт' mean in English?",
+      "options": [
+        {
+          "text": "Where is the train station?",
+          "isCorrect": false
+        },
+        {
+          "text": "To the right",
+          "isCorrect": false
+        },
+        {
+          "text": "To the left",
+          "isCorrect": false
+        },
+        {
+          "text": "The airport",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'Do you have a free room?' in Russian?",
+      "options": [
+        {
+          "text": "У вас есть свободный номер?",
+          "isCorrect": true
+        },
+        {
+          "text": "Сколько стоит билет?",
+          "isCorrect": false
+        },
+        {
+          "text": "Направо",
+          "isCorrect": false
+        },
+        {
+          "text": "Счёт, пожалуйста.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Налево' mean in English?",
+      "options": [
+        {
+          "text": "Do you have a free room?",
+          "isCorrect": false
+        },
+        {
+          "text": "To the left",
+          "isCorrect": true
+        },
+        {
+          "text": "Do you speak English?",
+          "isCorrect": false
+        },
+        {
+          "text": "To the right",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'To the right' in Russian?",
+      "options": [
+        {
+          "text": "Где вокзал?",
+          "isCorrect": false
+        },
+        {
+          "text": "Аэропорт",
+          "isCorrect": false
+        },
+        {
+          "text": "Направо",
+          "isCorrect": true
+        },
+        {
+          "text": "Сколько стоит билет?",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "What does 'Вы говорите по-английски?' mean in English?",
+      "options": [
+        {
+          "text": "To the left",
+          "isCorrect": false
+        },
+        {
+          "text": "How much is a ticket?",
+          "isCorrect": false
+        },
+        {
+          "text": "Do you speak English?",
+          "isCorrect": true
+        },
+        {
+          "text": "The bill, please.",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

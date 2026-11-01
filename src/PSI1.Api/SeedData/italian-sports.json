@@ -1,0 +1,176 @@
+{
+  "title": "Italian Sports",
+  "description": "Sports, teams and match vocabulary. Calcio is more than a sport in Italy.",
+  "category": "Sports",
+  "language": "Italian",
+  "questions": [
+    {
+      "text": "What does 'calcio' mean in English?",
+      "options": [
+        {
+          "text": "football",
+          "isCorrect": true
+        },
+        {
+          "text": "team",
+          "isCorrect": false
+        },
+        {
+          "text": "swimming",
+          "isCorrect": false
+        },
+        {
+          "text": "match",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'basketball' in Italian?",
+      "options": [
+        {
+          "text": "squadra",
+          "isCorrect": false
+        },
+        {
+          "text": "ciclismo",
+          "isCorrect": false
+        },
+        {
+          "text": "calcio",
+          "isCorrect": false
+        },
+        {
+          "text": "pallacanestro",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'nuoto' mean in English?",
+      "options": [
+        {
+          "text": "running",
+          "isCorrect": false
+        },
+        {
+          "text": "swimming",
+          "isCorrect": true
+        },
+        {
+          "text": "team",
+          "isCorrect": false
+        },
+        {
+          "text": "cycling",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'cycling' in Italian?",
+      "options": [
+        {
+          "text": "pallavolo",
+          "isCorrect": false
+        },
+        {
+          "text": "corsa",
+          "isCorrect": false
+        },
+        {
+          "text": "palestra",
+          "isCorrect": false
+        },
+        {
+          "text": "ciclismo",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'squadra' mean in English?",
+      "options": [
+        {
+          "text": "cycling",
+          "isCorrect": false
+        },
+        {
+          "text": "match",
+          "isCorrect": false
+        },
+        {
+          "text": "gym",
+          "isCorrect": false
+        },
+        {
+          "text": "team",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'match' in Italian?",
+      "options": [
+        {
+          "text": "sci",
+          "isCorrect": false
+        },
+        {
+          "text": "squadra",
+          "isCorrect": false
+        },
+        {
+          "text": "ciclismo",
+          "isCorrect": false
+        },
+        {
+          "text": "partita",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "text": "What does 'allenatore' mean in English?",
+      "options": [
+        {
+          "text": "gym",
+          "isCorrect": false
+        },
+        {
+          "text": "coach",
+          "isCorrect": true
+        },
+        {
+          "text": "team",
+          "isCorrect": false
+        },
+        {
+          "text": "running",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "How do you say 'skiing' in Italian?",
+      "options": [
+        {
+          "text": "squadra",
+          "isCorrect": false
+        },
+        {
+          "text": "palestra",
+          "isCorrect": false
+        },
+        {
+          "text": "sci",
+          "isCorrect": true
+        },
+        {
+          "text": "ciclismo",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

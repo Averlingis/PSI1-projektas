@@ -24,4 +24,9 @@
     <ProjectReference Include="..\..\src\PSI1.Api\PSI1.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- copies the seed quizzes next to the test assembly, so SeedDataTests reads the same files the repo ships -->
+    <None Include="..\..\src\PSI1.Api\SeedData\*.json" Link="SeedData\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
