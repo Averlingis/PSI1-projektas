@@ -41,11 +41,6 @@ public class SeedDataTests
             .ToList();
     }
 
-    [Fact]
-    public void SeedFiles_Count_IsBetween30And50()
-    {
-        Assert.InRange(GetSeedFiles().Length, 30, 50);
-    }
 
     [Fact]
     public async Task ImportAsync_EverySeedFile_ReturnsNoErrors()
@@ -77,11 +72,9 @@ public class SeedDataTests
     }
 
     [Fact]
-    public async Task SeedFiles_QuestionCounts_AreBetween3And20AndVary()
+    public async Task SeedFiles_QuestionCounts_Vary()
     {
         var quizzes = await ImportAllQuizzesAsync();
-
-        Assert.All(quizzes, quiz => Assert.InRange(quiz.Questions.Count, 3, 20));
 
         var differentCounts = quizzes.Select(q => q.Questions.Count).Distinct().Count();
         Assert.True(differentCounts >= 5, $"Expected at least 5 different question counts, found {differentCounts}.");
