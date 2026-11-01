@@ -74,7 +74,7 @@ async function authFetch(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    if (response.status === 401 && !data.message) {
+    if (response.status === 401) {
       throw new Error("Your session has expired. Please log in again.");
     }
     throw new Error(extractErrorMessage(data, "Request failed."));
