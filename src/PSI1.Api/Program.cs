@@ -44,6 +44,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<JsonQuizImporter>();
+builder.Services.AddScoped<QuizSeeder>();
 builder.Services.AddExceptionHandler<AuthExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -68,5 +69,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<QuizSeeder>();
+    await seeder.SeedAsync(Path.Combine(app.Environment.ContentRootPath, "SeedData"));
+}
 
 app.Run();
