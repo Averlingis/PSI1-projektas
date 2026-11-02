@@ -20,9 +20,21 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private readonly PostgreSqlContainer _db = new PostgreSqlBuilder("postgres:15-alpine")
         .Build();
 
+    // every factory gets its own temporary folder for uploaded pictures,
+    // so tests never touch the real Uploads folder
+    public string UploadsPath { get; } = Path.Combine(Path.GetTempPath(), "psi1-tests", Guid.NewGuid().ToString("N"));
+
     public Task InitializeAsync() => _db.StartAsync();
 
-    public new async Task DisposeAsync() => await _db.DisposeAsync();
+    public new async Task DisposeAsync()
+    {
+        await _db.DisposeAsync();
+
+        if (Directory.Exists(UploadsPath))
+        {
+            Directory.Delete(UploadsPath, recursive: true);
+        }
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -35,7 +47,8 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 ["ConnectionStrings:Default"] = _db.GetConnectionString(),
                 ["Jwt:Issuer"] = "test-issuer",
                 ["Jwt:Audience"] = "test-audience",
-                ["Jwt:Key"] = "test-key-at-least-32-characters-long!!"
+                ["Jwt:Key"] = "test-key-at-least-32-characters-long!!",
+                ["Uploads:Path"] = UploadsPath
             });
         });
     }

@@ -19,10 +19,12 @@ public class ProfileController : ControllerBase
     private readonly AppDbContext _db;
     private readonly string _picturesDirectory;
 
-    public ProfileController(AppDbContext db, IWebHostEnvironment environment)
+    public ProfileController(AppDbContext db, IWebHostEnvironment environment, IConfiguration configuration)
     {
         _db = db;
-        _picturesDirectory = Path.Combine(environment.ContentRootPath, "Uploads");
+        // tests point Uploads:Path to a temporary foldert herefore they never touch the real Uploads folder
+        _picturesDirectory = configuration["Uploads:Path"]
+            ?? Path.Combine(environment.ContentRootPath, "Uploads");
     }
 
     [HttpGet("picture")]
