@@ -41,6 +41,17 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         return new JwtSecurityTokenHandler().ReadJwtToken(token).Subject;
     }
 
+    // files user has in the uploads folder as the folder may not exist
+    private string[] GetUserFiles(HttpClient client)
+    {
+        if (!Directory.Exists(_factory.UploadsPath))
+        {
+            return [];
+        }
+
+        return Directory.GetFiles(_factory.UploadsPath, $"{GetUserId(client)}.*");
+    }
+
     [Fact]
     public async Task UploadPicture_ValidPng_CanBeLoadedBack()
     {
@@ -79,6 +90,11 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         var response = await UploadAsync(client, ZipBytes, fileName: "photo.png", contentType: "image/png");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        // nothing should be saved: no file on disk and no picture for the user
+        Assert.Empty(GetUserFiles(client));
+        var picture = await client.GetAsync("api/profile/picture");
+        Assert.Equal(HttpStatusCode.NotFound, picture.StatusCode);
     }
 
     [Fact]
@@ -93,6 +109,11 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         var response = await UploadAsync(client, bytes);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        // nothing should be saved: no file on disk and no picture for the user
+        Assert.Empty(GetUserFiles(client));
+        var picture = await client.GetAsync("api/profile/picture");
+        Assert.Equal(HttpStatusCode.NotFound, picture.StatusCode);
     }
 
     [Fact]
@@ -123,9 +144,7 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         await UploadAsync(client, JpegBytes, fileName: "photo.jpg", contentType: "image/jpeg");
         await UploadAsync(client, PngBytes);
 
-        var files = Directory.GetFiles(_factory.UploadsPath, $"{GetUserId(client)}.*");
-
-        var file = Assert.Single(files);
+        var file = Assert.Single(GetUserFiles(client));
         Assert.EndsWith(".png", file);
     }
 }
