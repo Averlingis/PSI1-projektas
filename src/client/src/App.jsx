@@ -32,6 +32,9 @@ export default function App() {
   // Quiz navigation
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  // Keep quiz filters when navigating between list and details
+  const [quizLanguage, setQuizLanguage] = useState(null);
+  const [quizCategory, setQuizCategory] = useState(null);
 
   // once logged in, load the list of languages to choose from
   useEffect(() => {
@@ -87,6 +90,8 @@ export default function App() {
     setCategory(null);
     setSelectedQuiz(null);
     setIsPlaying(false);
+    setQuizLanguage(null);
+    setQuizCategory(null);
     setLanguageError("");
   }
 
@@ -175,6 +180,10 @@ export default function App() {
               <QuizList
                 initialLanguage={selected}
                 initialCategory={category}
+                language={quizLanguage ?? selected ?? ""}
+                category={quizCategory ?? category ?? ""}
+                onLanguageChange={setQuizLanguage}
+                onCategoryChange={setQuizCategory}
                 onSelectQuiz={(quiz) => setSelectedQuiz(quiz)}
               />
             </>
