@@ -34,4 +34,21 @@ public class QuizScore
 
         answerRows.Add(new QuestionAnswer(questionIndex, isCorrect));
     }
+
+    public int? GetFirstUnansweredIndex(int questionCount)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(questionCount);
+
+        var answeredIndexes = answerRows.Select(a => a.QuestionIndex).ToHashSet();
+
+        for (var index = 0; index < questionCount; index++)
+        {
+            if (!answeredIndexes.Contains(index))
+            {
+                return index;
+            }
+        }
+
+        return null;
+    }
 }

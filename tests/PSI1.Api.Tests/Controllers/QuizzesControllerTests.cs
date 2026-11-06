@@ -611,6 +611,142 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(1, score.TotalAnswered);
         Assert.Equal(0, score.CorrectAnswers);
     }
+    // ---------- GET api/quizzes/{quizId}/progress ----------
+
+    private static async Task AnswerQuestionsAsync(HttpClient client, int quizId, params int[] questionIndexes)
+    {
+        foreach (var index in questionIndexes)
+        {
+            var response = await client.PostAsJsonAsync(
+                $"api/quizzes/{quizId}/questions/{index}/answer",
+                new AnswerRequest(0));
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+    }
+
+    private static async Task<QuizProgressResponse> GetProgressAsync(HttpClient client, int quizId)
+    {
+        var response = await client.GetAsync($"api/quizzes/{quizId}/progress");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var progress = await response.Content.ReadFromJsonAsync<QuizProgressResponse>();
+
+        Assert.NotNull(progress);
+        return progress;
+    }
+
+    [Fact]
+    public async Task GetProgress_NotStarted_ReturnsFirstQuestion()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var progress = await GetProgressAsync(client, quizId);
+
+        Assert.Equal(0, progress.NextQuestionIndex);
+        Assert.Equal(0, progress.AnsweredCount);
+        Assert.Equal(3, progress.TotalQuestions);
+    }
+
+    [Fact]
+    public async Task GetProgress_PartlyAnswered_ReturnsNextQuestion()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        await AnswerQuestionsAsync(client, quizId, 0, 1);
+
+        var progress = await GetProgressAsync(client, quizId);
+
+        Assert.Equal(2, progress.NextQuestionIndex);
+        Assert.Equal(2, progress.AnsweredCount);
+        Assert.Equal(3, progress.TotalQuestions);
+    }
+
+    [Fact]
+    public async Task GetProgress_AnsweredOutOfOrder_ReturnsLowestUnansweredQuestion()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        //question 2 first, then question 0: question 1 is still open
+        await AnswerQuestionsAsync(client, quizId, 2, 0);
+
+        var progress = await GetProgressAsync(client, quizId);
+
+        Assert.Equal(1, progress.NextQuestionIndex);
+        Assert.Equal(2, progress.AnsweredCount);
+        Assert.Equal(3, progress.TotalQuestions);
+    }
+
+    [Fact]
+    public async Task GetProgress_Completed_ReturnsNullNextQuestion()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        await AnswerQuestionsAsync(client, quizId, 0, 1, 2);
+
+        var response = await client.GetAsync($"api/quizzes/{quizId}/progress");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        //read the raw JSON, nextQuestionIndex must be present and null, not left out
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var root = json.RootElement;
+
+        Assert.Equal(JsonValueKind.Null, root.GetProperty("nextQuestionIndex").ValueKind);
+        Assert.Equal(3, root.GetProperty("answeredCount").GetInt32());
+        Assert.Equal(3, root.GetProperty("totalQuestions").GetInt32());
+    }
+
+    [Fact]
+    public async Task GetProgress_NonexistentQuiz_ReturnsNotFound()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.GetAsync("api/quizzes/2147483647/progress");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetProgress_WithoutToken_ReturnsUnauthorized()
+    {
+        var quizId = await CreateTestQuizAsync();
+
+        var response = await _client.GetAsync($"api/quizzes/{quizId}/progress");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetProgress_OtherUsersAnswers_AreNotCounted()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client1 = await _factory.CreateAuthenticatedClientAsync();
+        using var client2 = await _factory.CreateAuthenticatedClientAsync();
+        await AnswerQuestionsAsync(client1, quizId, 0, 1);
+
+        var progress = await GetProgressAsync(client2, quizId);
+
+        Assert.Equal(0, progress.NextQuestionIndex);
+        Assert.Equal(0, progress.AnsweredCount);
+    }
+
+    [Fact]
+    public async Task GetProgress_AnswersInOtherQuiz_AreNotCounted()
+    {
+        var answeredQuizId = await CreateTestQuizAsync();
+        var otherQuizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        await AnswerQuestionsAsync(client, answeredQuizId, 0, 1);
+
+        var progress = await GetProgressAsync(client, otherQuizId);
+
+        Assert.Equal(0, progress.NextQuestionIndex);
+        Assert.Equal(0, progress.AnsweredCount);
+    }
+
     // ---------- POST api/quizzes/import ----------
 
     private static MultipartFormDataContent ToFormContent(string json)

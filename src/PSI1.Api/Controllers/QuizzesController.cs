@@ -162,6 +162,35 @@ public class QuizzesController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{quizId}/progress")]
+    public async Task<ActionResult<QuizProgressResponse>> GetProgress(int quizId)
+    {
+        var userId = User.GetUserId();
+
+        var quiz = await _db.Quizzes
+            .AsNoTracking()
+            .Where(q => q.Id == quizId)
+            .Select(q => new { QuestionCount = EF.Property<ICollection<Question>>(q, "questions").Count })
+            .FirstOrDefaultAsync();
+
+        if (quiz is null)
+        {
+            return NotFound(new { message = "Quiz not found." });
+        }
+
+        var score = await _db.QuizScores
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
+        //new score if null
+        score ??= new QuizScore(userId, quizId);
+
+        return Ok(new QuizProgressResponse(
+            score.GetFirstUnansweredIndex(quiz.QuestionCount),
+            score.Answers.Count,
+            quiz.QuestionCount));
+    }
+
+    [Authorize]
     [HttpDelete("{quizId}/score")]
     public async Task<IActionResult> ResetScore(int quizId)
     {
