@@ -5,6 +5,7 @@ import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
+import QuizPlay from "./components/QuizPlay";
 import {
   getLanguages,
   getSelectedLanguage,
@@ -106,6 +107,13 @@ export default function App() {
     }
   }
 
+  // leaves the quiz and goes back to the list
+  // (until the result screen exists, finishing a quiz also lands here)
+  function handleBackToQuizzes() {
+    setSelectedQuiz(null);
+    setIsPlaying(false);
+  }
+
   // if the token is found, the user is logged in and goes through the steps
   if (token) {
     return (
@@ -198,24 +206,18 @@ export default function App() {
           )}
 
           {step === "ready" && selectedQuiz && isPlaying && (
-            <div className="quiz-detail">
-              <h2>{selectedQuiz.title}</h2>
-              <p>Questions are coming soon.</p>
-
-              <div className="step-actions">
-                <button
-                  className="secondary-button"
-                  onClick={() => setIsPlaying(false)}
-                >
-                  Back to details
-                </button>
-              </div>
-            </div>
+            <QuizPlay
+              quiz={selectedQuiz}
+              onQuit={() => setIsPlaying(false)}
+              onFinish={handleBackToQuizzes}
+            />
           )}
 
-          <button className="secondary-button logout" onClick={handleLogout}>
-            Log out
-          </button>
+          {!selectedQuiz && (
+            <button className="secondary-button logout" onClick={handleLogout}>
+              Log out
+            </button>
+          )}
 
         </div>
       </div>
