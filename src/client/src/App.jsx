@@ -4,6 +4,7 @@ import LoginForm from "./components/LoginForm";
 import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
 import QuizList from "./components/QuizList";
+import QuizDetail from "./components/QuizDetail";
 import {
   getLanguages,
   getSelectedLanguage,
@@ -28,6 +29,12 @@ export default function App() {
   const [languageError, setLanguageError] = useState("");
   // category confirmed by the backend
   const [category, setCategory] = useState(null);
+  // Quiz navigation
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  // Keep quiz filters when navigating between list and details
+  const [quizLanguage, setQuizLanguage] = useState(null);
+  const [quizCategory, setQuizCategory] = useState(null);
 
   // once logged in, load the list of languages to choose from
   useEffect(() => {
@@ -81,6 +88,10 @@ export default function App() {
     setStep("loading");
     setSelected(null);
     setCategory(null);
+    setSelectedQuiz(null);
+    setIsPlaying(false);
+    setQuizLanguage(null);
+    setQuizCategory(null);
     setLanguageError("");
   }
 
@@ -143,7 +154,7 @@ export default function App() {
             />
           )}
 
-          {step === "ready" && (
+          {step === "ready" && !selectedQuiz && (
             <>
               <ProfilePicture />
 
@@ -166,13 +177,46 @@ export default function App() {
                 </button>
               </div>
 
-              <QuizList initialLanguage={selected} initialCategory={category} />
+              <QuizList
+                initialLanguage={selected}
+                initialCategory={category}
+                language={quizLanguage ?? selected ?? ""}
+                category={quizCategory ?? category ?? ""}
+                onLanguageChange={setQuizLanguage}
+                onCategoryChange={setQuizCategory}
+                onSelectQuiz={(quiz) => setSelectedQuiz(quiz)}
+              />
             </>
+          )}
+
+          {step === "ready" && selectedQuiz && !isPlaying && (
+            <QuizDetail
+              quiz={selectedQuiz}
+              onBack={() => setSelectedQuiz(null)}
+              onPlay={() => setIsPlaying(true)}
+            />
+          )}
+
+          {step === "ready" && selectedQuiz && isPlaying && (
+            <div className="quiz-detail">
+              <h2>{selectedQuiz.title}</h2>
+              <p>Questions are coming soon.</p>
+
+              <div className="step-actions">
+                <button
+                  className="secondary-button"
+                  onClick={() => setIsPlaying(false)}
+                >
+                  Back to details
+                </button>
+              </div>
+            </div>
           )}
 
           <button className="secondary-button logout" onClick={handleLogout}>
             Log out
           </button>
+
         </div>
       </div>
     );

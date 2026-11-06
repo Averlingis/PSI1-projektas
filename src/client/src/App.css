@@ -279,7 +279,7 @@ body {
   padding-bottom: 18px;
   border-bottom: 1px solid var(--border);
 }
- 
+
 .profile-avatar {
   width: 96px;
   height: 96px;
@@ -291,19 +291,19 @@ body {
   color: var(--accent);
   border: 2px solid var(--border);
 }
- 
+
 .profile-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
- 
+
 .profile-avatar svg {
   width: 60%;
   height: 60%;
   fill: currentColor;
 }
- 
+
 .status-card .profile-picture button {
   padding: 6px 14px;
   font-size: 0.9rem;
@@ -332,12 +332,6 @@ body {
   font-size: 1rem;
 }
 
-.quiz-item {
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
 .quiz-item h3 {
   margin: 0 0 4px;
   font-size: 1.05rem;
@@ -347,4 +341,56 @@ body {
   margin-top: 6px;
   font-size: 0.85rem;
   color: #52606d;
+}
+
+/* quiz detail */
+
+.quiz-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quiz-detail h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.quiz-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+}
+
+/* clickable quiz cards */
+
+/* Entire quiz card is clickable */
+.status-card .quiz-item-button {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* text readable when hovering */
+.status-card .quiz-item-button:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* Reset filters button */
+.status-card .quiz-reset-button {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  padding: 8px 12px;
 }
