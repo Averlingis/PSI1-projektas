@@ -154,7 +154,7 @@ export default function App() {
 
           {step === "category" && (
             <CategorySelector
-              onBack={() => setStep("language")}
+              onBack={category ? undefined : () => setStep("language")}
               onContinue={(saved) => {
                 setCategory(saved);
                 setStep("ready");
@@ -213,7 +213,8 @@ export default function App() {
             />
           )}
 
-          {!selectedQuiz && (
+          {/* only on the main page, not during setup or inside a quiz */}
+          {step === "ready" && !selectedQuiz && (
             <button className="secondary-button logout" onClick={handleLogout}>
               Log out
             </button>
