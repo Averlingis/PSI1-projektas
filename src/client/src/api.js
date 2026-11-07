@@ -217,3 +217,8 @@ export async function answerQuestion(quizId, index, selectedOptionIndex) {
 export async function resetQuizScore(quizId) {
   return authFetch(`/api/quizzes/${quizId}/score`, { method: "DELETE" });
 }
+
+// Gets the user's score for a quiz.
+export async function getQuizScore(quizId) {
+  return authFetch(`/api/quizzes/${quizId}/score`); 
+}
