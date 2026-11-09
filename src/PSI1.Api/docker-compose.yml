@@ -16,7 +16,7 @@ services:
     image: sosedoff/pgweb
     container_name: psi1-pgweb
     ports:
-      - "8081:8081"
+      - "127.0.0.1:8081:8081"
     environment:
       - DATABASE_URL=postgres://postgres@psi1-db:5432/psi1?sslmode=disable
     depends_on:
