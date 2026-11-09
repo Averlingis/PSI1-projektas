@@ -8,4 +8,5 @@ public record QuizSummaryResponse(
     string? Description,
     Category Category,
     Language Language,
-    int QuestionCount);
+    int QuestionCount,
+    bool IsPublic);
