@@ -7,6 +7,7 @@ namespace PSI1.Api.Tests.Import;
 //checks the quiz files in src/PSI1.Api/SeedData
 public class SeedDataTests
 {
+    private static JsonQuizImporter CreateImporter() => new(new QuizBuilder());
     private static readonly string SeedDataDirectory = Path.Combine(AppContext.BaseDirectory, "SeedData");
 
     private static string[] GetSeedFiles() => Directory.GetFiles(SeedDataDirectory, "*.json");
@@ -14,7 +15,7 @@ public class SeedDataTests
     //imports every seed file
     private static async Task<List<(string FileName, QuizBuildResult Result)>> ImportAllAsync()
     {
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
         var results = new List<(string FileName, QuizBuildResult Result)>();
 
         foreach (var path in GetSeedFiles())
