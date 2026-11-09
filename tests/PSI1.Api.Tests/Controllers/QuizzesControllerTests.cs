@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -747,6 +748,80 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(0, progress.AnsweredCount);
     }
 
+    // ---------- GET api/quizzes/in-progress/latest ----------
+
+    [Fact]
+    public async Task GetLatestInProgress_NoQuizzesStarted_ReturnsNoContent()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.GetAsync("api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+   [Fact]
+    public async Task GetLatestInProgress_OneUnfinishedQuiz_ReturnsQuizIdAndTitle()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync();
+        await AnswerQuestionsAsync(client, quizId, 0);
+
+        var response = await client.GetAsync("api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var latest = await response.Content.ReadFromJsonAsync<QuizInProgressResponse>();
+
+        Assert.NotNull(latest);
+        Assert.Equal(quizId, latest.QuizId);
+        Assert.Equal("Family Vocabulary", latest.Title);
+    }
+
+   [Fact]
+    public async Task GetLatestInProgress_SeveralUnfinishedQuizzes_ReturnsLatest()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var olderQuizId = await CreateTestQuizAsync();
+        var newerQuizId = await CreateTestQuizAsync();
+
+        await AnswerQuestionsAsync(client, olderQuizId, 0);
+        await AnswerQuestionsAsync(client, newerQuizId, 0);
+        await AnswerQuestionsAsync(client, olderQuizId, 1);
+
+        var response = await client.GetAsync("api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var latest = await response.Content.ReadFromJsonAsync<QuizInProgressResponse>();
+
+        Assert.NotNull(latest);
+        Assert.Equal(olderQuizId, latest.QuizId);
+    }
+
+    [Fact]
+    public async Task GetLatestInProgress_CompletedQuiz_IsIgnored()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync();
+        await AnswerQuestionsAsync(client, quizId, 0, 1, 2);
+
+        var response = await client.GetAsync("api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetLatestInProgress_WithoutToken_ReturnsUnauthorized()
+    {
+        var response = await _client.GetAsync("api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     // ---------- POST api/quizzes/import ----------
 
     private static MultipartFormDataContent ToFormContent(string json)
@@ -914,6 +989,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+
 
 
 }

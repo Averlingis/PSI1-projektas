@@ -62,4 +62,12 @@ public class QuizScoreTests
 
         Assert.Equal(2, score.GetFirstUnansweredIndex(3));
     }
+
+    [Fact]
+    public void GetLatestAnswerId_NoAnswers_ReturnsNull()
+    {
+        var score = CreateScore();
+
+        Assert.Null(score.GetLatestAnswerId());
+    }
 }
