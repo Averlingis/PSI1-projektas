@@ -1,40 +1,42 @@
 using System.Text.Json;
 
 using PSI1.Api.Models;
+using PSI1.Api.DTOs;
+using PSI1.Api.QuizBuilding;
 
 namespace PSI1.Api.Import;
 
 public class JsonQuizImporter
 {
     private static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
-    public async Task<QuizImportResult> ImportAsync(Stream stream)
+    public async Task<QuizBuildResult> ImportAsync(Stream stream)
     {
-        QuizFileDto? dto;
+        QuizDto? dto;
 
         try
         {
-            dto = await JsonSerializer.DeserializeAsync<QuizFileDto>(stream, JsonSerializerOptions);
+            dto = await JsonSerializer.DeserializeAsync<QuizDto>(stream, JsonSerializerOptions);
         }
         catch (JsonException)
         {
-            return new QuizImportResult(null, [new ImportError(null, "The file is not valid JSON.")]);
+            return new QuizBuildResult(null, [new QuizError(null, "The file is not valid JSON.")]);
         }
 
         if (dto is null)
         {
-            return new QuizImportResult(null, [new ImportError(null, "The file does not contain a quiz.")]);
+            return new QuizBuildResult(null, [new QuizError(null, "The file does not contain a quiz.")]);
         }
 
-        var errors = new List<ImportError>();
+        var errors = new List<QuizError>();
 
         if (!TryParseEnum(dto.Category, out Category category))
         {
-            errors.Add(new ImportError(null, $"Unknown or missing category: '{dto.Category}'."));
+            errors.Add(new QuizError(null, $"Unknown or missing category: '{dto.Category}'."));
         }
 
         if (!TryParseEnum(dto.Language, out Language language))
         {
-            errors.Add(new ImportError(null, $"Unknown or missing language: '{dto.Language}'."));
+            errors.Add(new QuizError(null, $"Unknown or missing language: '{dto.Language}'."));
         }
 
         var questions = new List<Question>();
@@ -45,7 +47,7 @@ public class JsonQuizImporter
             var questionDto = questionDtos[i];
             if (questionDto is null)
             {
-                errors.Add(new ImportError(i + 1, "Question cannot be null."));
+                errors.Add(new QuizError(i + 1, "Question cannot be null."));
                 continue;
             }
 
@@ -60,22 +62,22 @@ public class JsonQuizImporter
             }
             catch (ArgumentException ex)
             {
-                errors.Add(new ImportError(i + 1, ex.Message));
+                errors.Add(new QuizError(i + 1, ex.Message));
             }
         }
 
         if (errors.Count > 0)
         {
-            return new QuizImportResult(null, errors);
+            return new QuizBuildResult(null, errors);
         }
         try
         {
             var quiz = new Quiz(title: dto.Title!, description: dto.Description, category: category, language: language, questions: questions);
-            return new QuizImportResult(quiz, []);
+            return new QuizBuildResult(quiz, []);
         }
         catch (ArgumentException ex)
         {
-            return new QuizImportResult(null, [new ImportError(null, ex.Message)]);
+            return new QuizBuildResult(null, [new QuizError(null, ex.Message)]);
         }
     }
 

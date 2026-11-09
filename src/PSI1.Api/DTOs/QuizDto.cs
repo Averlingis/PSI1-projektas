@@ -1,11 +1,11 @@
 using PSI1.Api.Models;
 
-namespace PSI1.Api.Import;
+namespace PSI1.Api.DTOs;
 
-public record QuizFileDto(
+public record QuizDto(
     string? Title,
     string? Description,
     string? Category,
     string? Language,
-    IReadOnlyList<QuestionFileDto?>? Questions
+    IReadOnlyList<QuestionDto?>? Questions
 );
