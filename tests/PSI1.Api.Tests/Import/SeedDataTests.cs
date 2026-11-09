@@ -1,20 +1,22 @@
 using PSI1.Api.Import;
 using PSI1.Api.Models;
+using PSI1.Api.QuizBuilding;
 
 namespace PSI1.Api.Tests.Import;
 
 //checks the quiz files in src/PSI1.Api/SeedData
 public class SeedDataTests
 {
+    private static JsonQuizImporter CreateImporter() => new(new QuizBuilder());
     private static readonly string SeedDataDirectory = Path.Combine(AppContext.BaseDirectory, "SeedData");
 
     private static string[] GetSeedFiles() => Directory.GetFiles(SeedDataDirectory, "*.json");
 
     //imports every seed file
-    private static async Task<List<(string FileName, QuizImportResult Result)>> ImportAllAsync()
+    private static async Task<List<(string FileName, QuizBuildResult Result)>> ImportAllAsync()
     {
-        var importer = new JsonQuizImporter();
-        var results = new List<(string FileName, QuizImportResult Result)>();
+        var importer = CreateImporter();
+        var results = new List<(string FileName, QuizBuildResult Result)>();
 
         foreach (var path in GetSeedFiles())
         {
@@ -25,7 +27,7 @@ public class SeedDataTests
         return results;
     }
 
-    private static List<string> DescribeFailures(IEnumerable<(string FileName, QuizImportResult Result)> results) =>
+    private static List<string> DescribeFailures(IEnumerable<(string FileName, QuizBuildResult Result)> results) =>
         results
             .Where(r => !r.Result.IsSuccess)
             .Select(r => $"{r.FileName}: {string.Join(" ", r.Result.Errors.Select(e => e.Message))}")

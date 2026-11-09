@@ -2,12 +2,14 @@ using System.Text;
 
 using PSI1.Api.Import;
 using PSI1.Api.Models;
+using PSI1.Api.QuizBuilding;
 
 namespace PSI1.Api.Tests.Import;
 
 public class JsonQuizImporterTests
 {
 
+    private static JsonQuizImporter CreateImporter() => new(new QuizBuilder());
     private static MemoryStream ToStream(string json) => new(Encoding.UTF8.GetBytes(json));
 
     [Fact]
@@ -45,7 +47,7 @@ public class JsonQuizImporterTests
             ]
           }
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -97,7 +99,7 @@ public class JsonQuizImporterTests
             ]
           }
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -113,7 +115,7 @@ public class JsonQuizImporterTests
           {
             "title": "Family Vocabulary"
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -125,7 +127,7 @@ public class JsonQuizImporterTests
     [Fact]
     public async Task ImportAsync_EmptyFile_ReturnsSingleErrorWithoutLocation()
     {
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(""));
 
@@ -137,7 +139,7 @@ public class JsonQuizImporterTests
     [Fact]
     public async Task ImportAsync_JsonNull_ReturnsSingleErrorWithoutLocation()
     {
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream("null"));
 
@@ -159,7 +161,7 @@ public class JsonQuizImporterTests
             "language": "Lithuanian"
           }
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -182,7 +184,7 @@ public class JsonQuizImporterTests
             "language": "{{language}}"
           }
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -228,7 +230,7 @@ public class JsonQuizImporterTests
           }
           """;
 
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -273,7 +275,7 @@ public class JsonQuizImporterTests
           }
           """;
 
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -310,7 +312,7 @@ public class JsonQuizImporterTests
           }
           """;
 
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -355,7 +357,7 @@ public class JsonQuizImporterTests
           }
           """;
 
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -398,7 +400,7 @@ public class JsonQuizImporterTests
             ]
           }
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -438,7 +440,7 @@ public class JsonQuizImporterTests
           }
           """;
 
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
@@ -483,7 +485,7 @@ public class JsonQuizImporterTests
             ]
           }
           """;
-        var importer = new JsonQuizImporter();
+        var importer = CreateImporter();
 
         var result = await importer.ImportAsync(ToStream(json));
 
