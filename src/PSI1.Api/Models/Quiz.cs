@@ -16,13 +16,15 @@ public class Quiz : IEquatable<Quiz>
     public string? Description { get; private set; }
     public Category Category { get; private set; }
     public Language Language { get; private set; }
+    public int? OwnerId { get; private set; }
+    public bool IsPublic { get; private set; }
     public IReadOnlyList<Question> Questions => questions.OrderBy(q => q.Position).ToList();
 
     private Quiz()
     {
         Title = string.Empty;
     }
-    public Quiz(string title, Category category, Language language, List<Question> questions, string? description = null)
+    public Quiz(string title, Category category, Language language, List<Question> questions, string? description = null, int? ownerId = null, bool isPublic = true)
     {
         // Title validation
         if (string.IsNullOrWhiteSpace(title))
@@ -57,10 +59,22 @@ public class Quiz : IEquatable<Quiz>
                 $"A quiz must have between {MinQuestions} and {MaxQuestions} questions.", nameof(questions));
         }
 
+        //Owner and visibility validation 
+        if (ownerId < 1)
+        {
+            throw new ArgumentException("Owner id must be positive", nameof(ownerId));
+        }
+        if (ownerId is null && !isPublic)
+        {
+            throw new ArgumentException("A quiz with no owner must be public", nameof(isPublic));
+        }
+
         Title = title;
         Description = description;
         Category = category;
         Language = language;
+        OwnerId = ownerId;
+        IsPublic = isPublic;
         this.questions = [.. questions];
 
         for (var i = 0; i < this.questions.Count; i++)

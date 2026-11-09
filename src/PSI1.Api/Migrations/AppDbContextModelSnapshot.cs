@@ -114,7 +114,13 @@ namespace PSI1.Api.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("Language")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OwnerId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -123,6 +129,8 @@ namespace PSI1.Api.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Quizzes");
                 });
@@ -217,6 +225,14 @@ namespace PSI1.Api.Migrations
                         .HasForeignKey("QuizScoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PSI1.Api.Models.Quiz", b =>
+                {
+                    b.HasOne("PSI1.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("PSI1.Api.Models.QuizScore", b =>
