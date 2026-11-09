@@ -37,6 +37,8 @@ public class AppDbContext : DbContext
             // a question cannot exist without its quiz. deleting a quiz deletes its questions
             b.HasMany<Question>("questions").WithOne().HasForeignKey("QuizId").IsRequired();
             b.Navigation("questions").AutoInclude();
+            // deleting user deletes their quizzes 
+            b.HasOne<User>().WithMany().HasForeignKey(q => q.OwnerId).OnDelete(DeleteBehavior.Cascade);
         });
 
         // Question
