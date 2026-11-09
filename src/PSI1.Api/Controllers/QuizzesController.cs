@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
@@ -165,6 +166,43 @@ public class QuizzesController : ControllerBase
             score.GetFirstUnansweredIndex(quiz.QuestionCount),
             score.Answers.Count,
             quiz.QuestionCount));
+    }
+
+    [Authorize]
+    [HttpGet("in-progress/latest")]
+    public async Task<ActionResult<QuizInProgressResponse>> GetLatestInProgress()
+    {
+        var userId = User.GetUserId();
+
+        var scores = await _db.QuizScores
+            .AsNoTracking()
+            .Where(s => s.UserId == userId)
+            .ToListAsync();
+
+        var quizIds = scores.Select(s => s.QuizId).ToList();
+
+        var quizzes = await _db.Quizzes
+            .AsNoTracking()
+            .Where(q => quizIds.Contains(q.Id))
+            .Select(q => new
+            {
+                q.Id,
+                q.Title,
+                QuestionCount = EF.Property<ICollection<Question>>(q, "questions").Count
+            })
+            .ToDictionaryAsync(q => q.Id);
+
+        var latest = scores
+            .Where(s => s.GetLatestAnswerId() is not null
+                && s.GetFirstUnansweredIndex(quizzes[s.QuizId].QuestionCount) is not null)
+            .MaxBy(s => s.GetLatestAnswerId());
+
+        if (latest is null)
+        {
+            return NoContent();
+        }
+
+        return Ok(new QuizInProgressResponse(latest.QuizId, quizzes[latest.QuizId].Title));
     }
 
     [Authorize]

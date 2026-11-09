@@ -51,4 +51,9 @@ public class QuizScore
 
         return null;
     }
+
+    public int? GetLatestAnswerId()
+    {
+        return answerRows.Select(a => (int?)a.Id).Max();
+    }
 }

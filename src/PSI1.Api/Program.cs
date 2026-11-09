@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using PSI1.Api.Data;
 using PSI1.Api.Exceptions;
 using PSI1.Api.Import;
+using PSI1.Api.QuizBuilding;
 
 
 //Creates builder object that is used to configure the app before start
@@ -44,6 +45,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<JsonQuizImporter>();
+builder.Services.AddSingleton<QuizBuilder>();
 builder.Services.AddScoped<QuizSeeder>();
 builder.Services.AddExceptionHandler<AuthExceptionHandler>();
 builder.Services.AddProblemDetails();
