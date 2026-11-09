@@ -12,5 +12,16 @@ services:
       - psi1_postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: psi1-pgweb
+    ports:
+      - "127.0.0.1:8081:8081"
+    environment:
+      - DATABASE_URL=postgres://postgres@psi1-db:5432/psi1?sslmode=disable
+    depends_on:
+      - psi1-db
+    restart: unless-stopped
+
 volumes:
   psi1_postgres_data:
