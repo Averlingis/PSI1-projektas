@@ -855,7 +855,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
 
-   [Fact]
+    [Fact]
     public async Task GetLatestInProgress_OneUnfinishedQuiz_ReturnsQuizIdAndTitle()
     {
         using var client = await _factory.CreateAuthenticatedClientAsync();
@@ -866,7 +866,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         var response = await client.GetAsync("api/quizzes/in-progress/latest");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var latest = await response.Content.ReadFromJsonAsync<QuizInProgressResponse>();
 
         Assert.NotNull(latest);
@@ -874,7 +874,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal("Family Vocabulary", latest.Title);
     }
 
-   [Fact]
+    [Fact]
     public async Task GetLatestInProgress_SeveralUnfinishedQuizzes_ReturnsLatest()
     {
         using var client = await _factory.CreateAuthenticatedClientAsync();
@@ -1083,5 +1083,190 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         var response = await client.PostAsync("api/quizzes/import", new MultipartFormDataContent());
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_PublicQuiz_ReturnsCreatedAndAppearsInLists()
+    {
+        var title = $"Created Quiz {Guid.NewGuid():N}";
+
+        var request = new
+        {
+            quiz = new
+            {
+                title,
+                category = "Family",
+                language = "Lithuanian",
+                questions = new[]
+                {
+                new
+                {
+                    text = "Question 1",
+                    options = new[]
+                    {
+                        new { text = "Yes", isCorrect = true },
+                        new { text = "No", isCorrect = false }
+                    }
+                },
+                new
+                {
+                    text = "Question 2",
+                    options = new[]
+                    {
+                        new { text = "Yes", isCorrect = true },
+                        new { text = "No", isCorrect = false }
+                    }
+                },
+                new
+                {
+                    text = "Question 3",
+                    options = new[]
+                    {
+                        new { text = "Yes", isCorrect = true },
+                        new { text = "No", isCorrect = false }
+                    }
+                }
+            }
+            },
+            isPublic = true
+        };
+
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync("api/quizzes", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        var created = await response.Content.ReadFromJsonAsync<QuizSummaryResponse>(Json);
+
+        Assert.NotNull(created);
+        Assert.True(created.Id > 0);
+        Assert.True(created.IsPublic);
+
+        var publicQuizzes = await GetQuizzesAsync("api/quizzes");
+        var myQuizzes = await GetQuizzesAsync("api/quizzes/mine", client);
+
+        Assert.Contains(publicQuizzes, q => q.Id == created.Id);
+        Assert.Contains(myQuizzes, q => q.Id == created.Id);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_PrivateQuiz_AppearsOnlyInMine()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var title = $"Private-{Guid.NewGuid():N}";
+
+        var request = new
+        {
+            quiz = new
+            {
+                title,
+                category = "Family",
+                language = "Lithuanian",
+                questions = Enumerable.Range(1, 3).Select(i => new
+                {
+                    text = $"Question {i}",
+                    options = new[]
+                    {
+                    new { text = "Yes", isCorrect = true },
+                    new { text = "No", isCorrect = false }
+                }
+                }).ToArray()
+            },
+            isPublic = false
+        };
+
+        var response = await client.PostAsJsonAsync("api/quizzes", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        var created = await response.Content.ReadFromJsonAsync<QuizSummaryResponse>(Json);
+
+        Assert.NotNull(created);
+        Assert.False(created.IsPublic);
+
+        var publicQuizzes = await GetQuizzesAsync("api/quizzes");
+        var myQuizzes = await GetQuizzesAsync("api/quizzes/mine", client);
+
+        Assert.DoesNotContain(publicQuizzes, q => q.Id == created.Id);
+        Assert.Contains(myQuizzes, q => q.Id == created.Id);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_QuestionWithoutText_ReturnsBadRequestWithQuestionNumber()
+    {
+        var request = new
+        {
+            quiz = new
+            {
+                title = $"Invalid-{Guid.NewGuid():N}",
+                category = "Family",
+                language = "Lithuanian",
+                questions = new[]
+                {
+                new
+                {
+                    options = new[]
+                    {
+                        new { text = "Yes", isCorrect = true },
+                        new { text = "No", isCorrect = false }
+                    }
+                }
+            }
+            },
+            isPublic = true
+        };
+
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync("api/quizzes", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var body = await response.Content.ReadAsStringAsync();
+        Assert.Contains("\"location\":1", body);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_DuplicateQuiz_ReturnsConflict()
+    {
+        var request = new
+        {
+            quiz = new
+            {
+                title = $"Duplicate-{Guid.NewGuid():N}",
+                category = "Family",
+                language = "Lithuanian",
+                questions = Enumerable.Range(1, 3).Select(i => new
+                {
+                    text = $"Question {i}",
+                    options = new[]
+                    {
+                    new { text = "Yes", isCorrect = true },
+                    new { text = "No", isCorrect = false }
+                }
+                }).ToArray()
+            },
+            isPublic = true
+        };
+
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response1 = await client.PostAsJsonAsync("api/quizzes", request);
+        Assert.Equal(HttpStatusCode.Created, response1.StatusCode);
+
+        var response2 = await client.PostAsJsonAsync("api/quizzes", request);
+        Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_WithoutToken_ReturnsUnauthorized()
+    {
+        var response = await _client.PostAsJsonAsync(
+            "api/quizzes",
+            new { });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 }
