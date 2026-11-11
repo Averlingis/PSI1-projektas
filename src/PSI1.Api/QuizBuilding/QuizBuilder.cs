@@ -5,7 +5,7 @@ namespace PSI1.Api.QuizBuilding;
 
 public class QuizBuilder()
 {
-    public QuizBuildResult Build(QuizDto dto)
+    public QuizBuildResult Build(QuizDto dto, int? ownerId = null, bool isPublic = true)
     {
         var errors = new List<QuizError>();
 
@@ -53,7 +53,7 @@ public class QuizBuilder()
 
         try
         {
-            var quiz = new Quiz(title: dto.Title!, description: dto.Description, category: category, language: language, questions: questions);
+            var quiz = new Quiz(title: dto.Title!, description: dto.Description, category: category, language: language, questions: questions, ownerId: ownerId, isPublic: isPublic);
             return new QuizBuildResult(quiz, []);
         }
         catch (ArgumentException ex)
