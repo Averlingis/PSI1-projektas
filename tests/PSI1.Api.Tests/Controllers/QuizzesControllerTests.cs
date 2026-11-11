@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -136,7 +137,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     // ---------- GET api/quizzes
-    private async Task SeedAsync(string title, Category category, Language language)
+    private async Task SeedAsync(string title, Category category, Language language, int? ownerId = null, bool isPublic = true)
     {
 
         using var scope = _factory.Services.CreateScope();
@@ -146,7 +147,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
             .Select(i => new Question($"Q{i}", [new AnswerOption("A", true), new AnswerOption("B", false)]))
             .ToList();
 
-        db.Quizzes.Add(new Quiz(title, category, language, questions));
+        db.Quizzes.Add(new Quiz(title, category, language, questions, ownerId: ownerId, isPublic: isPublic));
         await db.SaveChangesAsync();
     }
 
@@ -168,15 +169,22 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
     private record Seeded(string FoodItalian, string FoodLithuanian, string TravelItalian, string TravelLithuanian);
 
-    private async Task<List<QuizSummaryResponse>> GetQuizzesAsync(string url)
+    private async Task<List<QuizSummaryResponse>> GetQuizzesAsync(string url, HttpClient? client = null)
     {
-        var response = await _client.GetAsync(url);
+        var response = await (client ?? _client).GetAsync(url);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         return (await response.Content.ReadFromJsonAsync<List<QuizSummaryResponse>>(Json))!;
     }
 
+    // the user id is the "sub" claim of the client's token
+    private static int GetUserId(HttpClient client)
+    {
+        var token = client.DefaultRequestHeaders.Authorization!.Parameter;
+        return int.Parse(new JwtSecurityTokenHandler().ReadJwtToken(token).Subject);
+    }
+
     [Fact]
-    public async Task GetQuizzes_WithoutToken_ReturnsOk()
+    public async Task GetAll_WithoutToken_ReturnsOk()
     {
         var response = await _client.GetAsync("api/quizzes");
 
@@ -184,7 +192,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuizzes_NoFilters_ReturnsAllQuizzes()
+    public async Task GetAll_NoFilters_ReturnsAllPublicQuizzes()
     {
         var seeded = await SeedMatrixAsync();
 
@@ -198,7 +206,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuizzes_FilterByCategory_ReturnsOnlyThatCategory()
+    public async Task GetAll_FilterByCategory_ReturnsOnlyThatCategory()
     {
         var seeded = await SeedMatrixAsync();
 
@@ -213,7 +221,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuizzes_FilterByLanguage_ReturnsOnlyThatLanguage()
+    public async Task GetAll_FilterByLanguage_ReturnsOnlyThatLanguage()
     {
         var seeded = await SeedMatrixAsync();
 
@@ -228,7 +236,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuizzes_FilterByCategoryAndLanguage_ReturnsOnlyBothMatching()
+    public async Task GetAll_FilterByCategoryAndLanguage_ReturnsOnlyBothMatching()
     {
         var seeded = await SeedMatrixAsync();
 
@@ -247,7 +255,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuizzes_FilterIsCaseInsensitive()
+    public async Task GetAll_FilterIsCaseInsensitive()
     {
         var seeded = await SeedMatrixAsync();
 
@@ -262,19 +270,106 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     [InlineData("api/quizzes?language=French")]
     [InlineData("api/quizzes?category=999")]
     [InlineData("api/quizzes?language=999")]
-    public async Task GetQuizzes_UnknownFilterValue_ReturnsBadRequest(string url)
+    public async Task GetAll_UnknownFilterValue_ReturnsBadRequest(string url)
     {
         var response = await _client.GetAsync(url);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
+    [Fact]
+    public async Task GetAll_PrivateQuiz_IsNotReturned()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Private-{Guid.NewGuid():N}";
+        await SeedAsync(title, Category.Food, Language.Italian, GetUserId(client), isPublic: false);
+
+        var quizzes = await GetQuizzesAsync("api/quizzes");
+
+        Assert.DoesNotContain(quizzes, q => q.Title == title);
+    }
+
+    [Fact]
+    public async Task GetAll_PublicQuizWithOwner_IsReturned()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Public-{Guid.NewGuid():N}";
+        await SeedAsync(title, Category.Food, Language.Italian, GetUserId(client), isPublic: true);
+
+        var quizzes = await GetQuizzesAsync("api/quizzes");
+
+        Assert.Contains(quizzes, q => q.Title == title && q.IsPublic);
+    }
+
+    // ---------- GET api/quizzes/mine ----------
+
+    [Fact]
+    public async Task GetMyQuizzes_PublicAndPrivateQuizzes_ReturnsBoth()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var publicTitle = $"Public-{Guid.NewGuid():N}";
+        var privateTitle = $"Private-{Guid.NewGuid():N}";
+
+        await SeedAsync(publicTitle, Category.Food, Language.Italian, GetUserId(client), isPublic: true);
+        await SeedAsync(privateTitle, Category.Food, Language.Italian, GetUserId(client), isPublic: false);
+
+        var quizzes = await GetQuizzesAsync("api/quizzes/mine", client);
+
+        Assert.Equal(2, quizzes.Count);
+        Assert.Contains(quizzes, q => q.Title == publicTitle && q.IsPublic);
+        Assert.Contains(quizzes, q => q.Title == privateTitle && !q.IsPublic);
+    }
+
+    [Fact]
+    public async Task GetMyQuizzes_OtherUsersAndSeedQuizzes_AreNotReturned()
+    {
+        using var client1 = await _factory.CreateAuthenticatedClientAsync();
+        using var client2 = await _factory.CreateAuthenticatedClientAsync();
+
+        var myTitle = $"Mine-{Guid.NewGuid():N}";
+
+        await SeedAsync(myTitle, Category.Food, Language.Italian, GetUserId(client1));
+        await SeedAsync($"Other-{Guid.NewGuid():N}", Category.Food, Language.Italian, GetUserId(client2));
+
+        // a quiz with no owner, like the seed quizzes
+        await SeedAsync($"Seed-{Guid.NewGuid():N}", Category.Food, Language.Italian);
+
+        var quizzes = await GetQuizzesAsync("api/quizzes/mine", client1);
+
+        var quiz = Assert.Single(quizzes);
+        Assert.Equal(myTitle, quiz.Title);
+    }
+
+    [Fact]
+    public async Task GetMyQuizzes_CategoryFilter_ReturnsMatchingQuizzes()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var foodTitle = $"Food-{Guid.NewGuid():N}";
+
+        await SeedAsync(foodTitle, Category.Food, Language.Italian, GetUserId(client));
+        await SeedAsync($"Travel-{Guid.NewGuid():N}", Category.Travel, Language.Italian, GetUserId(client));
+
+        var quizzes = await GetQuizzesAsync("api/quizzes/mine?category=Food", client);
+
+        var quiz = Assert.Single(quizzes);
+        Assert.Equal(foodTitle, quiz.Title);
+    }
+
+    [Fact]
+    public async Task GetMyQuizzes_WithoutToken_ReturnsUnauthorized()
+    {
+        var response = await _client.GetAsync("api/quizzes/mine");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    // ---------- POST api/quizzes/{quizId}/questions/{index}/answer ----------
+
     [Theory]
     [InlineData(1, true)]
     [InlineData(0, false)]
     [InlineData(2, false)]
-
-    // ---------- POST api/quizzes/{quizId}/questions/{index}/answer ----------
     public async Task AnswerQuestion_SelectedOption_ReturnsCorrectnessAndCorrectText(int selectedOptionIndex, bool expectedIsCorrect)
     {
         var quizId = await CreateTestQuizAsync();
@@ -989,7 +1084,4 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
-
-
-
 }
