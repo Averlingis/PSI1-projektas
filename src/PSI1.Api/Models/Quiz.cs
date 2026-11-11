@@ -62,11 +62,11 @@ public class Quiz : IEquatable<Quiz>
         //Owner and visibility validation 
         if (ownerId < 1)
         {
-            throw new ArgumentException("Owner id must be positive", nameof(ownerId));
+            throw new ArgumentException("Owner id must be positive.", nameof(ownerId));
         }
         if (ownerId is null && !isPublic)
         {
-            throw new ArgumentException("A quiz with no owner must be public", nameof(isPublic));
+            throw new ArgumentException("A quiz with no owner must be public.", nameof(isPublic));
         }
 
         Title = title;
