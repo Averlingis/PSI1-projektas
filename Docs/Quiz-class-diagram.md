@@ -1,4 +1,4 @@
-<!-- Made with AI> -->
+<!-- Made with AI -->
 
 # Quiz class diagram
 
@@ -10,6 +10,8 @@ classDiagram
     +string? Description
     +Category Category
     +Language Language
+    +int? OwnerId
+    +bool IsPublic
     +IReadOnlyList~Question~ Questions
   }
   class Question {
@@ -35,6 +37,7 @@ classDiagram
     +int QuizId
     +IReadOnlyDictionary~int,bool~ Answers
     +RecordAnswer(questionIndex, isCorrect)
+    +GetFirstUnansweredIndex(questionCount) int?
   }
   class QuestionAnswer {
     <<db row>>
@@ -47,6 +50,10 @@ classDiagram
     +int Id
     +string Email
     +string Username
+    +string PasswordHash
+    +string ProfilePictureFilename
+    +Language? LearningLanguage
+    +Category? SelectedCategory
   }
   class Category {
     <<enumeration>>
@@ -62,6 +69,7 @@ classDiagram
   QuizScore "*" --> "1" User
   Quiz --> Category
   Quiz --> Language
+  Quiz "0..*" --> "0..1" User : owner (cascade delete)
 ```
 
 `AnswerOptionRow` and `QuestionAnswer` are database rows. EF Core cannot store a struct collection or a dictionary directly, so `Question.Options` and `QuizScore.Answers` are built from these rows.
