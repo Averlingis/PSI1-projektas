@@ -6,12 +6,23 @@ export default function QuizResult({ quiz, onPlayAgain, onBackToQuizzes }) {
   const [score, setScore] = useState(null);
   const [error, setError] = useState("");
 
+  // load the score, ignore the response if the screen was already left
   useEffect(() => {
-    getQuizScore(quiz.id)
-      .then(setScore)
-      .catch((err) => setError(err.message));
-  }, [quiz.id]);
+    let cancelled = false;
 
+    getQuizScore(quiz.id)
+      .then((data) => {
+        if (!cancelled) setScore(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [quiz.id]);
+  
   return (
     <div className="quiz-detail">
       <h2>{quiz.title}</h2>

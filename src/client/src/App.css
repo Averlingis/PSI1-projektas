@@ -464,3 +464,8 @@ body {
   font-weight: 600;
   color: var(--accent);
 }
+
+.status-card .quiz-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
