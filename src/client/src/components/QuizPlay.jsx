@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { getQuestion, answerQuestion, resetQuizScore } from "../api";
+import { getQuestion, answerQuestion } from "../api";
 
 // Shows a question at a time with feedback after answer
 export default function QuizPlay({ quiz, onFinish, onQuit }) {
   const [index, setIndex] = useState(0);
   const [question, setQuestion] = useState(null);
-  // the option that a user clicked, and the backend return
+  // the option that a user selected, can be changed until submit
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [result, setResult] = useState(null); // { isCorrect, correctOptionText }
   const [submitting, setSubmitting] = useState(false);
@@ -13,12 +13,11 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
 
   const isLastQuestion = index === quiz.questionCount - 1;
 
-  // clear answers from an earlier play, then load q
+  // load first q, earlier answers are cleared when play is clicked
   useEffect(() => {
     let cancelled = false;
 
-    resetQuizScore(quiz.id)
-      .then(() => getQuestion(quiz.id, 0))
+    getQuestion(quiz.id, 0)
       .then((first) => {
         if (!cancelled) setQuestion(first);
       })
@@ -31,20 +30,25 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
     };
   }, [quiz.id]);
 
-  async function handleAnswer(optionIndex) {
-    // only one answer per q
-    if (result || submitting) return;
-
+  // clicking an option only selects it, nothing is sent yet
+  function handleSelect(optionIndex) {
+    if (result) return;
     setSelectedIndex(optionIndex);
+    setError("");
+  }
+
+  async function handleSubmit() {
+    // only one answer per q
+    if (selectedIndex === null || result || submitting) return;
+
     setSubmitting(true);
     setError("");
 
     try {
-      const data = await answerQuestion(quiz.id, index, optionIndex);
+      const data = await answerQuestion(quiz.id, index, selectedIndex);
       setResult(data);
     } catch (err) {
       setError(err.message);
-      setSelectedIndex(null);
     } finally {
       setSubmitting(false);
     }
@@ -72,7 +76,10 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
 
   // the backend returns the correct answer as text
   function optionClass(option, optionIndex) {
-    if (!result) return "quiz-option";
+    // before submit only the selected option is marked
+    if (!result) {
+      return optionIndex === selectedIndex ? "quiz-option selected" : "quiz-option";
+    }
     if (option === result.correctOptionText) return "quiz-option correct";
     if (optionIndex === selectedIndex) return "quiz-option wrong";
     return "quiz-option";
@@ -105,8 +112,9 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
             key={optionIndex}
             type="button"
             className={optionClass(option, optionIndex)}
+            aria-pressed={optionIndex === selectedIndex}
             disabled={result !== null || submitting}
-            onClick={() => handleAnswer(optionIndex)}
+            onClick={() => handleSelect(optionIndex)}
           >
             {option}
           </button>
@@ -130,6 +138,14 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
         <button className="secondary-button" onClick={onQuit}>
           Quit
         </button>
+        {!result && (
+          <button
+            onClick={handleSubmit}
+            disabled={selectedIndex === null || submitting}
+          >
+            {submitting ? "Submitting..." : "Submit"}
+          </button>
+        )}
         {result && (
           <button onClick={handleNext}>
             {isLastQuestion ? "Finish" : "Next"}

@@ -456,3 +456,8 @@ body {
 .quiz-feedback.wrong {
   color: var(--error);
 }
+
+.status-card .quiz-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}

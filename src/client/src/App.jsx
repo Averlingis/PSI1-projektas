@@ -11,6 +11,7 @@ import {
   getSelectedLanguage,
   getSelectedCategory,
   selectLanguage,
+  resetQuizScore,
 } from "./api";
 import "./App.css";
 
@@ -107,6 +108,13 @@ export default function App() {
     }
   }
 
+
+  // clears earlier answers, then opens the play screen
+  async function startQuiz() {
+    await resetQuizScore(selectedQuiz.id);
+    setIsPlaying(true);
+  }
+
   // leaves the quiz and goes back to the list
   // (until the result screen exists, finishing a quiz also lands here)
   function handleBackToQuizzes() {
@@ -201,7 +209,7 @@ export default function App() {
             <QuizDetail
               quiz={selectedQuiz}
               onBack={() => setSelectedQuiz(null)}
-              onPlay={() => setIsPlaying(true)}
+              onPlay={startQuiz}
             />
           )}
 
