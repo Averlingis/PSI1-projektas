@@ -5,6 +5,7 @@ import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
+import CreateQuizForm from "./components/CreateQuizForm";
 import {
   getLanguages,
   getSelectedLanguage,
@@ -32,6 +33,8 @@ export default function App() {
   // Quiz navigation
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  // Quiz creating
+  const [isCreating, setIsCreating] = useState(false);
   // Keep quiz filters when navigating between list and details
   const [quizLanguage, setQuizLanguage] = useState(null);
   const [quizCategory, setQuizCategory] = useState(null);
@@ -90,6 +93,7 @@ export default function App() {
     setCategory(null);
     setSelectedQuiz(null);
     setIsPlaying(false);
+    setIsCreating(false);
     setQuizLanguage(null);
     setQuizCategory(null);
     setLanguageError("");
@@ -154,7 +158,7 @@ export default function App() {
             />
           )}
 
-          {step === "ready" && !selectedQuiz && (
+          {step === "ready" && !selectedQuiz && !isCreating && (
             <>
               <ProfilePicture />
 
@@ -177,6 +181,11 @@ export default function App() {
                 </button>
               </div>
 
+
+              <div className="step-actions">
+                <button onClick={() => setIsCreating(true)}>Create quiz</button>
+              </div>
+
               <QuizList
                 initialLanguage={selected}
                 initialCategory={category}
@@ -188,6 +197,16 @@ export default function App() {
               />
             </>
           )}
+
+        {step === "ready" && isCreating && (
+          <CreateQuizForm
+            onBack={() => setIsCreating(false)}
+            onCreated={(quiz) => {
+            setSelectedQuiz(quiz);
+            setIsCreating(false);
+            }}
+          />
+        )}
 
           {step === "ready" && selectedQuiz && !isPlaying && (
             <QuizDetail

@@ -394,3 +394,92 @@ body {
   font-size: 0.85rem;
   padding: 8px 12px;
 }
+/* ---- create quiz ---- */
+
+.create-quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.create-quiz h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.create-quiz .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.create-quiz input[type="text"],
+.create-quiz textarea,
+.create-quiz select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.create-quiz input:focus,
+.create-quiz textarea:focus,
+.create-quiz select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.create-quiz-row {
+  display: flex;
+  gap: 10px;
+}
+
+.create-quiz fieldset {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.create-quiz .visibility {
+  flex-direction: row;
+  gap: 20px;
+}
+
+.create-quiz .visibility label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.option-row input[type="radio"] {
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.status-card .option-row button {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+.status-card .question-editor .step-actions button {
+  font-size: 0.85rem;
+  padding: 8px 12px;
+}
+
+.status-card .import-row {
+  align-self: flex-start;
+}
