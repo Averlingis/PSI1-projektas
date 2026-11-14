@@ -479,3 +479,7 @@ body {
   font-size: 0.85rem;
   padding: 8px 12px;
 }
+
+.status-card .import-row {
+  align-self: flex-start;
+}
