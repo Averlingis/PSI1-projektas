@@ -77,7 +77,12 @@ async function authFetch(path, options = {}) {
     if (response.status === 401) {
       throw new Error("Your session has expired. Please log in again.");
     }
-    throw new Error(extractErrorMessage(data, "Request failed."));
+    const error = new Error(extractErrorMessage(data, "Request failed."));
+    //quiz endpoints return { errors: [{ location, message }] }, keep the whole list
+    if (Array.isArray(data.errors)) {
+      error.errors = data.errors;
+    }
+    throw error;
   }
 
   return data;
@@ -199,3 +204,11 @@ export async function getQuizzes({ category, language }) {
   return response.json();
 }
 
+// Creates a quiz owned by the current user.
+// On a 400 the thrown error has an `errors` array: [{ location, message }].
+export async function createQuiz(quiz, isPublic) {
+  return authFetch("/api/quizzes", {
+    method: "POST",
+    body: JSON.stringify({ quiz, isPublic }),
+  });
+}
