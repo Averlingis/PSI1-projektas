@@ -5,6 +5,7 @@ import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
+import CreateQuizForm from "./components/CreateQuizForm";
 import QuizPlay from "./components/QuizPlay";
 import QuizResult from "./components/QuizResult";
 import {
@@ -35,6 +36,8 @@ export default function App() {
   // Quiz navigation
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  // Quiz creating
+  const [isCreating, setIsCreating] = useState(false);
   // true after the last question, shows the result screen
   const [isFinished, setIsFinished] = useState(false);
   // Keep quiz filters when navigating between list and details
@@ -95,6 +98,7 @@ export default function App() {
     setCategory(null);
     setSelectedQuiz(null);
     setIsPlaying(false);
+    setIsCreating(false);
     setIsFinished(false);
     setQuizLanguage(null);
     setQuizCategory(null);
@@ -175,7 +179,7 @@ export default function App() {
             />
           )}
 
-          {step === "ready" && !selectedQuiz && (
+          {step === "ready" && !selectedQuiz && !isCreating && (
             <>
               <ProfilePicture />
 
@@ -198,6 +202,11 @@ export default function App() {
                 </button>
               </div>
 
+
+              <div className="step-actions">
+                <button onClick={() => setIsCreating(true)}>Create quiz</button>
+              </div>
+
               <QuizList
                 initialLanguage={selected}
                 initialCategory={category}
@@ -209,6 +218,16 @@ export default function App() {
               />
             </>
           )}
+
+        {step === "ready" && isCreating && (
+          <CreateQuizForm
+            onBack={() => setIsCreating(false)}
+            onCreated={(quiz) => {
+            setSelectedQuiz(quiz);
+            setIsCreating(false);
+            }}
+          />
+        )}
 
           {step === "ready" && selectedQuiz && !isPlaying && (
             <QuizDetail
