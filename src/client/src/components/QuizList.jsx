@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCategories, getLanguages, getQuizzes } from "../api";
+import { getCategories, getLanguages, getQuizzes, getMyQuizzes } from "../api";
 
 // List of quizzes with language and category filters
 export default function QuizList({
@@ -8,6 +8,8 @@ export default function QuizList({
   onLanguageChange,
   onCategoryChange,
   onSelectQuiz,
+  showMine,
+  onToggleMine,
 }) {
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -21,19 +23,34 @@ export default function QuizList({
     getCategories().then(setCategories).catch(() => { });
   }, []);
 
-  // reload the list whenever a filter change
+  // reload the list whenever a filter or the list type changes
   useEffect(() => {
-    getQuizzes({ language, category })
+    let cancelled = false;
+    const load = showMine ? getMyQuizzes : getQuizzes;
+
+    load({ language, category })
       .then((list) => {
+        if (cancelled) return;
         setQuizzes(list);
         setError("");
       })
-      .catch((err) => setError(err.message));
-  }, [language, category]);
+      .catch((err) => {
+        if (!cancelled) setError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [language, category, showMine]);
 
   return (
     <div className="quiz-list">
-      <h2>Quizzes</h2>
+      <div className="quiz-list-header">
+        <h2>{showMine ? "My Quizzes" : "Quizzes"}</h2>
+        <button type="button" className="secondary-button" onClick={onToggleMine}>
+          {showMine ? "Public Quizzes" : "My Quizzes"}
+        </button>
+      </div>
 
       <div className="quiz-filters">
         <select
@@ -68,12 +85,17 @@ export default function QuizList({
         Reset filters
       </button>
 
+      {quizzes?.length === 0 && (
+        <p>
+          {showMine && !language && !category
+            ? "You have not created any quizzes yet."
+            : "No quizzes match these filters."}
+        </p>
+      )}
+
       {error && <p className="auth-error">{error}</p>}
 
       {quizzes === null && !error && <p>Loading quizzes...</p>}
-
-      {quizzes?.length === 0 && <p>No quizzes match these filters.</p>}
-
 
       {quizzes?.map((quiz) => (
         <button
@@ -86,6 +108,11 @@ export default function QuizList({
           {quiz.description && <p>{quiz.description}</p>}
           <p className="quiz-meta">
             {quiz.language} · {quiz.category} · {quiz.questionCount} questions
+            {showMine && (
+              <span className="quiz-visibility">
+                {quiz.isPublic ? "Public" : "Private"}
+              </span>
+            )}
           </p>
         </button>
       ))}

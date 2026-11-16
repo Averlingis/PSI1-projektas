@@ -199,6 +199,15 @@ export async function getQuizzes({ category, language }) {
   return response.json();
 }
 
+// Gets the user's public and private quizzes.
+export async function getMyQuizzes({ category, language }) {
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if (language) params.set("language", language);
+
+  return authFetch(`/api/quizzes/mine?${params}`);
+}
+
 
 // Gets one question of a quiz, without revealing the correct answer.
 export async function getQuestion(quizId, index) {

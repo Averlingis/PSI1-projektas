@@ -319,6 +319,13 @@ body {
   border-top: 1px solid var(--border);
 }
 
+.quiz-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .quiz-filters {
   display: flex;
   gap: 8px;
@@ -341,6 +348,15 @@ body {
   margin-top: 6px;
   font-size: 0.85rem;
   color: #52606d;
+}
+
+.quiz-visibility {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.75rem;
 }
 
 /* quiz detail */
