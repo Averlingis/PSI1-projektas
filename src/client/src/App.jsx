@@ -6,11 +6,14 @@ import ProfilePicture from "./components/ProfilePicture";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
 import CreateQuizForm from "./components/CreateQuizForm";
+import QuizPlay from "./components/QuizPlay";
+import QuizResult from "./components/QuizResult";
 import {
   getLanguages,
   getSelectedLanguage,
   getSelectedCategory,
   selectLanguage,
+  resetQuizScore,
 } from "./api";
 import "./App.css";
 
@@ -35,6 +38,8 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   // Quiz creating
   const [isCreating, setIsCreating] = useState(false);
+  // true after the last question, shows the result screen
+  const [isFinished, setIsFinished] = useState(false);
   // Keep quiz filters when navigating between list and details
   const [quizLanguage, setQuizLanguage] = useState(null);
   const [quizCategory, setQuizCategory] = useState(null);
@@ -94,6 +99,7 @@ export default function App() {
     setSelectedQuiz(null);
     setIsPlaying(false);
     setIsCreating(false);
+    setIsFinished(false);
     setQuizLanguage(null);
     setQuizCategory(null);
     setLanguageError("");
@@ -108,6 +114,21 @@ export default function App() {
     } catch (err) {
       setLanguageError(err.message);
     }
+  }
+
+
+  // clears earlier answers, then opens the play screen
+  async function startQuiz() {
+    await resetQuizScore(selectedQuiz.id);
+    setIsFinished(false);
+    setIsPlaying(true);
+  }
+
+  // leaves the quiz and goes back to the list
+  function handleBackToQuizzes() {
+    setSelectedQuiz(null);
+    setIsPlaying(false);
+    setIsFinished(false);
   }
 
   // if the token is found, the user is logged in and goes through the steps
@@ -150,7 +171,7 @@ export default function App() {
 
           {step === "category" && (
             <CategorySelector
-              onBack={() => setStep("language")}
+              onBack={category ? undefined : () => setStep("language")}
               onContinue={(saved) => {
                 setCategory(saved);
                 setStep("ready");
@@ -212,29 +233,32 @@ export default function App() {
             <QuizDetail
               quiz={selectedQuiz}
               onBack={() => setSelectedQuiz(null)}
-              onPlay={() => setIsPlaying(true)}
+              onPlay={startQuiz}
             />
           )}
 
-          {step === "ready" && selectedQuiz && isPlaying && (
-            <div className="quiz-detail">
-              <h2>{selectedQuiz.title}</h2>
-              <p>Questions are coming soon.</p>
-
-              <div className="step-actions">
-                <button
-                  className="secondary-button"
-                  onClick={() => setIsPlaying(false)}
-                >
-                  Back to details
-                </button>
-              </div>
-            </div>
+          {step === "ready" && selectedQuiz && isPlaying && !isFinished && (
+            <QuizPlay
+              quiz={selectedQuiz}
+              onQuit={() => setIsPlaying(false)}
+              onFinish={() => setIsFinished(true)}
+            />
           )}
 
-          <button className="secondary-button logout" onClick={handleLogout}>
-            Log out
-          </button>
+          {step === "ready" && selectedQuiz && isPlaying && isFinished && (
+            <QuizResult
+              quiz={selectedQuiz}
+              onPlayAgain={startQuiz}
+              onBackToQuizzes={handleBackToQuizzes}
+            />
+          )}
+
+          {/* only on the main page, not during setup or inside a quiz */}
+          {step === "ready" && !selectedQuiz && (
+            <button className="secondary-button logout" onClick={handleLogout}>
+              Log out
+            </button>
+          )}
 
         </div>
       </div>

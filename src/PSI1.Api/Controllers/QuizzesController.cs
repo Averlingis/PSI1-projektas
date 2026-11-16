@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
@@ -217,13 +216,10 @@ public class QuizzesController : ControllerBase
     {
         var userId = User.GetUserId();
 
-        var score = await _db.QuizScores.FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
-
-        if (score is not null)
-        {
-            _db.QuizScores.Remove(score);
-            await _db.SaveChangesAsync();
-        }
+        // if two resets arrive at the same time, the second one simply deletes nothing and allows the quiz to be played the second time
+        await _db.QuizScores
+            .Where(s => s.UserId == userId && s.QuizId == quizId)
+            .ExecuteDeleteAsync();
 
         return NoContent();
     }
