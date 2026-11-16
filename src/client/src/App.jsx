@@ -6,6 +6,7 @@ import ProfilePicture from "./components/ProfilePicture";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
 import QuizPlay from "./components/QuizPlay";
+import QuizResult from "./components/QuizResult";
 import {
   getLanguages,
   getSelectedLanguage,
@@ -34,6 +35,8 @@ export default function App() {
   // Quiz navigation
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  // true after the last question, shows the result screen
+  const [isFinished, setIsFinished] = useState(false);
   // Keep quiz filters when navigating between list and details
   const [quizLanguage, setQuizLanguage] = useState(null);
   const [quizCategory, setQuizCategory] = useState(null);
@@ -92,6 +95,7 @@ export default function App() {
     setCategory(null);
     setSelectedQuiz(null);
     setIsPlaying(false);
+    setIsFinished(false);
     setQuizLanguage(null);
     setQuizCategory(null);
     setLanguageError("");
@@ -112,14 +116,15 @@ export default function App() {
   // clears earlier answers, then opens the play screen
   async function startQuiz() {
     await resetQuizScore(selectedQuiz.id);
+    setIsFinished(false);
     setIsPlaying(true);
   }
 
   // leaves the quiz and goes back to the list
-  // (until the result screen exists, finishing a quiz also lands here)
   function handleBackToQuizzes() {
     setSelectedQuiz(null);
     setIsPlaying(false);
+    setIsFinished(false);
   }
 
   // if the token is found, the user is logged in and goes through the steps
@@ -213,11 +218,19 @@ export default function App() {
             />
           )}
 
-          {step === "ready" && selectedQuiz && isPlaying && (
+          {step === "ready" && selectedQuiz && isPlaying && !isFinished && (
             <QuizPlay
               quiz={selectedQuiz}
               onQuit={() => setIsPlaying(false)}
-              onFinish={handleBackToQuizzes}
+              onFinish={() => setIsFinished(true)}
+            />
+          )}
+
+          {step === "ready" && selectedQuiz && isPlaying && isFinished && (
+            <QuizResult
+              quiz={selectedQuiz}
+              onPlayAgain={startQuiz}
+              onBackToQuizzes={handleBackToQuizzes}
             />
           )}
 

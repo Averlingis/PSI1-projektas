@@ -457,6 +457,14 @@ body {
   color: var(--error);
 }
 
+/* quiz result */
+
+.status-card .quiz-score {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
 .status-card .quiz-option.selected {
   border-color: var(--accent);
   background: var(--accent-soft);
