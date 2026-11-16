@@ -199,3 +199,21 @@ export async function getQuizzes({ category, language }) {
   return response.json();
 }
 
+
+// Gets one question of a quiz, without revealing the correct answer.
+export async function getQuestion(quizId, index) {
+  return authFetch(`/api/quizzes/${quizId}/questions/${index}`); 
+}
+
+// Submits an answer and returns whether it was correct.
+export async function answerQuestion(quizId, index, selectedOptionIndex) {
+  return authFetch(`/api/quizzes/${quizId}/questions/${index}/answer`, {
+    method: "POST",
+    body: JSON.stringify({ selectedOptionIndex }),
+  }); 
+}
+
+// Clears the earlier answers for a quiz
+export async function resetQuizScore(quizId) {
+  return authFetch(`/api/quizzes/${quizId}/score`, { method: "DELETE" });
+}
