@@ -503,6 +503,50 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
+    [Fact]
+    public async Task AnswerQuestion_OwnerCanPlayPrivateQuiz_ReturnsOk()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await ownerClient.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<AnswerResultResponse>();
+
+        Assert.NotNull(result);
+        Assert.True(result.IsCorrect);
+        Assert.Equal("Mama", result.CorrectOptionText);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_OtherUsersPublicQuiz_ReturnsOk()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: true);
+
+        var questionResponse = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/questions/0");
+
+        Assert.Equal(HttpStatusCode.OK, questionResponse.StatusCode);
+
+        var answerResponse = await otherClient.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.OK, answerResponse.StatusCode);
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(3)]

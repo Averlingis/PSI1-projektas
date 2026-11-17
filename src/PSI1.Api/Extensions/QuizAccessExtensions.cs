@@ -11,4 +11,5 @@ public static class QuizAccessExtensions
         return quizzes.Where(q =>
             q.IsPublic || q.OwnerId == userId);
     }
+
 }
