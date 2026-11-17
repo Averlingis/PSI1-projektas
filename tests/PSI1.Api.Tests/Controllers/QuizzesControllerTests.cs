@@ -30,7 +30,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     // ---------- GET api/quizzes{quizId}/questions/{index} ----------
-    private async Task<int> CreateTestQuizAsync()
+    private async Task<int> CreateTestQuizAsync(int? ownerId = null, bool isPublic = true)
     {
         var questions = new List<Question>
     {
@@ -58,7 +58,9 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
             "Family Vocabulary",
             Category.Family,
             Language.Lithuanian,
-            questions
+            questions,
+            ownerId: ownerId,
+            isPublic: isPublic
         );
 
         using var scope = _factory.Services.CreateScope();
@@ -68,6 +70,21 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         await db.SaveChangesAsync();
 
         return quiz.Id;
+    }
+
+    [Fact]
+    public async Task GetQuestion_OwnerCanAccessPrivateQuiz_ReturnsOk()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await ownerClient.GetAsync(
+            $"api/quizzes/{quizId}/questions/0");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Theory]
@@ -96,13 +113,17 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuestion_NonexistentQuiz_ReturnsNotFound()
+    public async Task GetQuestion_OtherUsersPrivateQuiz_ReturnsNotFound()
     {
-        using var client = await _factory.CreateAuthenticatedClientAsync();
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
 
-        var response = await client.GetAsync(
-            "api/quizzes/2147483647/questions/0"
-        );
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/questions/0");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -465,6 +486,23 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
+    [Fact]
+    public async Task AnswerQuestion_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await otherClient.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(3)]
@@ -564,6 +602,34 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task GetScore_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var otherUserId = GetUserId(otherClient);
+
+        // Creates an existing score for the other user
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var score = new QuizScore(otherUserId, quizId);
+        score.RecordAnswer(0, true);
+
+        db.QuizScores.Add(score);
+        await db.SaveChangesAsync();
+
+        var response = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetScore_WithoutToken_ReturnsUnauthorized()
     {
         var quizId = await CreateTestQuizAsync();
@@ -645,6 +711,45 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         var deleteResponse = await client.DeleteAsync($"api/quizzes/{quizId}/score");
 
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResetScore_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var otherUserId = GetUserId(otherClient);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var score = new QuizScore(otherUserId, quizId);
+            score.RecordAnswer(0, true);
+
+            db.QuizScores.Add(score);
+            await db.SaveChangesAsync();
+        }
+
+        var response = await otherClient.DeleteAsync(
+            $"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var score = await db.QuizScores
+                .FirstOrDefaultAsync(s => s.UserId == otherUserId && s.QuizId == quizId);
+
+            Assert.NotNull(score);
+        }
     }
 
     [Fact]
@@ -805,6 +910,22 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task GetProgress_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/progress");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetProgress_WithoutToken_ReturnsUnauthorized()
     {
         var quizId = await CreateTestQuizAsync();
@@ -904,6 +1025,35 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         await AnswerQuestionsAsync(client, quizId, 0, 1, 2);
 
         var response = await client.GetAsync("api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetLatestInProgress_OtherUsersPrivateQuiz_IsIgnored()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var otherUserId = GetUserId(otherClient);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var score = new QuizScore(otherUserId, quizId);
+            score.RecordAnswer(0, true);
+
+            db.QuizScores.Add(score);
+            await db.SaveChangesAsync();
+        }
+
+        var response = await otherClient.GetAsync(
+            "api/quizzes/in-progress/latest");
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
@@ -1100,4 +1250,5 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
 }
