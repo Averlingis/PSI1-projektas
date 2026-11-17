@@ -225,14 +225,6 @@ public class QuizzesController : ControllerBase
     public async Task<ActionResult<QuizSummaryResponse>> CreateQuiz(
         [FromBody] CreateQuizRequest request)
     {
-        if (request?.Quiz is null)
-        {
-            return BadRequest(new
-            {
-                errors = new[] { new QuizError(null, "Quiz is required.") }
-            });
-        }
-
         var userId = User.GetUserId();
 
         var result = _quizBuilder.Build(
