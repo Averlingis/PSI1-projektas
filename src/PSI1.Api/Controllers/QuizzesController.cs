@@ -47,9 +47,11 @@ public class QuizzesController : ControllerBase
     [HttpGet("{quizId}/questions/{index}")]
     public async Task<ActionResult<QuestionPlayResponse>> GetQuestion(int quizId, int index)
     {
+        var userId = User.GetUserId();
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .FirstOrDefaultAsync(q => q.Id == quizId);
 
         if (quiz is null)
@@ -77,6 +79,7 @@ public class QuizzesController : ControllerBase
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .FirstOrDefaultAsync(q => q.Id == quizId);
 
         if (quiz is null)
@@ -125,6 +128,14 @@ public class QuizzesController : ControllerBase
     {
         var userId = User.GetUserId();
 
+        var hasAccess = await _db.Quizzes
+            .AsNoTracking()
+            .AccessibleBy(userId)
+            .AnyAsync(q => q.Id == quizId);
+
+        if (!hasAccess)
+            return NotFound(new { message = "Quiz not found." });
+
         var score = await _db.QuizScores
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
@@ -148,6 +159,7 @@ public class QuizzesController : ControllerBase
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .Where(q => q.Id == quizId)
             .Select(q => new { QuestionCount = EF.Property<ICollection<Question>>(q, "questions").Count })
             .FirstOrDefaultAsync();
@@ -184,6 +196,7 @@ public class QuizzesController : ControllerBase
 
         var quizzes = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .Where(q => quizIds.Contains(q.Id))
             .Select(q => new
             {
@@ -194,7 +207,8 @@ public class QuizzesController : ControllerBase
             .ToDictionaryAsync(q => q.Id);
 
         var latest = scores
-            .Where(s => s.GetLatestAnswerId() is not null
+            .Where(s => quizzes.ContainsKey(s.QuizId)
+                && s.GetLatestAnswerId() is not null
                 && s.GetFirstUnansweredIndex(quizzes[s.QuizId].QuestionCount) is not null)
             .MaxBy(s => s.GetLatestAnswerId());
 
@@ -212,6 +226,14 @@ public class QuizzesController : ControllerBase
     {
         var userId = User.GetUserId();
 
+        var hasAccess = await _db.Quizzes
+            .AsNoTracking()
+            .AccessibleBy(userId)
+            .AnyAsync(q => q.Id == quizId);
+
+        if (!hasAccess)
+            return NotFound(new { message = "Quiz not found." });
+
         // if two resets arrive at the same time, the second one simply deletes nothing and allows the quiz to be played the second time
         await _db.QuizScores
             .Where(s => s.UserId == userId && s.QuizId == quizId)
@@ -219,6 +241,7 @@ public class QuizzesController : ControllerBase
 
         return NoContent();
     }
+
     [Authorize]
     [HttpPost]
     [RequestSizeLimit(1_000_000)]
