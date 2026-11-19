@@ -261,10 +261,19 @@ public class QuizzesController : ControllerBase
         }
 
         var quiz = result.Quiz!;
+        var category = quiz.Category;
+        var language = quiz.Language;
 
-        var existing = await _db.Quizzes.AsNoTracking().ToListAsync();
+        // only quizzes that can see with the same category and language
+        var candidates = await _db.Quizzes
+            .AsNoTracking()
+            .IgnoreAutoIncludes()
+            .AccessibleBy(userId)
+            .Where(q => q.Category == category && q.Language == language)
+            .ToListAsync();
 
-        if (existing.Contains(quiz))
+        if (candidates.Contains(quiz))
+
         {
             return Conflict(new
             {

@@ -1295,4 +1295,104 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    // ---------- POST api/quizzes – duplicates ----------
+    private static object QuizRequest(
+        string title,
+        string category = "Family",
+        string language = "Lithuanian",
+        bool isPublic = true)
+    {
+        return new
+        {
+            quiz = new
+            {
+                title,
+                category,
+                language,
+                questions = Enumerable.Range(1, 3).Select(i => new
+                {
+                    text = $"Question {i}",
+                    options = new[]
+                    {
+                        new { text = "Yes", isCorrect = true },
+                        new { text = "No", isCorrect = false }
+                    }
+                }).ToArray()
+            },
+            isPublic
+        };
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameAsOwnPrivateQuiz_ReturnsConflict()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Own-{Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: false));
+        var second = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: false));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameAsOtherUsersPublicQuiz_ReturnsConflict()
+    {
+        using var owner = await _factory.CreateAuthenticatedClientAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Public-{Guid.NewGuid():N}";
+
+        var first = await owner.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: true));
+        var second = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameAsOtherUsersPrivateQuiz_ReturnsCreated()
+    {
+        using var owner = await _factory.CreateAuthenticatedClientAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Private-{Guid.NewGuid():N}";
+
+        var first = await owner.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: false));
+        var second = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, second.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("Travel", "Lithuanian")]
+    [InlineData("Family", "Italian")]
+    public async Task CreateQuiz_SameTitleDifferentCategoryOrLanguage_ReturnsCreated(string category, string language)
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Same-{Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+        var second = await client.PostAsJsonAsync(
+            "api/quizzes",
+            QuizRequest(title, category: category, language: language));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_TitleDifferingOnlyInCaseOrSpaces_ReturnsConflict()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Case Test {Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+        var second = await client.PostAsJsonAsync(
+            "api/quizzes",
+            QuizRequest($"  {title.ToUpperInvariant()}  "));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
+    }
 }
