@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
-using PSI1.Api.Import;
 using PSI1.Api.Models;
 using PSI1.Api.QuizBuilding;
 
@@ -16,16 +15,13 @@ namespace PSI1.Api.Controllers;
 public class QuizzesController : ControllerBase
 {
     private readonly AppDbContext _db;
-    private readonly JsonQuizImporter _importer;
     private readonly QuizBuilder _quizBuilder;
 
     public QuizzesController(
      AppDbContext db,
-     JsonQuizImporter importer,
      QuizBuilder quizBuilder)
     {
         _db = db;
-        _importer = importer;
         _quizBuilder = quizBuilder;
     }
 
@@ -51,9 +47,11 @@ public class QuizzesController : ControllerBase
     [HttpGet("{quizId}/questions/{index}")]
     public async Task<ActionResult<QuestionPlayResponse>> GetQuestion(int quizId, int index)
     {
+        var userId = User.GetUserId();
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .FirstOrDefaultAsync(q => q.Id == quizId);
 
         if (quiz is null)
@@ -81,6 +79,7 @@ public class QuizzesController : ControllerBase
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .FirstOrDefaultAsync(q => q.Id == quizId);
 
         if (quiz is null)
@@ -129,6 +128,14 @@ public class QuizzesController : ControllerBase
     {
         var userId = User.GetUserId();
 
+        var hasAccess = await _db.Quizzes
+            .AsNoTracking()
+            .AccessibleBy(userId)
+            .AnyAsync(q => q.Id == quizId);
+
+        if (!hasAccess)
+            return NotFound(new { message = "Quiz not found." });
+
         var score = await _db.QuizScores
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.UserId == userId && s.QuizId == quizId);
@@ -152,6 +159,7 @@ public class QuizzesController : ControllerBase
 
         var quiz = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .Where(q => q.Id == quizId)
             .Select(q => new { QuestionCount = EF.Property<ICollection<Question>>(q, "questions").Count })
             .FirstOrDefaultAsync();
@@ -188,6 +196,7 @@ public class QuizzesController : ControllerBase
 
         var quizzes = await _db.Quizzes
             .AsNoTracking()
+            .AccessibleBy(userId)
             .Where(q => quizIds.Contains(q.Id))
             .Select(q => new
             {
@@ -198,7 +207,8 @@ public class QuizzesController : ControllerBase
             .ToDictionaryAsync(q => q.Id);
 
         var latest = scores
-            .Where(s => s.GetLatestAnswerId() is not null
+            .Where(s => quizzes.ContainsKey(s.QuizId)
+                && s.GetLatestAnswerId() is not null
                 && s.GetFirstUnansweredIndex(quizzes[s.QuizId].QuestionCount) is not null)
             .MaxBy(s => s.GetLatestAnswerId());
 
@@ -216,6 +226,14 @@ public class QuizzesController : ControllerBase
     {
         var userId = User.GetUserId();
 
+        var hasAccess = await _db.Quizzes
+            .AsNoTracking()
+            .AccessibleBy(userId)
+            .AnyAsync(q => q.Id == quizId);
+
+        if (!hasAccess)
+            return NotFound(new { message = "Quiz not found." });
+
         // if two resets arrive at the same time, the second one simply deletes nothing and allows the quiz to be played the second time
         await _db.QuizScores
             .Where(s => s.UserId == userId && s.QuizId == quizId)
@@ -223,20 +241,13 @@ public class QuizzesController : ControllerBase
 
         return NoContent();
     }
+
     [Authorize]
     [HttpPost]
     [RequestSizeLimit(1_000_000)]
     public async Task<ActionResult<QuizSummaryResponse>> CreateQuiz(
         [FromBody] CreateQuizRequest request)
     {
-        if (request?.Quiz is null)
-        {
-            return BadRequest(new
-            {
-                errors = new[] { new QuizError(null, "Quiz is required.") }
-            });
-        }
-
         var userId = User.GetUserId();
 
         var result = _quizBuilder.Build(
@@ -274,42 +285,6 @@ public class QuizzesController : ControllerBase
                 quiz.Language,
                 quiz.Questions.Count,
                 quiz.IsPublic));
-    }
-
-    [Authorize]
-    [HttpPost("import")]
-    [RequestSizeLimit(1_000_000)]
-    public async Task<ActionResult<QuizSummaryResponse>> ImportQuiz(IFormFile file)
-    {
-        await using var stream = file.OpenReadStream();
-        var result = await _importer.ImportAsync(stream);
-
-        var quiz = result.Quiz;
-
-        if (quiz is null)
-        {
-            return BadRequest(new { errors = result.Errors });
-        }
-
-        var existing = await _db.Quizzes.AsNoTracking().ToListAsync();
-
-        if (existing.Contains(quiz))
-        {
-            return Conflict(new { message = "A quiz with the same title, category and language already exists." });
-        }
-
-        _db.Quizzes.Add(quiz);
-        await _db.SaveChangesAsync();
-
-        return StatusCode(StatusCodes.Status201Created, new QuizSummaryResponse(
-            quiz.Id,
-            quiz.Title,
-            quiz.Description,
-            quiz.Category,
-            quiz.Language,
-            quiz.Questions.Count,
-            quiz.IsPublic)
-        );
     }
 
     private async Task<ActionResult<List<QuizSummaryResponse>>> GetSummariesAsync(IQueryable<Quiz> query, Category? category, Language? language)

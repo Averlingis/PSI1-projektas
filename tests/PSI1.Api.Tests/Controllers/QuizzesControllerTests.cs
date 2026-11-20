@@ -30,7 +30,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     // ---------- GET api/quizzes{quizId}/questions/{index} ----------
-    private async Task<int> CreateTestQuizAsync()
+    private async Task<int> CreateTestQuizAsync(int? ownerId = null, bool isPublic = true)
     {
         var questions = new List<Question>
     {
@@ -58,7 +58,9 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
             "Family Vocabulary",
             Category.Family,
             Language.Lithuanian,
-            questions
+            questions,
+            ownerId: ownerId,
+            isPublic: isPublic
         );
 
         using var scope = _factory.Services.CreateScope();
@@ -68,6 +70,21 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         await db.SaveChangesAsync();
 
         return quiz.Id;
+    }
+
+    [Fact]
+    public async Task GetQuestion_OwnerCanAccessPrivateQuiz_ReturnsOk()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await ownerClient.GetAsync(
+            $"api/quizzes/{quizId}/questions/0");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Theory]
@@ -96,13 +113,17 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GetQuestion_NonexistentQuiz_ReturnsNotFound()
+    public async Task GetQuestion_OtherUsersPrivateQuiz_ReturnsNotFound()
     {
-        using var client = await _factory.CreateAuthenticatedClientAsync();
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
 
-        var response = await client.GetAsync(
-            "api/quizzes/2147483647/questions/0"
-        );
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/questions/0");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -465,6 +486,67 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
+    [Fact]
+    public async Task AnswerQuestion_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await otherClient.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_OwnerCanPlayPrivateQuiz_ReturnsOk()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await ownerClient.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<AnswerResultResponse>();
+
+        Assert.NotNull(result);
+        Assert.True(result.IsCorrect);
+        Assert.Equal("Mama", result.CorrectOptionText);
+    }
+
+    [Fact]
+    public async Task AnswerQuestion_OtherUsersPublicQuiz_ReturnsOk()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: true);
+
+        var questionResponse = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/questions/0");
+
+        Assert.Equal(HttpStatusCode.OK, questionResponse.StatusCode);
+
+        var answerResponse = await otherClient.PostAsJsonAsync(
+            $"api/quizzes/{quizId}/questions/0/answer",
+            new AnswerRequest(1));
+
+        Assert.Equal(HttpStatusCode.OK, answerResponse.StatusCode);
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(3)]
@@ -564,6 +646,34 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task GetScore_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var otherUserId = GetUserId(otherClient);
+
+        // Creates an existing score for the other user
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var score = new QuizScore(otherUserId, quizId);
+        score.RecordAnswer(0, true);
+
+        db.QuizScores.Add(score);
+        await db.SaveChangesAsync();
+
+        var response = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetScore_WithoutToken_ReturnsUnauthorized()
     {
         var quizId = await CreateTestQuizAsync();
@@ -645,6 +755,45 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         var deleteResponse = await client.DeleteAsync($"api/quizzes/{quizId}/score");
 
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task ResetScore_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var otherUserId = GetUserId(otherClient);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var score = new QuizScore(otherUserId, quizId);
+            score.RecordAnswer(0, true);
+
+            db.QuizScores.Add(score);
+            await db.SaveChangesAsync();
+        }
+
+        var response = await otherClient.DeleteAsync(
+            $"api/quizzes/{quizId}/score");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var score = await db.QuizScores
+                .FirstOrDefaultAsync(s => s.UserId == otherUserId && s.QuizId == quizId);
+
+            Assert.NotNull(score);
+        }
     }
 
     [Fact]
@@ -805,6 +954,22 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task GetProgress_OtherUsersPrivateQuiz_ReturnsNotFound()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var response = await otherClient.GetAsync(
+            $"api/quizzes/{quizId}/progress");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetProgress_WithoutToken_ReturnsUnauthorized()
     {
         var quizId = await CreateTestQuizAsync();
@@ -909,179 +1074,40 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task GetLatestInProgress_OtherUsersPrivateQuiz_IsIgnored()
+    {
+        using var ownerClient = await _factory.CreateAuthenticatedClientAsync();
+        using var otherClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var quizId = await CreateTestQuizAsync(
+            ownerId: GetUserId(ownerClient),
+            isPublic: false);
+
+        var otherUserId = GetUserId(otherClient);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var score = new QuizScore(otherUserId, quizId);
+            score.RecordAnswer(0, true);
+
+            db.QuizScores.Add(score);
+            await db.SaveChangesAsync();
+        }
+
+        var response = await otherClient.GetAsync(
+            "api/quizzes/in-progress/latest");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetLatestInProgress_WithoutToken_ReturnsUnauthorized()
     {
         var response = await _client.GetAsync("api/quizzes/in-progress/latest");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
-    // ---------- POST api/quizzes/import ----------
-
-    private static MultipartFormDataContent ToFormContent(string json)
-    {
-        var content = new MultipartFormDataContent();
-        content.Add(new StringContent(json), "file", "quiz.json");
-        return content;
-    }
-
-    [Fact]
-    public async Task ImportQuiz_WithoutToken_ReturnsUnauthorized()
-    {
-        var content = new MultipartFormDataContent();
-
-        var response = await _client.PostAsync("api/quizzes/import", content);
-
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task ImportQuiz_ValidFile_ReturnsCreatedAndSavesQuiz()
-    {
-        var json = """
-        {
-            "title": "Imported Quiz",
-            "category": "Family",
-            "language": "Lithuanian",
-            "questions": [
-            {
-                "text": "How do you say 'Mother' in Lithuanian?",
-                "options": [
-                { "text": "Sesuo", "isCorrect": false },
-                { "text": "Mama", "isCorrect": true }
-                ]
-            },
-            {
-                "text": "What does 'Brolis' mean in English?",
-                "options": [
-                { "text": "Father", "isCorrect": false },
-                { "text": "Brother", "isCorrect": true }
-                ]
-            },
-            {
-                "text": "How do you say 'Grandmother' in Lithuanian?",
-                "options": [
-                { "text": "Močiutė", "isCorrect": true },
-                { "text": "Teta", "isCorrect": false }
-                ]
-            }
-            ]
-        }
-        """;
-        using var client = await _factory.CreateAuthenticatedClientAsync();
-
-        var response = await client.PostAsync("api/quizzes/import", ToFormContent(json));
-
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var quizzes = await client.GetFromJsonAsync<List<QuizSummaryResponse>>("api/quizzes", Json);
-        Assert.Contains(quizzes!, q => q.Title == "Imported Quiz");
-    }
-
-    [Fact]
-    public async Task ImportQuiz_MalformedJson_ReturnsBadRequest()
-    {
-        using var client = await _factory.CreateAuthenticatedClientAsync();
-
-        var response = await client.PostAsync("api/quizzes/import", ToFormContent("{ \"title\": "));
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task ImportQuiz_QuestionWithoutText_ReturnsBadRequestWithQuestionNumber()
-    {
-        var json = """
-            {
-                "title": "Family Vocabulary",
-                "description": "Basic family words in Lithuanian",
-                "category": "Family",
-                "language": "Lithuanian",
-                "questions": [
-                {
-                    "text": "How do you say 'Mother' in Lithuanian?",
-                    "options": [
-                    { "text": "Sesuo", "isCorrect": false },
-                    { "text": "Mama", "isCorrect": true },
-                    { "text": "Močiutė", "isCorrect": false }
-                    ]
-                },
-                {
-                    "text": "What does 'Brolis' mean in English?",
-                    "options": [
-                    { "text": "Father", "isCorrect": false },
-                    { "text": "Brother", "isCorrect": true }
-                    ]
-                },
-                {
-                    "options": [
-                    { "text": "Močiutė", "isCorrect": true },
-                    { "text": "Teta", "isCorrect": false }
-                    ]
-                }
-                ]
-            }
-            """;
-
-        using var client = await _factory.CreateAuthenticatedClientAsync();
-
-        var response = await client.PostAsync("api/quizzes/import", ToFormContent(json));
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var body = await response.Content.ReadAsStringAsync();
-        Assert.Contains("\"location\":3", body);
-    }
-
-    [Fact]
-    public async Task ImportQuiz_DuplicateQuiz_ReturnsConflict()
-    {
-        var json = """
-        {
-            "title": "Duplicate Quiz",
-            "category": "Family",
-            "language": "Lithuanian",
-            "questions": [
-            {
-                "text": "How do you say 'Mother' in Lithuanian?",
-                "options": [
-                { "text": "Sesuo", "isCorrect": false },
-                { "text": "Mama", "isCorrect": true }
-                ]
-            },
-            {
-                "text": "What does 'Brolis' mean in English?",
-                "options": [
-                { "text": "Father", "isCorrect": false },
-                { "text": "Brother", "isCorrect": true }
-                ]
-            },
-            {
-                "text": "How do you say 'Grandmother' in Lithuanian?",
-                "options": [
-                { "text": "Močiutė", "isCorrect": true },
-                { "text": "Teta", "isCorrect": false }
-                ]
-            }
-            ]
-        }
-        """;
-
-        using var client = await _factory.CreateAuthenticatedClientAsync();
-
-        var response1 = await client.PostAsync("api/quizzes/import", ToFormContent(json));
-        Assert.Equal(HttpStatusCode.Created, response1.StatusCode);
-
-        var response2 = await client.PostAsync("api/quizzes/import", ToFormContent(json));
-        Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
-    }
-
-    [Fact]
-    public async Task ImportQuiz_NoFile_ReturnsBadRequest()
-    {
-        using var client = await _factory.CreateAuthenticatedClientAsync();
-
-        var response = await client.PostAsync("api/quizzes/import", new MultipartFormDataContent());
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -1268,4 +1294,5 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
 }
