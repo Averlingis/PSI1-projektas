@@ -35,7 +35,9 @@ export default function QuizList({
         setError("");
       })
       .catch((err) => {
-        if (!cancelled) setError(err.message);
+        if (cancelled) return;
+        setQuizzes(null);
+        setError(err.message);
       });
 
     return () => {
