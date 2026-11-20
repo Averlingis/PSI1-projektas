@@ -368,7 +368,7 @@ export default function App() {
           )}
 
           {/* only on the main page, not during setup or inside a quiz */}
-          {step === "ready" && !selectedQuiz && (
+          {step === "ready" && !selectedQuiz && !isCreating && (
             <button className="secondary-button logout" onClick={handleLogout}>
               Log out
             </button>
