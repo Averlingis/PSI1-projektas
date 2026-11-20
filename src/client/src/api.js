@@ -69,15 +69,23 @@ async function authFetch(path, options = {}) {
     throw new Error("Could not reach the server. Please try again.");
   }
 
-  // Some error responses (e.g. 401 from the JWT middleware) have an empty body,
-  // so parsing must not throw.
+  // Handle responses without a body.
+  if (response.status === 204) {
+    return null;
+  }
+
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     if (response.status === 401) {
       throw new Error("Your session has expired. Please log in again.");
     }
-    throw new Error(extractErrorMessage(data, "Request failed."));
+    const error = new Error(extractErrorMessage(data, "Request failed."));
+    //quiz endpoints return { errors: [{ location, message }] }, keep the whole list
+    if (Array.isArray(data.errors)) {
+      error.errors = data.errors;
+    }
+    throw error;
   }
 
   return data;
@@ -184,7 +192,7 @@ export async function getProfilePicture() {
 }
 
 
-  // Fetches quizzes, optionally filtered by category and/or language (public endpoint).
+// Fetches quizzes, optionally filtered by category and/or language (public endpoint).
 export async function getQuizzes({ category, language }) {
   const params = new URLSearchParams();
   if (category) params.set("category", category);
@@ -208,10 +216,18 @@ export async function getMyQuizzes({ category, language }) {
   return authFetch(`/api/quizzes/mine?${params}`);
 }
 
+// Creates a quiz owned by the current user.
+// On a 400 the thrown error has an `errors` array: [{ location, message }].
+export async function createQuiz(quiz, isPublic) {
+  return authFetch("/api/quizzes", {
+    method: "POST",
+    body: JSON.stringify({ quiz, isPublic }),
+  });
+}
 
 // Gets one question of a quiz, without revealing the correct answer.
 export async function getQuestion(quizId, index) {
-  return authFetch(`/api/quizzes/${quizId}/questions/${index}`); 
+  return authFetch(`/api/quizzes/${quizId}/questions/${index}`);
 }
 
 // Submits an answer and returns whether it was correct.
@@ -219,7 +235,7 @@ export async function answerQuestion(quizId, index, selectedOptionIndex) {
   return authFetch(`/api/quizzes/${quizId}/questions/${index}/answer`, {
     method: "POST",
     body: JSON.stringify({ selectedOptionIndex }),
-  }); 
+  });
 }
 
 // Clears the earlier answers for a quiz
@@ -229,5 +245,15 @@ export async function resetQuizScore(quizId) {
 
 // Gets the user's score for a quiz.
 export async function getQuizScore(quizId) {
-  return authFetch(`/api/quizzes/${quizId}/score`); 
+  return authFetch(`/api/quizzes/${quizId}/score`);
+}
+
+// Gets the user's latest unfinished quiz.
+export async function getLatestInProgress() {
+  return authFetch("/api/quizzes/in-progress/latest");
+}
+
+// Gets the user's progress in a specific quiz.
+export async function getQuizProgress(quizId) {
+  return authFetch(`/api/quizzes/${quizId}/progress`);
 }
