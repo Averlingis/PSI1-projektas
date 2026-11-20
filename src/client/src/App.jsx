@@ -202,6 +202,14 @@ export default function App() {
     }
   }
 
+  // continues the selected quiz from the detail page, without clearing previous answers
+  function continueFromDetail(questionIndex) {
+    setInitialQuestionIndex(questionIndex);
+    setIsFinished(false);
+    setIsResuming(false);
+    setIsPlaying(true);
+  }
+
   // leaves the quiz and goes back to the list
   function handleBackToQuizzes() {
     setSelectedQuiz(null);
@@ -330,6 +338,7 @@ export default function App() {
               quiz={selectedQuiz}
               onBack={() => setSelectedQuiz(null)}
               onPlay={startQuiz}
+              onContinue={continueFromDetail}              
             />
           )}
 
