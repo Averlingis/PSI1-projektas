@@ -14,6 +14,8 @@ import {
   getSelectedCategory,
   selectLanguage,
   resetQuizScore,
+  getLatestInProgress,
+  getQuizProgress,
 } from "./api";
 import "./App.css";
 
@@ -36,6 +38,10 @@ export default function App() {
   // Quiz navigation
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [latestInProgress, setLatestInProgress] = useState(null);
+  const [continueError, setContinueError] = useState("");
+  const [isContinuing, setIsContinuing] = useState(false);
+  const [initialQuestionIndex, setInitialQuestionIndex] = useState(0);
   // Quiz creating
   const [isCreating, setIsCreating] = useState(false);
   // true after the last question, shows the result screen
@@ -43,6 +49,7 @@ export default function App() {
   // Keep quiz filters when navigating between list and details
   const [quizLanguage, setQuizLanguage] = useState(null);
   const [quizCategory, setQuizCategory] = useState(null);
+  const [isResuming, setIsResuming] = useState(false);
 
   // once logged in, load the list of languages to choose from
   useEffect(() => {
@@ -81,6 +88,34 @@ export default function App() {
     };
   }, [token]);
 
+  // Load the latest unfinished quiz when the home screen is opened.
+  useEffect(() => {
+    if (!token || step !== "ready" || selectedQuiz || isCreating) return;
+
+    let cancelled = false;
+
+    getLatestInProgress()
+      .then((data) => {
+        if (!cancelled) {
+          setLatestInProgress(data);
+          setContinueError("");
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          if (err.message === SESSION_EXPIRED_MESSAGE) {
+            handleLogout();
+          } else {
+            setContinueError(err.message);
+          }
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, step, selectedQuiz, isCreating]);
+
   // called after successful login, saves the jw token
   function handleLoginSuccess(newToken) {
     localStorage.setItem("token", newToken);
@@ -97,12 +132,17 @@ export default function App() {
     setSelected(null);
     setCategory(null);
     setSelectedQuiz(null);
+    setIsResuming(false);
     setIsPlaying(false);
     setIsCreating(false);
     setIsFinished(false);
     setQuizLanguage(null);
     setQuizCategory(null);
     setLanguageError("");
+    setLatestInProgress(null);
+    setContinueError("");
+    setIsContinuing(false);
+    setInitialQuestionIndex(0);
   }
 
   // sends the chosen language to the backend, using the saved jw token
@@ -120,8 +160,46 @@ export default function App() {
   // clears earlier answers, then opens the play screen
   async function startQuiz() {
     await resetQuizScore(selectedQuiz.id);
+    setInitialQuestionIndex(0);
     setIsFinished(false);
     setIsPlaying(true);
+    setIsResuming(false);
+  }
+
+  // Continues the latest unfinished quiz without clearing previous answers.
+  async function handleContinue() {
+    if (!latestInProgress || isContinuing) return;
+
+    setIsContinuing(true);
+    setContinueError("");
+
+    try {
+      const progress = await getQuizProgress(latestInProgress.quizId);
+
+      if (progress.nextQuestionIndex == null) {
+        setLatestInProgress(null);
+        return;
+      }
+      setIsResuming(true);
+
+      setSelectedQuiz({
+        id: latestInProgress.quizId,
+        title: latestInProgress.title,
+        questionCount: progress.totalQuestions,
+      });
+
+      setInitialQuestionIndex(progress.nextQuestionIndex);
+      setIsFinished(false);
+      setIsPlaying(true);
+    } catch (err) {
+      if (err.message === SESSION_EXPIRED_MESSAGE) {
+        handleLogout();
+      } else {
+        setContinueError(err.message);
+      }
+    } finally {
+      setIsContinuing(false);
+    }
   }
 
   // leaves the quiz and goes back to the list
@@ -129,6 +207,7 @@ export default function App() {
     setSelectedQuiz(null);
     setIsPlaying(false);
     setIsFinished(false);
+    setIsResuming(false);
   }
 
   // if the token is found, the user is logged in and goes through the steps
@@ -207,6 +286,23 @@ export default function App() {
                 <button onClick={() => setIsCreating(true)}>Create quiz</button>
               </div>
 
+              {latestInProgress && (
+                <div className="step-actions">
+                  <button
+                    onClick={handleContinue}
+                    disabled={isContinuing}
+                  >
+                    {isContinuing
+                      ? "Loading..."
+                      : `Continue: ${latestInProgress.title}`}
+                  </button>
+                </div>
+              )}
+
+              {continueError && (
+                <p className="auth-error">{continueError}</p>
+              )}
+
               <QuizList
                 initialLanguage={selected}
                 initialCategory={category}
@@ -219,15 +315,15 @@ export default function App() {
             </>
           )}
 
-        {step === "ready" && isCreating && (
-          <CreateQuizForm
-            onBack={() => setIsCreating(false)}
-            onCreated={(quiz) => {
-            setSelectedQuiz(quiz);
-            setIsCreating(false);
-            }}
-          />
-        )}
+          {step === "ready" && isCreating && (
+            <CreateQuizForm
+              onBack={() => setIsCreating(false)}
+              onCreated={(quiz) => {
+                setSelectedQuiz(quiz);
+                setIsCreating(false);
+              }}
+            />
+          )}
 
           {step === "ready" && selectedQuiz && !isPlaying && (
             <QuizDetail
@@ -240,7 +336,16 @@ export default function App() {
           {step === "ready" && selectedQuiz && isPlaying && !isFinished && (
             <QuizPlay
               quiz={selectedQuiz}
-              onQuit={() => setIsPlaying(false)}
+              initialQuestionIndex={initialQuestionIndex}
+              onQuit={() => {
+                if (isResuming) {
+                  setSelectedQuiz(null);
+                  setIsPlaying(false);
+                  setIsResuming(false);
+                } else {
+                  setIsPlaying(false);
+                }
+              }}
               onFinish={() => setIsFinished(true)}
             />
           )}
