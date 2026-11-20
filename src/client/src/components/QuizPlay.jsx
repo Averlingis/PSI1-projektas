@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { getQuestion, answerQuestion } from "../api";
 
 // Shows a question at a time with feedback after answer
-export default function QuizPlay({ quiz, onFinish, onQuit }) {
-  const [index, setIndex] = useState(0);
+export default function QuizPlay({ quiz, initialQuestionIndex = 0, onFinish, onQuit }) {
+  const [index, setIndex] = useState(initialQuestionIndex);
   const [question, setQuestion] = useState(null);
   // the option that a user selected, can be changed until submit
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -13,13 +13,19 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
 
   const isLastQuestion = index === quiz.questionCount - 1;
 
-  // load first q, earlier answers are cleared when play is clicked
+  // Load the requested question, starting from the first unanswered one when continuing.
   useEffect(() => {
     let cancelled = false;
 
-    getQuestion(quiz.id, 0)
-      .then((first) => {
-        if (!cancelled) setQuestion(first);
+    setIndex(initialQuestionIndex);
+    setQuestion(null);
+    setSelectedIndex(null);
+    setResult(null);
+    setError("");
+
+    getQuestion(quiz.id, initialQuestionIndex)
+      .then((data) => {
+        if (!cancelled) setQuestion(data);
       })
       .catch((err) => {
         if (!cancelled) setError(err.message);
@@ -28,7 +34,7 @@ export default function QuizPlay({ quiz, onFinish, onQuit }) {
     return () => {
       cancelled = true;
     };
-  }, [quiz.id]);
+  }, [quiz.id, initialQuestionIndex]);
 
   // clicking an option only selects it, nothing is sent yet
   function handleSelect(optionIndex) {
