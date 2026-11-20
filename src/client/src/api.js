@@ -207,6 +207,15 @@ export async function getQuizzes({ category, language }) {
   return response.json();
 }
 
+// Gets the user's public and private quizzes.
+export async function getMyQuizzes({ category, language }) {
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if (language) params.set("language", language);
+
+  return authFetch(`/api/quizzes/mine?${params}`);
+}
+
 // Creates a quiz owned by the current user.
 // On a 400 the thrown error has an `errors` array: [{ location, message }].
 export async function createQuiz(quiz, isPublic) {

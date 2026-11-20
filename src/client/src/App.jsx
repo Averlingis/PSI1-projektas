@@ -49,6 +49,8 @@ export default function App() {
   // Keep quiz filters when navigating between list and details
   const [quizLanguage, setQuizLanguage] = useState(null);
   const [quizCategory, setQuizCategory] = useState(null);
+  // true when the quiz list shows the user's own quizzes instead of the public ones
+  const [showMyQuizzes, setShowMyQuizzes] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
 
   // once logged in, load the list of languages to choose from
@@ -139,6 +141,7 @@ export default function App() {
     setQuizLanguage(null);
     setQuizCategory(null);
     setLanguageError("");
+    setShowMyQuizzes(false);
     setLatestInProgress(null);
     setContinueError("");
     setIsContinuing(false);
@@ -311,6 +314,8 @@ export default function App() {
                 onLanguageChange={setQuizLanguage}
                 onCategoryChange={setQuizCategory}
                 onSelectQuiz={(quiz) => setSelectedQuiz(quiz)}
+                showMine={showMyQuizzes}
+                onToggleMine={() => setShowMyQuizzes((v) => !v)}
               />
             </>
           )}
