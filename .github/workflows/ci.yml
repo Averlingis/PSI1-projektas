@@ -27,6 +27,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: npm
+          cache-dependency-path: src/client/package-lock.json
+
+      - name: Install client dependencies
+        run: npm ci
+        working-directory: src/client
+
       - name: Restore dependencies
         run: dotnet restore
 
@@ -35,7 +46,10 @@ jobs:
 
       - name: Check formatting
         run: dotnet format --verify-no-changes --no-restore
-        working-directory: src/PSI1.Api
+
+      - name: Lint client
+        run: npm run lint
+        working-directory: src/client
 
       - name: Test
         run: >
