@@ -45,7 +45,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Check formatting
-        run: dotnet format --verify-no-changes
+        run: dotnet format --verify-no-changes --no-restore
 
       - name: Lint client
         run: npm run lint

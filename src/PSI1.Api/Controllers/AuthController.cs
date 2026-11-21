@@ -1,14 +1,10 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
 using Microsoft.AspNetCore.Mvc; // for features needed to build a web api controller
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 using PSI1.Api.Data; // for AppDbContext
 using PSI1.Api.DTOs; // for RegisterRequest class
 using PSI1.Api.Models; // for User class
+using PSI1.Api.Services; // for JwtTokenService
 
 namespace PSI1.Api.Controllers;
 
@@ -18,17 +14,16 @@ namespace PSI1.Api.Controllers;
 // URL for end point
 [Route("api/[controller]")]
 
-// Inhertis from ControllerBase core class
+// Inherits from ControllerBase core class
 public class AuthController : ControllerBase
 {
-    // where user data is saved on disk, value is shared across all requests and never changes for now
     private readonly AppDbContext _db;
-    private readonly IConfiguration _configuration;
+    private readonly JwtTokenService _tokenService;
 
-    public AuthController(AppDbContext db, IConfiguration configuration)
+    public AuthController(AppDbContext db, JwtTokenService tokenService)
     {
         _db = db;
-        _configuration = configuration;
+        _tokenService = tokenService;
     }
 
     // Handles POST req
@@ -72,31 +67,8 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid email or password." });
         }
 
-        var token = GenerateJwtToken(user);
+        var token = _tokenService.CreateToken(user);
 
         return Ok(new { Token = token });
-    }
-
-    private string GenerateJwtToken(User user)
-    {
-        var claims = new[]
-        {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        new Claim(JwtRegisteredClaimNames.UniqueName, user.Username) // aTODO: delete after adding username changing 
-	    };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: credentials
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
