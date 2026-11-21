@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
+using PSI1.Api.Helpers;
 using PSI1.Api.Models;
 using PSI1.Api.QuizBuilding;
 
@@ -290,11 +291,11 @@ public class QuizzesController : ControllerBase
     private async Task<ActionResult<List<QuizSummaryResponse>>> GetSummariesAsync(IQueryable<Quiz> query, Category? category, Language? language)
     {
         //validation
-        if (category.HasValue && !Enum.IsDefined(category.Value))
+        if (category.HasValue && !EnumValues<Category>.IsDefined(category.Value))
         {
             return BadRequest(new { message = "Unknown category." });
         }
-        if (language.HasValue && !Enum.IsDefined(language.Value))
+        if (language.HasValue && !EnumValues<Language>.IsDefined(language.Value))
         {
             return BadRequest(new { message = "Unknown language." });
         }

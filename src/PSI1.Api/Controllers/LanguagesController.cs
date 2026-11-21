@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
+using PSI1.Api.Helpers;
 using PSI1.Api.Models;
 
 namespace PSI1.Api.Controllers;
@@ -24,11 +25,7 @@ public class LanguagesController : ControllerBase
     [HttpGet]
     public IActionResult GetLanguages()
     {
-        var languages = Enum.GetValues<Language>()
-            .Select(language => language.ToString())
-            .ToList();
-
-        return Ok(languages);
+        return Ok(EnumValues<Language>.Names());
     }
 
     // Updates and saves the selected learning language for the authenticated user.

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
+using PSI1.Api.Helpers;
 using PSI1.Api.Models;
 
 namespace PSI1.Api.Controllers;
@@ -24,11 +25,7 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     public IActionResult GetCategories()
     {
-        var categories = Enum.GetValues<Category>()
-            .Select(category => category.ToString())
-            .ToList();
-
-        return Ok(categories);
+        return Ok(EnumValues<Category>.Names());
     }
 
     [Authorize]
