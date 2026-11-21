@@ -34,7 +34,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Check formatting
-        run: dotnet format --verify-no-changes
+        run: dotnet format --verify-no-changes --no-restore
         working-directory: src/PSI1.Api
 
       - name: Test
