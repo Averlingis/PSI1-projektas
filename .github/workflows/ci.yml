@@ -29,16 +29,26 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
-        working-directory: src/PSI1.Api
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
-        working-directory: src/PSI1.Api
 
       - name: Check formatting
-        run: dotnet format --verify-no-changes
+        run: dotnet format --verify-no-changes --no-restore
         working-directory: src/PSI1.Api
 
       - name: Test
-        run: dotnet test --no-build --configuration Release --verbosity normal
-        working-directory: src/PSI1.Api
+        run: >
+         dotnet test --no-build --configuration Release --verbosity normal
+         --collect:"XPlat Code Coverage" --results-directory ./coverage
+         -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Migrations/*.cs,**/obj/**"
+
+      - name: Coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
+        with:
+          reports: coverage/**/coverage.cobertura.xml
+          targetdir: coveragereport
+          reporttypes: MarkdownSummaryGithub
+
+      - name: Add coverage to summary
+        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
