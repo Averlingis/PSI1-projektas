@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -9,7 +10,7 @@ using PSI1.Api.Data;
 using PSI1.Api.Exceptions;
 using PSI1.Api.Import;
 using PSI1.Api.QuizBuilding;
-
+using PSI1.Api.Services;
 
 //Creates builder object that is used to configure the app before start
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +50,8 @@ builder.Services.AddSingleton<QuizBuilder>();
 builder.Services.AddScoped<QuizSeeder>();
 builder.Services.AddExceptionHandler<AuthExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddSingleton<JwtSecurityTokenHandler>();
+builder.Services.AddSingleton<JwtTokenService>();
 
 // Allow the React server to call this API from the browser.
 builder.Services.AddCors(options =>
