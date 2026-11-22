@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Time.Testing;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
@@ -35,7 +37,7 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             Directory.Delete(UploadsPath, recursive: true);
         }
     }
-
+    public FakeTimeProvider Time { get; } = new(new DateTimeOffset(2026, 11, 22, 12, 0, 0, TimeSpan.Zero));
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -50,6 +52,13 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 ["Jwt:Key"] = "test-key-at-least-32-characters-long!!",
                 ["Uploads:Path"] = UploadsPath
             });
+        });
+        builder.ConfigureAppConfiguration((_, config) => { /* unchanged */ });
+
+        builder.ConfigureServices(services =>
+        {
+            services.RemoveAll<TimeProvider>();
+            services.AddSingleton<TimeProvider>(Time);
         });
     }
 
