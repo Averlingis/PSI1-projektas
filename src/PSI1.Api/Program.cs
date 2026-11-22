@@ -52,6 +52,7 @@ builder.Services.AddExceptionHandler<AuthExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddSingleton<JwtSecurityTokenHandler>();
 builder.Services.AddSingleton<JwtTokenService>();
+builder.Services.AddSingleton<QuizCreationLocks>();
 
 // Allow the React server to call this API from the browser.
 builder.Services.AddCors(options =>
