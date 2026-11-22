@@ -9,4 +9,6 @@ public class User
     public string ProfilePictureFilename { get; set; } = "default.jpg";
     public Language? LearningLanguage { get; set; } // default null 
     public Category? SelectedCategory { get; set; } // default null
+    public int CurrentStreak { get; private set; } = 0;
+    public DateOnly? LastActivityDate { get; private set; }
 }
