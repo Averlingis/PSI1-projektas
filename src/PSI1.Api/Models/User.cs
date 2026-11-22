@@ -11,4 +11,30 @@ public class User
     public Category? SelectedCategory { get; set; } // default null
     public int CurrentStreak { get; private set; } = 0;
     public DateOnly? LastActivityDate { get; private set; }
+
+    public void RecordActivity(DateOnly today)
+    {
+        DateOnly? last = LastActivityDate;
+        if (last == today)
+        {
+            return;
+        }
+        if (last == today.AddDays(-1))
+        {
+            CurrentStreak += 1;
+        }
+        else
+        {
+            CurrentStreak = 1;
+        }
+        LastActivityDate = today;
+    }
+    public int GetCurrentStreak(DateOnly today)
+    {
+        if (LastActivityDate >= today.AddDays(-1))
+        {
+            return CurrentStreak;
+        }
+        return 0;
+    }
 }
