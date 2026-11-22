@@ -1395,4 +1395,98 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.Created, first.StatusCode);
         Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
     }
+    // ---------- streak updates ----------
+    private record StreakResponse(int CurrentStreak);
+
+    private static async Task<int> GetStreakAsync(HttpClient client)
+    {
+        var response = await client.GetAsync("api/profile/streak");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<StreakResponse>();
+        return body!.CurrentStreak;
+    }
+
+    // answers every question of the quiz (3 questions in CreateTestQuizAsync)
+    private static Task AnswerAllAsync(HttpClient client, int quizId) =>
+        AnswerQuestionsAsync(client, quizId, 0, 1, 2);
+
+
+    [Fact]
+    public async Task FinishQuiz_FirstQuiz_StreakIsOne()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quizId);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishQuiz_NextDay_StreakIsTwo()
+    {
+        var quiz1 = await CreateTestQuizAsync();
+        var quiz2 = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quiz1);
+        _factory.Time.Advance(TimeSpan.FromDays(1));
+        await AnswerAllAsync(client, quiz2);
+
+        Assert.Equal(2, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishTwoQuizzes_SameDay_StreakIsOne()
+    {
+        var quiz1 = await CreateTestQuizAsync();
+        var quiz2 = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quiz1);
+        await AnswerAllAsync(client, quiz2);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishQuiz_AfterMissedDay_StreakResetsToOne()
+    {
+        var quiz1 = await CreateTestQuizAsync();
+        var quiz2 = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quiz1);
+        _factory.Time.Advance(TimeSpan.FromDays(2));
+        await AnswerAllAsync(client, quiz2);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task AnswerPartOfQuiz_StreakDoesNotChange()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerQuestionsAsync(client, quizId, 0, 1);
+
+        Assert.Equal(0, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishQuiz_StartedYesterday_CountsForToday()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerQuestionsAsync(client, quizId, 0, 1);
+        Assert.Equal(0, await GetStreakAsync(client));
+
+        _factory.Time.Advance(TimeSpan.FromDays(1));
+        await AnswerQuestionsAsync(client, quizId, 2);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
 }
