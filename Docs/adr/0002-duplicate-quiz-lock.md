@@ -27,7 +27,7 @@ The duplicate check and the save are two separate steps. When two identical crea
 
 ## Consequences
 
-- Two identical quizzes can no longer be saved when they are created at the same time. An integration test sends identical create requests at once and checks that only one is created.
-- Creating quizzes in different categories or languages does not wait, and requests for the same pair wait only for the duplicate check and the save.
-- The lock only works within one server instance. If the API ran as several instances, each would have its own locks, and a lock in the database would be needed instead.
-- The dictionary keeps one lock for every category and language pair that was used. The number of pairs is limited (categories * languages), so this does not grow without limit.
+- Good, because two identical quizzes can no longer be saved when they are created at the same time. An integration test sends identical create requests at once and checks that only one is created.
+- Good, because creating quizzes in different categories or languages does not wait, and requests for the same pair wait only for the duplicate check and the save.
+- Bad, because the lock only works within one server instance. If the API ran as several instances, each would have its own locks, and a lock in the database would be needed instead.
+- Neutral, because the dictionary keeps one lock for every category and language pair that was used. The number of pairs is limited (categories * languages), so this does not grow without limit.
