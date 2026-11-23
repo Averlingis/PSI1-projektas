@@ -257,3 +257,8 @@ export async function getLatestInProgress() {
 export async function getQuizProgress(quizId) {
   return authFetch(`/api/quizzes/${quizId}/progress`);
 }
+
+// Gets the user's currentStreak
+export async function getStreak() {
+  return authFetch("/api/profile/streak");
+}
