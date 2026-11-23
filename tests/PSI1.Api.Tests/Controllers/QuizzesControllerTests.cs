@@ -1396,7 +1396,6 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
     }
     // ---------- streak updates ----------
-    private record StreakResponse(int CurrentStreak);
 
     private static async Task<int> GetStreakAsync(HttpClient client)
     {

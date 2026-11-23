@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 
 using PSI1.Api.Data;
+using PSI1.Api.DTOs;
 
 namespace PSI1.Api.Tests.Controllers;
 
@@ -154,7 +155,6 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
     }
     // ---------- GET api/profile/streak ----------
 
-    private record StreakResponse(int CurrentStreak);
 
     private DateOnly Today() => DateOnly.FromDateTime(_factory.Time.GetUtcNow().UtcDateTime);
 

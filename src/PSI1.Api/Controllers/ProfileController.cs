@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using PSI1.Api.Data;
 using PSI1.Api.Extensions;
+using PSI1.Api.DTOs;
 
 namespace PSI1.Api.Controllers;
 
@@ -35,7 +36,7 @@ public class ProfileController : ControllerBase
         var user = await _db.GetCurrentUserAsync(User);
         var today = DateOnly.FromDateTime(_timeProvider.GetUtcNow().UtcDateTime);
 
-        return Ok(new { currentStreak = user.GetCurrentStreak(today) });
+        return Ok(new StreakResponse(user.GetCurrentStreak(today)));
     }
 
     [HttpGet("picture")]
