@@ -237,34 +237,15 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
     // ---------- GET api/profile ----------
-
-    private async Task<(HttpClient Client, string Username, string Email)> CreateClientForNewUserAsync()
-    {
-        var id = Guid.NewGuid().ToString("N")[..12];
-        var email = $"{id}@test.com";
-        var username = $"user{id}";
-        const string password = "password123";
-
-        var client = _factory.CreateClient();
-
-        var register = await client.PostAsJsonAsync("api/auth/register", new RegisterRequest(email, username, password));
-        Assert.Equal(HttpStatusCode.Created, register.StatusCode);
-
-        var login = await client.PostAsJsonAsync("api/auth/login", new LoginRequest(email, password));
-        login.EnsureSuccessStatusCode();
-
-        var body = await login.Content.ReadFromJsonAsync<LoginResponse>();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", body!.Token);
-
-        return (client, username, email);
-    }
 
     [Fact]
     public async Task GetProfile_AuthenticatedUser_ReturnsOwnUsernameAndEmail()
     {
-        var (client, username, email) = await CreateClientForNewUserAsync();
-        using var _ = client;
+        var email = $"{Guid.NewGuid():N}@test.com";
+        var username = $"user{Guid.NewGuid().ToString("N")[..12]}";
+        using var client = await _factory.CreateAuthenticatedClientAsync(email: email, username: username);
 
         var response = await client.GetAsync("api/profile");
 
@@ -279,10 +260,10 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
     [Fact]
     public async Task GetProfile_TwoUsers_EachGetsOwnProfile()
     {
-        var (client1, username1, _) = await CreateClientForNewUserAsync();
-        var (client2, username2, _) = await CreateClientForNewUserAsync();
-        using var c1 = client1;
-        using var c2 = client2;
+        var username1 = $"user{Guid.NewGuid().ToString("N")[..12]}";
+        var username2 = $"user{Guid.NewGuid().ToString("N")[..12]}";
+        using var client1 = await _factory.CreateAuthenticatedClientAsync(username: username1);
+        using var client2 = await _factory.CreateAuthenticatedClientAsync(username: username2);
 
         var profile1 = await (await client1.GetAsync("api/profile")).Content.ReadFromJsonAsync<ProfileResponse>();
         var profile2 = await (await client2.GetAsync("api/profile")).Content.ReadFromJsonAsync<ProfileResponse>();
@@ -301,7 +282,6 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
-
 
     // ---------- GET api/profile/stats ----------
 

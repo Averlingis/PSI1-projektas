@@ -70,11 +70,11 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         return host;
     }
 
-    public async Task<HttpClient> CreateAuthenticatedClientAsync()
+    public async Task<HttpClient> CreateAuthenticatedClientAsync(string? email = null, string? username = null)
     {
         var client = CreateClient();
-        var email = $"{Guid.NewGuid():N}@test.com";
-        var username = Guid.NewGuid().ToString("N")[..12];
+        email ??= $"{Guid.NewGuid():N}@test.com";
+        username ??= Guid.NewGuid().ToString("N")[..12];
         var password = "password123";
 
         await client.PostAsJsonAsync("api/auth/register", new RegisterRequest(email, username, password));
