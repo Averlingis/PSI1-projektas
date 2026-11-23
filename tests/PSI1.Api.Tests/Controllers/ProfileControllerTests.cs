@@ -2,11 +2,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
+using PSI1.Api.Models;
 
 namespace PSI1.Api.Tests.Controllers;
 
@@ -231,6 +234,128 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         using var client = _factory.CreateClient();
 
         var response = await client.GetAsync("api/profile/streak");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    // ---------- GET api/profile/stats ----------
+
+    // the API sends enums as names ("Food"), so the tests read them the same way
+    private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new JsonStringEnumConverter() }
+    };
+
+    private async Task<int> CreateQuizAsync(Category category, Language language)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var questions = Enumerable.Range(0, 3)
+            .Select(i => new Question($"Q{i}", [new AnswerOption("Right", true), new AnswerOption("Wrong", false)]))
+            .ToList();
+        var quiz = new Quiz($"Stats-{Guid.NewGuid():N}", category, language, questions);
+
+        db.Quizzes.Add(quiz);
+        await db.SaveChangesAsync();
+        return quiz.Id;
+    }
+
+    // answers question i with optionIndexes[i]
+    private static async Task AnswerAsync(HttpClient client, int quizId, params int[] optionIndexes)
+    {
+        for (var i = 0; i < optionIndexes.Length; i++)
+        {
+            var response = await client.PostAsJsonAsync(
+                $"api/quizzes/{quizId}/questions/{i}/answer",
+                new AnswerRequest(optionIndexes[i]));
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+    }
+
+    private static async Task<ProgressResponse> GetStatsAsync(HttpClient client, Language language)
+    {
+        var response = await client.GetAsync($"api/profile/stats?language={language}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        return (await response.Content.ReadFromJsonAsync<ProgressResponse>(Json))!;
+    }
+
+    [Fact]
+    public async Task GetStats_UserWithoutAnswers_ReturnsZeros()
+    {
+        // another user's answers must not be counted
+        var quizId = await CreateQuizAsync(Category.Food, Language.Lithuanian);
+        using var otherUser = await _factory.CreateAuthenticatedClientAsync();
+        await AnswerAsync(otherUser, quizId, 0, 0, 0);
+
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var progress = await GetStatsAsync(client, Language.Lithuanian);
+
+        Assert.All(progress.Categories, c => Assert.Equal(0, c.Answered));
+        Assert.Null(progress.Strongest);
+        Assert.Null(progress.Weakest);
+    }
+
+    [Fact]
+    public async Task GetStats_AnswersInTwoLanguages_AreCountedSeparately()
+    {
+        var lithuanian = await CreateQuizAsync(Category.Food, Language.Lithuanian);
+        var italian = await CreateQuizAsync(Category.Food, Language.Italian);
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAsync(client, lithuanian, 0, 0, 0);
+        await AnswerAsync(client, italian, 0, 1, 1);
+
+        var lithuanianFood = (await GetStatsAsync(client, Language.Lithuanian)).Categories
+            .Single(c => c.Category == Category.Food);
+        var italianFood = (await GetStatsAsync(client, Language.Italian)).Categories
+           .Single(c => c.Category == Category.Food);
+
+        Assert.Equal(3, lithuanianFood.Answered);
+        Assert.Equal(3, lithuanianFood.Correct);
+        Assert.Equal(3, italianFood.Answered);
+        Assert.Equal(1, italianFood.Correct);
+    }
+
+    [Fact]
+    public async Task GetStats_ReplayedQuiz_CountsOnlyLatestAttempt()
+    {
+        var quizId = await CreateQuizAsync(Category.Family, Language.Lithuanian);
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAsync(client, quizId, 1, 1, 1);
+        var reset = await client.DeleteAsync($"api/quizzes/{quizId}/score");
+        Assert.Equal(HttpStatusCode.NoContent, reset.StatusCode);
+        await AnswerAsync(client, quizId, 0, 0, 0);
+
+        var family = (await GetStatsAsync(client, Language.Lithuanian)).Categories
+            .Single(c => c.Category == Category.Family);
+
+        Assert.Equal(3, family.Answered);
+        Assert.Equal(3, family.Correct);
+    }
+
+    [Theory]
+    [InlineData("api/profile/stats?language=99")]
+    [InlineData("api/profile/stats")]
+    public async Task GetStats_UnknownOrMissingLanguage_ReturnsBadRequest(string url)
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.GetAsync(url);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetStats_WithoutToken_ReturnsUnauthorized()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("api/profile/stats?language=Lithuanian");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
