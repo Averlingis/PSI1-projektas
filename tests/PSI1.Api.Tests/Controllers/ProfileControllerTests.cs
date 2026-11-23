@@ -238,6 +238,51 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    // ---------- GET api/profile ----------
+
+    [Fact]
+    public async Task GetProfile_AuthenticatedUser_ReturnsOwnUsernameAndEmail()
+    {
+        var email = $"{Guid.NewGuid():N}@test.com";
+        var username = $"user{Guid.NewGuid().ToString("N")[..12]}";
+        using var client = await _factory.CreateAuthenticatedClientAsync(email: email, username: username);
+
+        var response = await client.GetAsync("api/profile");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var profile = await response.Content.ReadFromJsonAsync<ProfileResponse>();
+        Assert.NotNull(profile);
+        Assert.Equal(username, profile.Username);
+        Assert.Equal(email, profile.Email);
+    }
+
+    [Fact]
+    public async Task GetProfile_TwoUsers_EachGetsOwnProfile()
+    {
+        var username1 = $"user{Guid.NewGuid().ToString("N")[..12]}";
+        var username2 = $"user{Guid.NewGuid().ToString("N")[..12]}";
+        using var client1 = await _factory.CreateAuthenticatedClientAsync(username: username1);
+        using var client2 = await _factory.CreateAuthenticatedClientAsync(username: username2);
+
+        var profile1 = await (await client1.GetAsync("api/profile")).Content.ReadFromJsonAsync<ProfileResponse>();
+        var profile2 = await (await client2.GetAsync("api/profile")).Content.ReadFromJsonAsync<ProfileResponse>();
+
+        // the user is taken from the token, so each client only sees its own profile
+        Assert.Equal(username1, profile1!.Username);
+        Assert.Equal(username2, profile2!.Username);
+    }
+
+    [Fact]
+    public async Task GetProfile_WithoutToken_ReturnsUnauthorized()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("api/profile");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     // ---------- GET api/profile/stats ----------
 
     // the API sends enums as names ("Food"), so the tests read them the same way

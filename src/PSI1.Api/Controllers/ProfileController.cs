@@ -39,6 +39,16 @@ public class ProfileController : ControllerBase
             ?? Path.Combine(environment.ContentRootPath, "Uploads");
     }
 
+    // the current user's profile details; the user comes from the JWT,
+    // so another user's profile can't be requested
+    [HttpGet]
+    public async Task<ActionResult<ProfileResponse>> GetProfile()
+    {
+        var user = await _db.GetCurrentUserAsync(User);
+
+        return Ok(new ProfileResponse(user.Username, user.Email));
+    }
+
     [HttpGet("streak")]
     public async Task<IActionResult> GetStreak()
     {
