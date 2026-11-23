@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using PSI1.Api.Data;
+using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
 
 namespace PSI1.Api.Controllers;
@@ -18,13 +19,24 @@ public class ProfileController : ControllerBase
 
     private readonly AppDbContext _db;
     private readonly string _picturesDirectory;
+    private readonly TimeProvider _timeProvider;
 
-    public ProfileController(AppDbContext db, IWebHostEnvironment environment, IConfiguration configuration)
+    public ProfileController(AppDbContext db, IWebHostEnvironment environment, IConfiguration configuration, TimeProvider timeProvider)
     {
         _db = db;
+        _timeProvider = timeProvider;
         // tests point Uploads:Path to a temporary foldert herefore they never touch the real Uploads folder
         _picturesDirectory = configuration["Uploads:Path"]
             ?? Path.Combine(environment.ContentRootPath, "Uploads");
+    }
+
+    [HttpGet("streak")]
+    public async Task<IActionResult> GetStreak()
+    {
+        var user = await _db.GetCurrentUserAsync(User);
+        var today = DateOnly.FromDateTime(_timeProvider.GetUtcNow().UtcDateTime);
+
+        return Ok(new StreakResponse(user.GetCurrentStreak(today)));
     }
 
     [HttpGet("picture")]

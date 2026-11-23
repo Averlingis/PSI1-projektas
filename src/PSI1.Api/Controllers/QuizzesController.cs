@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
+using PSI1.Api.Helpers;
 using PSI1.Api.Models;
 using PSI1.Api.QuizBuilding;
+using PSI1.Api.Services;
 
 namespace PSI1.Api.Controllers;
 
@@ -16,13 +18,19 @@ public class QuizzesController : ControllerBase
 {
     private readonly AppDbContext _db;
     private readonly QuizBuilder _quizBuilder;
+    private readonly TimeProvider _timeProvider;
+    private readonly QuizCreationLocks _creationLocks;
 
     public QuizzesController(
      AppDbContext db,
-     QuizBuilder quizBuilder)
+     QuizBuilder quizBuilder,
+     QuizCreationLocks creationLocks,
+     TimeProvider timeProvider)
     {
         _db = db;
         _quizBuilder = quizBuilder;
+        _creationLocks = creationLocks;
+        _timeProvider = timeProvider;
     }
 
     [HttpGet]
@@ -116,6 +124,14 @@ public class QuizzesController : ControllerBase
         {
             return Conflict(new { message = ex.Message });
         }
+
+        if (score.GetFirstUnansweredIndex(quiz.Questions.Count) is null)
+        {
+            var user = await _db.GetCurrentUserAsync(User);
+            var today = DateOnly.FromDateTime(_timeProvider.GetUtcNow().UtcDateTime);
+            user.RecordActivity(today);
+        }
+
 
         await _db.SaveChangesAsync();
 
@@ -261,19 +277,36 @@ public class QuizzesController : ControllerBase
         }
 
         var quiz = result.Quiz!;
+        var category = quiz.Category;
+        var language = quiz.Language;
 
-        var existing = await _db.Quizzes.AsNoTracking().ToListAsync();
-
-        if (existing.Contains(quiz))
+        var semaphore = _creationLocks.Get(category, language);
+        await semaphore.WaitAsync();
+        try
         {
-            return Conflict(new
-            {
-                message = "A quiz with the same title, category and language already exists."
-            });
-        }
+            // only quizzes the user can see with the same category and language
+            var candidates = await _db.Quizzes
+                .AsNoTracking()
+                .IgnoreAutoIncludes()
+                .AccessibleBy(userId)
+                .Where(q => q.Category == category && q.Language == language)
+                .ToListAsync();
 
-        _db.Quizzes.Add(quiz);
-        await _db.SaveChangesAsync();
+            if (candidates.Contains(quiz))
+            {
+                return Conflict(new
+                {
+                    message = "A quiz with the same title, category and language already exists."
+                });
+            }
+
+            _db.Quizzes.Add(quiz);
+            await _db.SaveChangesAsync();
+        }
+        finally
+        {
+            semaphore.Release();
+        }
 
         return StatusCode(
             StatusCodes.Status201Created,
@@ -290,11 +323,11 @@ public class QuizzesController : ControllerBase
     private async Task<ActionResult<List<QuizSummaryResponse>>> GetSummariesAsync(IQueryable<Quiz> query, Category? category, Language? language)
     {
         //validation
-        if (category.HasValue && !Enum.IsDefined(category.Value))
+        if (category.HasValue && !EnumValues<Category>.IsDefined(category.Value))
         {
             return BadRequest(new { message = "Unknown category." });
         }
-        if (language.HasValue && !Enum.IsDefined(language.Value))
+        if (language.HasValue && !EnumValues<Language>.IsDefined(language.Value))
         {
             return BadRequest(new { message = "Unknown language." });
         }

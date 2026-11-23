@@ -1,4 +1,5 @@
 using PSI1.Api.DTOs;
+using PSI1.Api.Helpers;
 using PSI1.Api.Models;
 
 namespace PSI1.Api.QuizBuilding;
@@ -9,12 +10,12 @@ public class QuizBuilder()
     {
         var errors = new List<QuizError>();
 
-        if (!TryParseEnum(dto.Category, out Category category))
+        if (!EnumValues<Category>.TryParse(dto.Category, out Category category))
         {
             errors.Add(new QuizError(null, $"Unknown or missing category: '{dto.Category}'."));
         }
 
-        if (!TryParseEnum(dto.Language, out Language language))
+        if (!EnumValues<Language>.TryParse(dto.Language, out Language language))
         {
             errors.Add(new QuizError(null, $"Unknown or missing language: '{dto.Language}'."));
         }
@@ -61,7 +62,4 @@ public class QuizBuilder()
             return new QuizBuildResult(null, [new QuizError(null, ex.Message)]);
         }
     }
-
-    private static bool TryParseEnum<T>(string? text, out T value) where T : struct, Enum =>
-        Enum.TryParse(text, ignoreCase: true, out value) && Enum.IsDefined(value);
 }

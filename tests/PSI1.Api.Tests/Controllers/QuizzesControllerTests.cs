@@ -1295,4 +1295,211 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    // ---------- POST api/quizzes – duplicates ----------
+    private static object QuizRequest(
+        string title,
+        string category = "Family",
+        string language = "Lithuanian",
+        bool isPublic = true)
+    {
+        return new
+        {
+            quiz = new
+            {
+                title,
+                category,
+                language,
+                questions = Enumerable.Range(1, 3).Select(i => new
+                {
+                    text = $"Question {i}",
+                    options = new[]
+                    {
+                        new { text = "Yes", isCorrect = true },
+                        new { text = "No", isCorrect = false }
+                    }
+                }).ToArray()
+            },
+            isPublic
+        };
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameAsOwnPrivateQuiz_ReturnsConflict()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Own-{Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: false));
+        var second = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: false));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameAsOtherUsersPublicQuiz_ReturnsConflict()
+    {
+        using var owner = await _factory.CreateAuthenticatedClientAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Public-{Guid.NewGuid():N}";
+
+        var first = await owner.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: true));
+        var second = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameAsOtherUsersPrivateQuiz_ReturnsCreated()
+    {
+        using var owner = await _factory.CreateAuthenticatedClientAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Private-{Guid.NewGuid():N}";
+
+        var first = await owner.PostAsJsonAsync("api/quizzes", QuizRequest(title, isPublic: false));
+        var second = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, second.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("Travel", "Lithuanian")]
+    [InlineData("Family", "Italian")]
+    public async Task CreateQuiz_SameTitleDifferentCategoryOrLanguage_ReturnsCreated(string category, string language)
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Same-{Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+        var second = await client.PostAsJsonAsync(
+            "api/quizzes",
+            QuizRequest(title, category: category, language: language));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateQuiz_TitleDifferingOnlyInCaseOrSpaces_ReturnsConflict()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Case Test {Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/quizzes", QuizRequest(title));
+        var second = await client.PostAsJsonAsync(
+            "api/quizzes",
+            QuizRequest($"  {title.ToUpperInvariant()}  "));
+
+        Assert.Equal(HttpStatusCode.Created, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, second.StatusCode);
+    }
+    // ---------- streak updates ----------
+
+    private static async Task<int> GetStreakAsync(HttpClient client)
+    {
+        var response = await client.GetAsync("api/profile/streak");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<StreakResponse>();
+        return body!.CurrentStreak;
+    }
+
+    // answers every question of the quiz (3 questions in CreateTestQuizAsync)
+    private static Task AnswerAllAsync(HttpClient client, int quizId) =>
+        AnswerQuestionsAsync(client, quizId, 0, 1, 2);
+
+
+    [Fact]
+    public async Task FinishQuiz_FirstQuiz_StreakIsOne()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quizId);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishQuiz_NextDay_StreakIsTwo()
+    {
+        var quiz1 = await CreateTestQuizAsync();
+        var quiz2 = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quiz1);
+        _factory.Time.Advance(TimeSpan.FromDays(1));
+        await AnswerAllAsync(client, quiz2);
+
+        Assert.Equal(2, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishTwoQuizzes_SameDay_StreakIsOne()
+    {
+        var quiz1 = await CreateTestQuizAsync();
+        var quiz2 = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quiz1);
+        await AnswerAllAsync(client, quiz2);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishQuiz_AfterMissedDay_StreakResetsToOne()
+    {
+        var quiz1 = await CreateTestQuizAsync();
+        var quiz2 = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerAllAsync(client, quiz1);
+        _factory.Time.Advance(TimeSpan.FromDays(2));
+        await AnswerAllAsync(client, quiz2);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task AnswerPartOfQuiz_StreakDoesNotChange()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerQuestionsAsync(client, quizId, 0, 1);
+
+        Assert.Equal(0, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task FinishQuiz_StartedYesterday_CountsForToday()
+    {
+        var quizId = await CreateTestQuizAsync();
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        await AnswerQuestionsAsync(client, quizId, 0, 1);
+        Assert.Equal(0, await GetStreakAsync(client));
+
+        _factory.Time.Advance(TimeSpan.FromDays(1));
+        await AnswerQuestionsAsync(client, quizId, 2);
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task CreateQuiz_SameQuizAtTheSameTime_OnlyOneIsCreated()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Concurrent-{Guid.NewGuid():N}";
+
+        var responses = await Task.WhenAll(
+            Enumerable.Range(0, 10).Select(_ => client.PostAsJsonAsync("api/quizzes", QuizRequest(title))));
+
+        Assert.Single(responses, r => r.StatusCode == HttpStatusCode.Created);
+        Assert.All(responses.Where(r => r.StatusCode != HttpStatusCode.Created),
+            r => Assert.Equal(HttpStatusCode.Conflict, r.StatusCode));
+    }
 }

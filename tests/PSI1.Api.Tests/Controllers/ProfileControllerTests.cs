@@ -1,6 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using PSI1.Api.Data;
+using PSI1.Api.DTOs;
 
 namespace PSI1.Api.Tests.Controllers;
 
@@ -146,5 +152,86 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
 
         var file = Assert.Single(GetUserFiles(client));
         Assert.EndsWith(".png", file);
+    }
+    // ---------- GET api/profile/streak ----------
+
+
+    private DateOnly Today() => DateOnly.FromDateTime(_factory.Time.GetUtcNow().UtcDateTime);
+
+    private async Task RecordActivityAsync(HttpClient client, params DateOnly[] dates)
+    {
+        var userId = int.Parse(GetUserId(client));
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var user = await db.Users.FindAsync(userId);
+        foreach (var date in dates)
+        {
+            user!.RecordActivity(date);
+        }
+
+        await db.SaveChangesAsync();
+    }
+
+    private static async Task<int> GetStreakAsync(HttpClient client)
+    {
+        var response = await client.GetAsync("api/profile/streak");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<StreakResponse>();
+        return body!.CurrentStreak;
+    }
+
+    [Fact]
+    public async Task GetStreak_NewUser_ReturnsZero()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        Assert.Equal(0, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task GetStreak_RecordedToday_ReturnsStreak()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var today = Today();
+
+        await RecordActivityAsync(client, today.AddDays(-2), today.AddDays(-1), today);
+
+        Assert.Equal(3, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task GetStreak_OneDayLater_StreakIsStillAlive()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        await RecordActivityAsync(client, Today());
+
+        _factory.Time.Advance(TimeSpan.FromDays(1));
+
+        Assert.Equal(1, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task GetStreak_TwoDaysLater_ReturnsZero()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        await RecordActivityAsync(client, Today());
+        Assert.Equal(1, await GetStreakAsync(client));
+
+        _factory.Time.Advance(TimeSpan.FromDays(2));
+
+        Assert.Equal(0, await GetStreakAsync(client));
+    }
+
+    [Fact]
+    public async Task GetStreak_WithoutToken_ReturnsUnauthorized()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("api/profile/streak");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 }

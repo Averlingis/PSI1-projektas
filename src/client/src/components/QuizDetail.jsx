@@ -1,32 +1,13 @@
-import { useState, useEffect } from "react";
-import { getQuizProgress } from "../api";
+import { useState } from "react";
 
-export default function QuizDetail({ quiz, onBack, onPlay, onContinue }) {
+// progress is loaded by App before this page is shown,
+export default function QuizDetail({ quiz, progress, onBack, onPlay, onContinue }) {
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState("");
-  // { nextQuestionIndex, answeredCount, totalQuestions }, null until loaded
-  const [progress, setProgress] = useState(null);
-
-  // load how far the user got, to decide which buttons to show
-  useEffect(() => {
-    let cancelled = false;
-
-    getQuizProgress(quiz.id)
-      .then((data) => {
-        if (!cancelled) setProgress(data);
-      })
-      .catch(() => {
-        // without progress only "Play" is shown, which still works
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [quiz.id]);
 
   // partly answered: at least one answer, but not finished
   const canContinue =
-    progress !== null && progress.answeredCount > 0 && progress.nextQuestionIndex !== null;
+    progress != null && progress.answeredCount > 0 && progress.nextQuestionIndex !== null;
 
   // onPlay resets the old score first, so wait for it and show any error here
   async function handlePlay() {
@@ -53,6 +34,12 @@ export default function QuizDetail({ quiz, onBack, onPlay, onContinue }) {
       </div>
 
       {error && <p className="auth-error">{error}</p>}
+
+      {canContinue && (
+        <p className="quiz-meta">
+          You stopped at question {progress.nextQuestionIndex + 1} of {progress.totalQuestions}.
+        </p>
+      )}
 
       <div className="step-actions">
         <button className="secondary-button" onClick={onBack}>
