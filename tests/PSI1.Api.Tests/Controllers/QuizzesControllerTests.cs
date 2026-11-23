@@ -1487,5 +1487,18 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         await AnswerQuestionsAsync(client, quizId, 2);
 
         Assert.Equal(1, await GetStreakAsync(client));
+
+    [Fact]
+    public async Task CreateQuiz_SameQuizAtTheSameTime_OnlyOneIsCreated()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var title = $"Concurrent-{Guid.NewGuid():N}";
+
+        var responses = await Task.WhenAll(
+            Enumerable.Range(0, 10).Select(_ => client.PostAsJsonAsync("api/quizzes", QuizRequest(title))));
+
+        Assert.Single(responses, r => r.StatusCode == HttpStatusCode.Created);
+        Assert.All(responses.Where(r => r.StatusCode != HttpStatusCode.Created),
+            r => Assert.Equal(HttpStatusCode.Conflict, r.StatusCode));
     }
 }

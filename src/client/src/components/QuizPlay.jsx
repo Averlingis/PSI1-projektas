@@ -17,12 +17,6 @@ export default function QuizPlay({ quiz, initialQuestionIndex = 0, onFinish, onQ
   useEffect(() => {
     let cancelled = false;
 
-    setIndex(initialQuestionIndex);
-    setQuestion(null);
-    setSelectedIndex(null);
-    setResult(null);
-    setError("");
-
     getQuestion(quiz.id, initialQuestionIndex)
       .then((data) => {
         if (!cancelled) setQuestion(data);

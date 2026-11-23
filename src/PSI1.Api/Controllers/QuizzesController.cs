@@ -7,6 +7,7 @@ using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
 using PSI1.Api.Models;
 using PSI1.Api.QuizBuilding;
+using PSI1.Api.Services;
 
 namespace PSI1.Api.Controllers;
 
@@ -17,14 +18,17 @@ public class QuizzesController : ControllerBase
     private readonly AppDbContext _db;
     private readonly QuizBuilder _quizBuilder;
     private readonly TimeProvider _timeProvider;
+    private readonly QuizCreationLocks _creationLocks;
 
     public QuizzesController(
      AppDbContext db,
      QuizBuilder quizBuilder,
+     QuizCreationLocks creationLocks,
      TimeProvider timeProvider)
     {
         _db = db;
         _quizBuilder = quizBuilder;
+        _creationLocks = creationLocks;
         _timeProvider = timeProvider;
     }
 
@@ -275,25 +279,33 @@ public class QuizzesController : ControllerBase
         var category = quiz.Category;
         var language = quiz.Language;
 
-        // only quizzes that can see with the same category and language
-        var candidates = await _db.Quizzes
-            .AsNoTracking()
-            .IgnoreAutoIncludes()
-            .AccessibleBy(userId)
-            .Where(q => q.Category == category && q.Language == language)
-            .ToListAsync();
-
-        if (candidates.Contains(quiz))
-
+        var semaphore = _creationLocks.Get(category, language);
+        await semaphore.WaitAsync();
+        try
         {
-            return Conflict(new
-            {
-                message = "A quiz with the same title, category and language already exists."
-            });
-        }
+            // only quizzes the user can see with the same category and language
+            var candidates = await _db.Quizzes
+                .AsNoTracking()
+                .IgnoreAutoIncludes()
+                .AccessibleBy(userId)
+                .Where(q => q.Category == category && q.Language == language)
+                .ToListAsync();
 
-        _db.Quizzes.Add(quiz);
-        await _db.SaveChangesAsync();
+            if (candidates.Contains(quiz))
+            {
+                return Conflict(new
+                {
+                    message = "A quiz with the same title, category and language already exists."
+                });
+            }
+
+            _db.Quizzes.Add(quiz);
+            await _db.SaveChangesAsync();
+        }
+        finally
+        {
+            semaphore.Release();
+        }
 
         return StatusCode(
             StatusCodes.Status201Created,
