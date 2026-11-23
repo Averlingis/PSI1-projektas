@@ -54,6 +54,7 @@ builder.Services.AddSingleton<JwtSecurityTokenHandler>();
 builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<QuizCreationLocks>();
+builder.Services.AddSingleton<ProgressAnalyzer>();
 
 // Allow the React server to call this API from the browser.
 builder.Services.AddCors(options =>
