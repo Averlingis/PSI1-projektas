@@ -10,6 +10,7 @@ export default function QuizList({
   onSelectQuiz,
   showMine,
   onToggleMine,
+  onCreateQuiz,
 }) {
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -53,6 +54,10 @@ export default function QuizList({
           {showMine ? "Public Quizzes" : "My Quizzes"}
         </button>
       </div>
+
+      <button type="button" className="quiz-create-button" onClick={onCreateQuiz}>
+        Create quiz
+      </button>
 
       <div className="quiz-filters">
         <select

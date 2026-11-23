@@ -608,3 +608,91 @@ body {
   flex-direction: column;
   gap: 14px;
 }
+
+/* home header */
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.header-avatar {
+  position: relative;
+}
+
+/* the avatar is the button that opens the menu */
+.status-card .header-avatar-button {
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+}
+
+.status-card .header-avatar-button:hover:not(:disabled) {
+  background: none;
+}
+
+.profile-avatar.small {
+  width: 44px;
+  height: 44px;
+}
+
+/* smaller streak on the small avatar */
+.header-avatar .streak-icon {
+  right: -12px;
+  bottom: -6px;
+  padding: 2px 6px 2px 4px;
+  font-size: 0.7rem;
+}
+
+.avatar-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  min-width: 150px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.status-card .avatar-menu button {
+  width: 100%;
+  padding: 8px 10px;
+  background: white;
+  color: var(--ink);
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.status-card .avatar-menu button:hover:not(:disabled) {
+  background: var(--accent-soft);
+}
+
+/* create quiz button in its own row below the quiz list heading */
+.status-card .quiz-create-button {
+  align-self: flex-start;
+}
+
+/* log out on the left, back on the right */
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* continue button on the left */
+
+.home-header + .step-actions {
+  justify-content: flex-start;
+}
