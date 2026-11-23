@@ -7,8 +7,8 @@ using PSI1.Api.Extensions;
 
 namespace PSI1.Api.Controllers;
 
-// Uploads and returns the user's profile picture
-// image saved on disk, filename is stored in the database.
+// The current user's profile: details, streak and profile picture.
+// The picture is saved on disk, its filename is stored in the database.
 [ApiController]
 [Route("api/profile")]
 [Authorize]
@@ -25,9 +25,19 @@ public class ProfileController : ControllerBase
     {
         _db = db;
         _timeProvider = timeProvider;
-        // tests point Uploads:Path to a temporary foldert herefore they never touch the real Uploads folder
+        // tests point Uploads:Path to a temporary folder, therefore they never touch the real Uploads folder
         _picturesDirectory = configuration["Uploads:Path"]
             ?? Path.Combine(environment.ContentRootPath, "Uploads");
+    }
+
+    // the current user's profile details; the user comes from the JWT,
+    // so another user's profile can't be requested
+    [HttpGet]
+    public async Task<ActionResult<ProfileResponse>> GetProfile()
+    {
+        var user = await _db.GetCurrentUserAsync(User);
+
+        return Ok(new ProfileResponse(user.Username, user.Email));
     }
 
     [HttpGet("streak")]

@@ -234,4 +234,69 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+    // ---------- GET api/profile ----------
+
+    private async Task<(HttpClient Client, string Username, string Email)> CreateClientForNewUserAsync()
+    {
+        var id = Guid.NewGuid().ToString("N")[..12];
+        var email = $"{id}@test.com";
+        var username = $"user{id}";
+        const string password = "password123";
+
+        var client = _factory.CreateClient();
+
+        var register = await client.PostAsJsonAsync("api/auth/register", new RegisterRequest(email, username, password));
+        Assert.Equal(HttpStatusCode.Created, register.StatusCode);
+
+        var login = await client.PostAsJsonAsync("api/auth/login", new LoginRequest(email, password));
+        login.EnsureSuccessStatusCode();
+
+        var body = await login.Content.ReadFromJsonAsync<LoginResponse>();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", body!.Token);
+
+        return (client, username, email);
+    }
+
+    [Fact]
+    public async Task GetProfile_AuthenticatedUser_ReturnsOwnUsernameAndEmail()
+    {
+        var (client, username, email) = await CreateClientForNewUserAsync();
+        using var _ = client;
+
+        var response = await client.GetAsync("api/profile");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var profile = await response.Content.ReadFromJsonAsync<ProfileResponse>();
+        Assert.NotNull(profile);
+        Assert.Equal(username, profile.Username);
+        Assert.Equal(email, profile.Email);
+    }
+
+    [Fact]
+    public async Task GetProfile_TwoUsers_EachGetsOwnProfile()
+    {
+        var (client1, username1, _) = await CreateClientForNewUserAsync();
+        var (client2, username2, _) = await CreateClientForNewUserAsync();
+        using var c1 = client1;
+        using var c2 = client2;
+
+        var profile1 = await (await client1.GetAsync("api/profile")).Content.ReadFromJsonAsync<ProfileResponse>();
+        var profile2 = await (await client2.GetAsync("api/profile")).Content.ReadFromJsonAsync<ProfileResponse>();
+
+        // the user is taken from the token, so each client only sees its own profile
+        Assert.Equal(username1, profile1!.Username);
+        Assert.Equal(username2, profile2!.Username);
+    }
+
+    [Fact]
+    public async Task GetProfile_WithoutToken_ReturnsUnauthorized()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("api/profile");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
 }
