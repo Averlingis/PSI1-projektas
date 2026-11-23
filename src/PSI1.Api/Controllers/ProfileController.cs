@@ -108,7 +108,7 @@ public class ProfileController : ControllerBase
         }
 
         // the picture is loaded from disk through a stream
-        var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+        var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true);
         var contentType = path.EndsWith(".png") ? "image/png" : "image/jpeg";
 
         return File(stream, contentType);
@@ -143,7 +143,7 @@ public class ProfileController : ControllerBase
 
         // the uploaded file is read as a stream and copied into a file on disk
         await using (var uploadStream = file.OpenReadStream())
-        await using (var fileStream = new FileStream(Path.Combine(_picturesDirectory, filename), FileMode.Create))
+        await using (var fileStream = new FileStream(Path.Combine(_picturesDirectory, filename), FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
         {
             await uploadStream.CopyToAsync(fileStream);
         }
