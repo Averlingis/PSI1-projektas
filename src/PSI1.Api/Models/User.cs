@@ -14,12 +14,11 @@ public class User
 
     public void RecordActivity(DateOnly today)
     {
-        DateOnly? last = LastActivityDate;
-        if (last == today)
+        if (LastActivityDate == today)
         {
             return;
         }
-        if (last == today.AddDays(-1))
+        if (LastActivityDate == today.AddDays(-1))
         {
             CurrentStreak += 1;
         }
@@ -29,6 +28,7 @@ public class User
         }
         LastActivityDate = today;
     }
+    // A missed day is detected here, when the streak is read, so the stored value is not reset in the database.
     public int GetCurrentStreak(DateOnly today)
     {
         if (LastActivityDate >= today.AddDays(-1))
