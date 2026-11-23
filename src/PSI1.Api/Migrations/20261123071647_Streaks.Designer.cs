@@ -12,7 +12,7 @@ using PSI1.Api.Data;
 namespace PSI1.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261122165816_Streaks")]
+    [Migration("20261123071647_Streaks")]
     partial class Streaks
     {
         /// <inheritdoc />
@@ -172,9 +172,7 @@ namespace PSI1.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CurrentStreak")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("integer");
 
                     b.Property<string>("Email")
                         .IsRequired()

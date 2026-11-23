@@ -25,8 +25,6 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.Username)
             .IsUnique();
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.CurrentStreak).HasDefaultValue(0);
 
         // Quiz
         modelBuilder.Entity<Quiz>(b =>
