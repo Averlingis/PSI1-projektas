@@ -1487,6 +1487,7 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
         await AnswerQuestionsAsync(client, quizId, 2);
 
         Assert.Equal(1, await GetStreakAsync(client));
+    }
 
     [Fact]
     public async Task CreateQuiz_SameQuizAtTheSameTime_OnlyOneIsCreated()

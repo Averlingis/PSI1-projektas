@@ -43,17 +43,6 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseEnvironment("Testing");
 
         builder.ConfigureAppConfiguration((_, config) =>
-        {
-            config.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:Default"] = _db.GetConnectionString(),
-                ["Jwt:Issuer"] = "test-issuer",
-                ["Jwt:Audience"] = "test-audience",
-                ["Jwt:Key"] = "test-key-at-least-32-characters-long!!",
-                ["Uploads:Path"] = UploadsPath
-            });
-        });
-        builder.ConfigureAppConfiguration((_, config) =>
              {
                  config.AddInMemoryCollection(new Dictionary<string, string?>
                  {
