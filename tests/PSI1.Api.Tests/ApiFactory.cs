@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Time.Testing;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
@@ -35,21 +37,26 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             Directory.Delete(UploadsPath, recursive: true);
         }
     }
-
+    public FakeTimeProvider Time { get; } = new(new DateTimeOffset(2026, 11, 22, 12, 0, 0, TimeSpan.Zero));
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
 
         builder.ConfigureAppConfiguration((_, config) =>
+             {
+                 config.AddInMemoryCollection(new Dictionary<string, string?>
+                 {
+                     ["ConnectionStrings:Default"] = _db.GetConnectionString(),
+                     ["Jwt:Issuer"] = "test-issuer",
+                     ["Jwt:Audience"] = "test-audience",
+                     ["Jwt:Key"] = "test-key-at-least-32-characters-long!!",
+                     ["Uploads:Path"] = UploadsPath
+                 });
+             });
+        builder.ConfigureServices(services =>
         {
-            config.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:Default"] = _db.GetConnectionString(),
-                ["Jwt:Issuer"] = "test-issuer",
-                ["Jwt:Audience"] = "test-audience",
-                ["Jwt:Key"] = "test-key-at-least-32-characters-long!!",
-                ["Uploads:Path"] = UploadsPath
-            });
+            services.RemoveAll<TimeProvider>();
+            services.AddSingleton<TimeProvider>(Time);
         });
     }
 

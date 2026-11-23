@@ -17,16 +17,19 @@ public class QuizzesController : ControllerBase
 {
     private readonly AppDbContext _db;
     private readonly QuizBuilder _quizBuilder;
+    private readonly TimeProvider _timeProvider;
     private readonly QuizCreationLocks _creationLocks;
 
     public QuizzesController(
      AppDbContext db,
      QuizBuilder quizBuilder,
-     QuizCreationLocks creationLocks)
+     QuizCreationLocks creationLocks,
+     TimeProvider timeProvider)
     {
         _db = db;
         _quizBuilder = quizBuilder;
         _creationLocks = creationLocks;
+        _timeProvider = timeProvider;
     }
 
     [HttpGet]
@@ -120,6 +123,14 @@ public class QuizzesController : ControllerBase
         {
             return Conflict(new { message = ex.Message });
         }
+
+        if (score.GetFirstUnansweredIndex(quiz.Questions.Count) is null)
+        {
+            var user = await _db.GetCurrentUserAsync(User);
+            var today = DateOnly.FromDateTime(_timeProvider.GetUtcNow().UtcDateTime);
+            user.RecordActivity(today);
+        }
+
 
         await _db.SaveChangesAsync();
 
