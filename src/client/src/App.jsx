@@ -37,6 +37,8 @@ export default function App() {
   const [category, setCategory] = useState(null);
   // Quiz navigation
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  // progress of the selected quiz, loaded before its detail page is shown
+  const [selectedProgress, setSelectedProgress] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [latestInProgress, setLatestInProgress] = useState(null);
   const [continueError, setContinueError] = useState("");
@@ -61,7 +63,7 @@ export default function App() {
       .catch((err) => setLanguageError(err.message));
   }, [token]);
 
-  // load the language and category the user saved earlier,
+  // load the language and category the user saved earlier
   // and skip the setup steps if both are already saved
   useEffect(() => {
     if (!token) return;
@@ -134,6 +136,7 @@ export default function App() {
     setSelected(null);
     setCategory(null);
     setSelectedQuiz(null);
+    setSelectedProgress(null);
     setIsResuming(false);
     setIsPlaying(false);
     setIsCreating(false);
@@ -205,9 +208,42 @@ export default function App() {
     }
   }
 
+  // continues the selected quiz from the detail page, without clearing previous answers
+  function continueFromDetail(questionIndex) {
+    setInitialQuestionIndex(questionIndex);
+    setIsFinished(false);
+    setIsResuming(false);
+    setIsPlaying(true);
+  }
+
+  // loads how far the user got in a quiz or null if it cant be loaded
+  async function loadProgress(quizId) {
+    try {
+      return await getQuizProgress(quizId);
+    } catch {
+      // without progress the detail page shows only play, which still works
+      return null;
+    }
+  }
+
+  // loads the progress first, so the detail page opens with the right buttons
+  async function openQuizDetail(quiz) {
+    const progress = await loadProgress(quiz.id);
+    setSelectedProgress(progress);
+    setSelectedQuiz(quiz);
+  }
+
+  // leaves the play screen and returns to the detail page with up-to-date progress
+  async function quitToDetail() {
+    const progress = await loadProgress(selectedQuiz.id);
+    setSelectedProgress(progress);
+    setIsPlaying(false);
+  }
+
   // leaves the quiz and goes back to the list
   function handleBackToQuizzes() {
     setSelectedQuiz(null);
+    setSelectedProgress(null);
     setIsPlaying(false);
     setIsFinished(false);
     setIsResuming(false);
@@ -313,7 +349,7 @@ export default function App() {
                 category={quizCategory ?? category ?? ""}
                 onLanguageChange={setQuizLanguage}
                 onCategoryChange={setQuizCategory}
-                onSelectQuiz={(quiz) => setSelectedQuiz(quiz)}
+                onSelectQuiz={openQuizDetail}
                 showMine={showMyQuizzes}
                 onToggleMine={() => setShowMyQuizzes((v) => !v)}
               />
@@ -323,8 +359,8 @@ export default function App() {
           {step === "ready" && isCreating && (
             <CreateQuizForm
               onBack={() => setIsCreating(false)}
-              onCreated={(quiz) => {
-                setSelectedQuiz(quiz);
+              onCreated={async (quiz) => {
+                await openQuizDetail(quiz);
                 setIsCreating(false);
               }}
             />
@@ -333,8 +369,10 @@ export default function App() {
           {step === "ready" && selectedQuiz && !isPlaying && (
             <QuizDetail
               quiz={selectedQuiz}
+              progress={selectedProgress}
               onBack={() => setSelectedQuiz(null)}
               onPlay={startQuiz}
+              onContinue={continueFromDetail}
             />
           )}
 
@@ -348,7 +386,7 @@ export default function App() {
                   setIsPlaying(false);
                   setIsResuming(false);
                 } else {
-                  setIsPlaying(false);
+                  quitToDetail();
                 }
               }}
               onFinish={() => setIsFinished(true)}
@@ -364,7 +402,7 @@ export default function App() {
           )}
 
           {/* only on the main page, not during setup or inside a quiz */}
-          {step === "ready" && !selectedQuiz && (
+          {step === "ready" && !selectedQuiz && !isCreating && (
             <button className="secondary-button logout" onClick={handleLogout}>
               Log out
             </button>

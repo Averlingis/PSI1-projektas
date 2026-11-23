@@ -1,8 +1,13 @@
 import { useState } from "react";
 
-export default function QuizDetail({ quiz, onBack, onPlay }) {
+// progress is loaded by App before this page is shown,
+export default function QuizDetail({ quiz, progress, onBack, onPlay, onContinue }) {
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState("");
+
+  // partly answered: at least one answer, but not finished
+  const canContinue =
+    progress != null && progress.answeredCount > 0 && progress.nextQuestionIndex !== null;
 
   // onPlay resets the old score first, so wait for it and show any error here
   async function handlePlay() {
@@ -30,14 +35,31 @@ export default function QuizDetail({ quiz, onBack, onPlay }) {
 
       {error && <p className="auth-error">{error}</p>}
 
+      {canContinue && (
+        <p className="quiz-meta">
+          You stopped at question {progress.nextQuestionIndex + 1} of {progress.totalQuestions}.
+        </p>
+      )}
+
       <div className="step-actions">
         <button className="secondary-button" onClick={onBack}>
           Back
         </button>
 
-        <button onClick={handlePlay} disabled={starting}>
-          {starting ? "Starting..." : "Play"}
-        </button>
+        {canContinue ? (
+          <>
+            <button className="secondary-button" onClick={handlePlay} disabled={starting}>
+              {starting ? "Starting..." : "Start over"}
+            </button>
+            <button onClick={() => onContinue(progress.nextQuestionIndex)} disabled={starting}>
+              Continue
+            </button>
+          </>
+        ) : (
+          <button onClick={handlePlay} disabled={starting}>
+            {starting ? "Starting..." : "Play"}
+          </button>
+        )}
       </div>
     </div>
   );

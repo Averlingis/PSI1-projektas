@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using PSI1.Api.Data;
 using PSI1.Api.DTOs;
 using PSI1.Api.Extensions;
+using PSI1.Api.Helpers;
+using PSI1.Api.Models;
+using PSI1.Api.Services;
 
 namespace PSI1.Api.Controllers;
 
-// The current user's profile: details, streak and profile picture.
-// The picture is saved on disk, its filename is stored in the database.
 [ApiController]
 [Route("api/profile")]
 [Authorize]
@@ -20,12 +22,19 @@ public class ProfileController : ControllerBase
     private readonly AppDbContext _db;
     private readonly string _picturesDirectory;
     private readonly TimeProvider _timeProvider;
+    private readonly ProgressAnalyzer _progressAnalyzer;
 
-    public ProfileController(AppDbContext db, IWebHostEnvironment environment, IConfiguration configuration, TimeProvider timeProvider)
+    public ProfileController(
+        AppDbContext db,
+        IWebHostEnvironment environment,
+        IConfiguration configuration,
+        TimeProvider timeProvider,
+        ProgressAnalyzer progressAnalyzer)
     {
         _db = db;
         _timeProvider = timeProvider;
-        // tests point Uploads:Path to a temporary folder, therefore they never touch the real Uploads folder
+        _progressAnalyzer = progressAnalyzer;
+        // tests point Uploads:Path to a temporary foldert herefore they never touch the real Uploads folder
         _picturesDirectory = configuration["Uploads:Path"]
             ?? Path.Combine(environment.ContentRootPath, "Uploads");
     }
@@ -47,6 +56,44 @@ public class ProfileController : ControllerBase
         var today = DateOnly.FromDateTime(_timeProvider.GetUtcNow().UtcDateTime);
 
         return Ok(new StreakResponse(user.GetCurrentStreak(today)));
+    }
+
+    [HttpGet("stats")]
+    public async Task<ActionResult<ProgressResponse>> GetStats([FromQuery] Language? language)
+    {
+        if (language is null || !EnumValues<Language>.IsDefined(language.Value))
+        {
+            return BadRequest(new { message = "Unknown language." });
+        }
+
+        var userId = User.GetUserId();
+
+        // the user's scores with their answers (answerRows are auto-included)
+        var scores = await _db.QuizScores
+            .AsNoTracking()
+            .Where(s => s.UserId == userId)
+            .ToListAsync();
+
+        var quizIds = scores.Select(s => s.QuizId).ToList();
+
+        // cateogry of each of those quizzes, only in the chosen language
+        var categoriesByQuizId = await _db.Quizzes
+            .AsNoTracking()
+            .IgnoreAutoIncludes()
+            .Where(q => quizIds.Contains(q.Id) && q.Language == language.Value)
+            .ToDictionaryAsync(q => q.Id, q => q.Category);
+
+        // answers grouped by category of their quiz. Scores of other languages are skipped.
+        var counts = scores
+            .Where(s => categoriesByQuizId.ContainsKey(s.QuizId))
+            .GroupBy(s => categoriesByQuizId[s.QuizId])
+            .Select(group => new CategoryAnswerCounts(
+                group.Key,
+                group.Sum(s => s.Answers.Count),
+                group.Sum(s => s.Answers.Count(a => a.Value))))
+            .ToList();
+
+        return Ok(_progressAnalyzer.Analyze(counts));
     }
 
     [HttpGet("picture")]
