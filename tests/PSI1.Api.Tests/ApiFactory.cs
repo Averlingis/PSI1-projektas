@@ -37,7 +37,7 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             Directory.Delete(UploadsPath, recursive: true);
         }
     }
-    public FakeTimeProvider Time { get; } = new(new DateTimeOffset(2026, 11, 22, 12, 0, 0, TimeSpan.Zero));
+    public FakeTimeProvider Time { get; } = new(DateTimeOffset.UtcNow);
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");

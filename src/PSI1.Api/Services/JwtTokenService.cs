@@ -13,11 +13,16 @@ public class JwtTokenService
 {
     private readonly IConfiguration _configuration;
     private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly TimeProvider _timeProvider;
 
-    public JwtTokenService(IConfiguration configuration, JwtSecurityTokenHandler tokenHandler)
+    public JwtTokenService(
+        IConfiguration configuration,
+        JwtSecurityTokenHandler tokenHandler,
+        TimeProvider timeProvider)
     {
         _configuration = configuration;
         _tokenHandler = tokenHandler;
+        _timeProvider = timeProvider;
     }
 
     public string CreateToken(User user)
@@ -36,7 +41,7 @@ public class JwtTokenService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: _timeProvider.GetUtcNow().UtcDateTime.AddHours(1),
             signingCredentials: credentials
         );
 
