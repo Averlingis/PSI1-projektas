@@ -33,9 +33,15 @@ public class ProgressAnalyzer
             return new ProgressResponse(categories, null, null);
         }
 
-        var weakest = withEnoughData.MinBy(c => c.Accuracy)!.Category;
-        var strongest = withEnoughData.MaxBy(c => c.Accuracy)!.Category;
+        var weakest = withEnoughData.MinBy(c => c.Accuracy)!;
+        var strongest = withEnoughData.MaxBy(c => c.Accuracy)!;
 
-        return new ProgressResponse(categories, strongest, weakest);
+        // with the same accuracy everywhere, no category is weaker or stronger than another
+        if (weakest.Accuracy == strongest.Accuracy)
+        {
+            return new ProgressResponse(categories, null, null);
+        }
+        
+        return new ProgressResponse(categories, strongest.Category, weakest.Category);
     }
 }

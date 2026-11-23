@@ -59,4 +59,17 @@ public class ProgressAnalyzerTests
         Assert.Equal(Category.Family, result.Weakest);
         Assert.Equal(Category.Food, result.Strongest);
     }
+
+    [Fact]
+    public void Analyze_SameAccuracyEverywhere_NoWeakestOrStrongest()
+    {
+        var result = _analyzer.Analyze(
+        [
+            new CategoryAnswerCounts(Category.Food, 10, 10),
+            new CategoryAnswerCounts(Category.Family, 20, 20)
+        ]);
+
+        Assert.Null(result.Weakest);
+        Assert.Null(result.Strongest);
+    }
 }
