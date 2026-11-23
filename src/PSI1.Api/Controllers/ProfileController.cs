@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using PSI1.Api.Data;
-using PSI1.Api.Extensions;
 using PSI1.Api.DTOs;
+using PSI1.Api.Extensions;
 
 namespace PSI1.Api.Controllers;
 
