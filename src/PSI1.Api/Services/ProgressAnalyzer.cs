@@ -41,7 +41,7 @@ public class ProgressAnalyzer
         {
             return new ProgressResponse(categories, null, null);
         }
-        
+
         return new ProgressResponse(categories, strongest.Category, weakest.Category);
     }
 }
