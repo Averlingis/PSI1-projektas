@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getProfilePicture, uploadProfilePicture } from "../api";
+import StreakIcon from "./StreakIcon";
 
 // same limits as the backend
 const MAX_SIZE_BYTES = 2 * 1024 * 1024;
@@ -72,15 +73,18 @@ export default function ProfilePicture() {
 
   return (
     <div className="profile-picture">
-      <div className="profile-avatar">
-        {imageUrl ? (
-          <img src={imageUrl} alt="Your profile picture" />
-        ) : (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="8" r="4" />
-            <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8z" />
-          </svg>
-        )}
+      <div className="profile-avatar-wrapper">
+        <div className="profile-avatar">
+          {imageUrl ? (
+            <img src={imageUrl} alt="Your profile picture" />
+          ) : (
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8z" />
+            </svg>
+          )}
+        </div>
+        <StreakIcon />
       </div>
 
       <input

@@ -575,3 +575,28 @@ body {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
+
+/* streak */
+
+.profile-avatar-wrapper {
+  position: relative;
+}
+
+.streak-icon {
+  position: absolute;
+  right: -18px;
+  bottom: -2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  /* emoji has its own space built in so less padding to the left */
+  padding: 3px 8px 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
