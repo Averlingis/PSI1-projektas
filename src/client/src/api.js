@@ -262,3 +262,8 @@ export async function getQuizProgress(quizId) {
 export async function getStreak() {
   return authFetch("/api/profile/streak");
 }
+
+// Gets the current user's profile details: { username, email }.
+export async function getProfile() {
+  return authFetch("/api/profile");
+}

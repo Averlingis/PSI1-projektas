@@ -3,6 +3,7 @@ import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import CategorySelector from "./components/CategorySelector";
 import ProfilePicture from "./components/ProfilePicture";
+import ProfilePage from "./components/ProfilePage";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
 import CreateQuizForm from "./components/CreateQuizForm";
@@ -16,6 +17,8 @@ import {
   resetQuizScore,
   getLatestInProgress,
   getQuizProgress,
+  getProfile,
+  getProfilePicture,
 } from "./api";
 import "./App.css";
 
@@ -54,6 +57,11 @@ export default function App() {
   // true when the quiz list shows the user's own quizzes instead of the public ones
   const [showMyQuizzes, setShowMyQuizzes] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
+  // profile page, the details are loaded before the page is shown
+  const [isViewingProfile, setIsViewingProfile] = useState(false);
+  const [profile, setProfile] = useState(null);
+  // the picture is loaded together with the profile, undefined means not preloaded
+  const [profilePicture, setProfilePicture] = useState(undefined);
 
   // once logged in, load the list of languages to choose from
   useEffect(() => {
@@ -149,6 +157,8 @@ export default function App() {
     setContinueError("");
     setIsContinuing(false);
     setInitialQuestionIndex(0);
+    setIsViewingProfile(false);
+    setProfile(null);
   }
 
   // sends the chosen language to the backend, using the saved jw token
@@ -249,6 +259,33 @@ export default function App() {
     setIsResuming(false);
   }
 
+  // loads the profile details and the picture first, so the profile page opens complete
+  async function openProfile() {
+    try {
+      const [details, picture] = await Promise.all([
+        getProfile(),
+        // without the picture the placeholder is shown, so a failure here doesn't stop the page
+        getProfilePicture().catch(() => null),
+      ]);
+      setProfile(details);
+      setProfilePicture(picture);
+    } catch (err) {
+      if (err.message === SESSION_EXPIRED_MESSAGE) {
+        handleLogout();
+        return;
+      }
+      // the page still opens and shows that the details couldn't be loaded
+      setProfile(null);
+      setProfilePicture(undefined);
+    }
+    setIsViewingProfile(true);
+  }
+
+  // leaves the profile page and goes back to the home screen
+  function closeProfile() {
+    setIsViewingProfile(false);
+  }
+
   // if the token is found, the user is logged in and goes through the steps
   if (token) {
     return (
@@ -297,7 +334,7 @@ export default function App() {
             />
           )}
 
-          {step === "ready" && !selectedQuiz && !isCreating && (
+          {step === "ready" && !selectedQuiz && !isCreating && !isViewingProfile && (
             <>
               <ProfilePicture />
 
@@ -322,6 +359,9 @@ export default function App() {
 
 
               <div className="step-actions">
+                <button className="secondary-button" onClick={openProfile}>
+                  Edit profile
+                </button>
                 <button onClick={() => setIsCreating(true)}>Create quiz</button>
               </div>
 
@@ -354,6 +394,10 @@ export default function App() {
                 onToggleMine={() => setShowMyQuizzes((v) => !v)}
               />
             </>
+          )}
+
+          {step === "ready" && isViewingProfile && (
+             <ProfilePage profile={profile} picture={profilePicture} onBack={closeProfile} />
           )}
 
           {step === "ready" && isCreating && (
@@ -402,7 +446,7 @@ export default function App() {
           )}
 
           {/* only on the main page, not during setup or inside a quiz */}
-          {step === "ready" && !selectedQuiz && !isCreating && (
+          {step === "ready" && !selectedQuiz && !isCreating && !isViewingProfile && (
             <button className="secondary-button logout" onClick={handleLogout}>
               Log out
             </button>

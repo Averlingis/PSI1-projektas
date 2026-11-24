@@ -6,9 +6,13 @@ import StreakIcon from "./StreakIcon";
 const MAX_SIZE_BYTES = 2 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
-export default function ProfilePicture() {
-  const [imageUrl, setImageUrl] = useState(null);
-  const [loading, setLoading] = useState(true);
+// initialPicture: undefined = load it here, null = preloaded and there's no picture, Blob = preloaded picture
+export default function ProfilePicture({ initialPicture }) {
+  const preloaded = initialPicture !== undefined;
+  const [imageUrl, setImageUrl] = useState(() =>
+    initialPicture ? URL.createObjectURL(initialPicture) : null
+  );
+  const [loading, setLoading] = useState(!preloaded);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
@@ -16,6 +20,9 @@ export default function ProfilePicture() {
 
   // load the saved picture from the backend
   useEffect(() => {
+    // a preloaded picture is already shown, so it's only loaded again after an upload
+    if (preloaded && reloadKey === 0) return;
+
     let cancelled = false;
 
     getProfilePicture()
@@ -33,7 +40,7 @@ export default function ProfilePicture() {
     return () => {
       cancelled = true;
     };
-  }, [reloadKey]);
+  }, [reloadKey, preloaded]);
 
   // frees the memory of object's URL once it's replaced or the component no longer available
   useEffect(() => {
