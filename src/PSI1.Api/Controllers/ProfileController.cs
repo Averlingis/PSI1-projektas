@@ -49,6 +49,27 @@ public class ProfileController : ControllerBase
         return Ok(new ProfileResponse(user.Username, user.Email));
     }
 
+    [HttpPut("username")]
+    public async Task<IActionResult> ChangeUsername(ChangeUsernameRequest request)
+    {
+        var user = await _db.GetCurrentUserAsync(User);
+
+        var username = request.Username.ToLowerInvariant();
+
+        var usernameExists = await _db.Users.AnyAsync(
+            u => u.Id != user.Id && u.Username.ToLower() == username);
+
+        if (usernameExists)
+        {
+            return Conflict(new { message = "Username already taken." });
+        }
+
+        user.Username = username;
+        await _db.SaveChangesAsync();
+
+        return Ok(new { username = user.Username });
+    }
+
     [HttpGet("streak")]
     public async Task<IActionResult> GetStreak()
     {
