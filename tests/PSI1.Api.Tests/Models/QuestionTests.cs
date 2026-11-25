@@ -9,6 +9,8 @@ public class QuestionTests
     [InlineData("Yes", "yes")]
     [InlineData("Yes", " Yes ")]
     [InlineData(" YES ", "yes")]
+    [InlineData("ĄČĘĖ", "ąčęė")]
+    [InlineData(" ĄČĘĖ ", "ąčęė")]
     public void Constructor_DuplicateOptions_ThrowsArgumentException(
         string first, string second)
     {

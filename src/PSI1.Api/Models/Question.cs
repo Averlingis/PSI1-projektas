@@ -55,6 +55,11 @@ public class Question
             }
         }
 
+        // Duplicate detection ignores case and surrounding whitespace.
+        // Edge cases not handled: differences in internal spaces.
+        // visually similar letters from different alphabets.
+        // and invisible zero-width characters.
+
         if (options.Select(o => o.OptionText.ToLowerTrimmed()).Distinct().Count() != options.Count)
         {
             throw new ArgumentException(
