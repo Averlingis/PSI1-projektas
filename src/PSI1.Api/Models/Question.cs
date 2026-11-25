@@ -1,3 +1,4 @@
+using PSI1.Api.Extensions;
 namespace PSI1.Api.Models;
 
 public class Question
@@ -52,6 +53,17 @@ public class Question
             {
                 throw new ArgumentException("Every option must have text.", nameof(options));
             }
+        }
+
+        // Duplicate detection ignores case and surrounding whitespace.
+        // Edge cases not handled: differences in internal spaces.
+        // visually similar letters from different alphabets.
+        // and invisible zero-width characters.
+
+        if (options.Select(o => o.OptionText.ToLowerTrimmed()).Distinct().Count() != options.Count)
+        {
+            throw new ArgumentException(
+                "Answer options must have unique text.", nameof(options));
         }
 
         if (options.Count(option => option.IsCorrect) != 1)
