@@ -20,6 +20,7 @@ import {
   getProfile,
   getProfilePicture,
 } from "./api";
+import ProfileProgress from "./components/ProfileProgress";
 import "./App.css";
 
 const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please log in again.";
@@ -357,13 +358,18 @@ export default function App() {
                 </button>
               </div>
 
-
-              <div className="step-actions">
+              <ProfileProgress
+                languages={languages}
+                initialLanguage={selected}
+              >
                 <button className="secondary-button" onClick={openProfile}>
                   Edit profile
                 </button>
-                <button onClick={() => setIsCreating(true)}>Create quiz</button>
-              </div>
+
+                <button onClick={() => setIsCreating(true)}>
+                  Create quiz
+                </button>
+              </ProfileProgress>
 
               {latestInProgress && (
                 <div className="step-actions">
@@ -397,7 +403,7 @@ export default function App() {
           )}
 
           {step === "ready" && isViewingProfile && (
-             <ProfilePage profile={profile} picture={profilePicture} onBack={closeProfile} />
+            <ProfilePage profile={profile} picture={profilePicture} onBack={closeProfile} />
           )}
 
           {step === "ready" && isCreating && (
