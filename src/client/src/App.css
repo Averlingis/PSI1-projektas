@@ -608,3 +608,24 @@ body {
   flex-direction: column;
   gap: 14px;
 }
+
+.username-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.username-row input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.username-row .username-save-button {
+  width: auto;
+  min-width: 0;
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 1rem;
+}

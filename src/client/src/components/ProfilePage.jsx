@@ -45,27 +45,29 @@ export default function ProfilePage({ profile, picture, onBack, onUsernameChange
               <strong>Username:</strong>
             </label>
 
-            <input
-              id="profile-username"
-              type="text"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-                setError("");
-                setSuccess("");
-              }}
-              minLength={3}
-              maxLength={30}
-              required
-            />
+            <div className="username-row">
+              <input
+                id="profile-username"
+                type="text"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setError("");
+                  setSuccess("");
+                }}
+                minLength={3}
+                maxLength={30}
+                required
+              />
+
+              <button type="submit" disabled={saving} className="username-save-button">
+                {saving ? "Saving..." : "Save"}
+              </button>
+            </div>
 
             {error && <p className="auth-error">{error}</p>}
-
             {success && <p role="status">{success}</p>}
 
-            <button type="submit" disabled={saving}>
-              {saving ? "Saving..." : "Save"}
-            </button>
           </form>
 
           <p><strong>Email:</strong> {profile.email}</p>
