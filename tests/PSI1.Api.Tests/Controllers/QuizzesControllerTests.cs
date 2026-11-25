@@ -1254,6 +1254,40 @@ public class QuizzesControllerTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task CreateQuiz_DuplicateAnswerOptions_ReturnsBadRequest()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var request = new
+        {
+            quiz = new
+            {
+                title = $"DuplicateOptions-{Guid.NewGuid():N}",
+                category = "Family",
+                language = "Lithuanian",
+                questions = Enumerable.Range(1, 3).Select(i => new
+                {
+                    text = $"Question {i}",
+                    options = new[]
+                    {
+                    new { text = "Yes", isCorrect = true },
+                    new { text = i == 1 ? " yes " : "No", isCorrect = false }
+                }
+                }).ToArray()
+            },
+            isPublic = true
+        };
+
+        var response = await client.PostAsJsonAsync("api/quizzes", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var body = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Answer options must have unique text.", body);
+        Assert.Contains("\"location\":1", body);
+    }
+
+    [Fact]
     public async Task CreateQuiz_DuplicateQuiz_ReturnsConflict()
     {
         var request = new
