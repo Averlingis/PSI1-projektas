@@ -28,7 +28,7 @@ public class JwtTokenServiceTests
             })
             .Build();
 
-        return new JwtTokenService(configuration, new JwtSecurityTokenHandler());
+        return new JwtTokenService(configuration, new JwtSecurityTokenHandler(), TimeProvider.System);
     }
 
     private static TokenValidationParameters ValidationParameters(string key)
