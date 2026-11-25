@@ -28,6 +28,101 @@ public class ProfileControllerTests : IClassFixture<ApiFactory>
         _factory = factory;
     }
 
+    [Fact]
+    public async Task ChangeUsername_ValidUsername_ReturnsOkAndUpdatesProfile()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+        var newUsername = $"User{Guid.NewGuid():N}"[..20];
+
+        var response = await client.PutAsJsonAsync(
+            "api/profile/username",
+            new ChangeUsernameRequest(newUsername));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var profile = await client.GetFromJsonAsync<ProfileResponse>("api/profile");
+
+        Assert.NotNull(profile);
+        Assert.Equal(newUsername.ToLowerInvariant(), profile.Username);
+    }
+
+    [Fact]
+    public async Task ChangeUsername_UppercaseUsername_IsStoredLowercase()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PutAsJsonAsync(
+            "api/profile/username",
+            new ChangeUsernameRequest("NEWUSERNAME123"));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var profile = await client.GetFromJsonAsync<ProfileResponse>("api/profile");
+
+        Assert.NotNull(profile);
+        Assert.Equal("newusername123", profile.Username);
+    }
+
+    [Fact]
+    public async Task ChangeUsername_UsernameAlreadyTaken_ReturnsConflict()
+    {
+        using var firstClient = await _factory.CreateAuthenticatedClientAsync();
+        using var secondClient = await _factory.CreateAuthenticatedClientAsync();
+
+        var firstProfile = await firstClient.GetFromJsonAsync<ProfileResponse>(
+            "api/profile");
+
+        Assert.NotNull(firstProfile);
+
+        var response = await secondClient.PutAsJsonAsync(
+            "api/profile/username",
+            new ChangeUsernameRequest(firstProfile.Username.ToUpperInvariant()));
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("ab")]
+    [InlineData("invalid name")]
+    [InlineData("invalid!")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    public async Task ChangeUsername_InvalidUsername_ReturnsBadRequest(
+        string username)
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var response = await client.PutAsJsonAsync(
+            "api/profile/username",
+            new ChangeUsernameRequest(username));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ChangeUsername_WithoutToken_ReturnsUnauthorized()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.PutAsJsonAsync(
+            "api/profile/username",
+            new ChangeUsernameRequest("NewUsername"));
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task LoginToken_DoesNotContainUsernameClaim()
+    {
+        using var client = await _factory.CreateAuthenticatedClientAsync();
+
+        var token = client.DefaultRequestHeaders.Authorization!.Parameter!;
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        Assert.DoesNotContain(
+            jwt.Claims,
+            claim => claim.Type == JwtRegisteredClaimNames.UniqueName);
+    }
+
     // sends the bytes as a file upload, the same way the browser does
     private static async Task<HttpResponseMessage> UploadAsync(
         HttpClient client,
