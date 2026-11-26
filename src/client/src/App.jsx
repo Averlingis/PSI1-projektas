@@ -397,7 +397,16 @@ export default function App() {
           )}
 
           {step === "ready" && isViewingProfile && (
-             <ProfilePage profile={profile} picture={profilePicture} onBack={closeProfile} />
+            <ProfilePage
+              profile={profile}
+              picture={profilePicture}
+              onBack={closeProfile}
+              onUsernameChanged={(newUsername) =>
+                setProfile((prev) =>
+                  prev ? { ...prev, username: newUsername } : prev
+                )
+              }
+            />
           )}
 
           {step === "ready" && isCreating && (

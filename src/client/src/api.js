@@ -267,3 +267,11 @@ export async function getStreak() {
 export async function getProfile() {
   return authFetch("/api/profile");
 }
+
+// Changes the current user's username.
+export async function changeUsername(username) {
+  return authFetch("/api/profile/username", {
+    method: "PUT",
+    body: JSON.stringify({ username }),
+  });
+}
