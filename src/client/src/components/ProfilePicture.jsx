@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { getProfilePicture, uploadProfilePicture } from "../api";
+import { useState, useRef } from "react";
+import { uploadProfilePicture } from "../api";
+import useProfilePicture from "../hooks/useProfilePicture";
+import AvatarImage from "./AvatarImage";
 import StreakIcon from "./StreakIcon";
 
 // same limits as the backend
@@ -7,47 +9,12 @@ const MAX_SIZE_BYTES = 2 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
 // initialPicture: undefined = load it here, null = preloaded and there's no picture, Blob = preloaded picture
-export default function ProfilePicture({ initialPicture }) {
-  const preloaded = initialPicture !== undefined;
-  const [imageUrl, setImageUrl] = useState(() =>
-    initialPicture ? URL.createObjectURL(initialPicture) : null
-  );
-  const [loading, setLoading] = useState(!preloaded);
+// onPictureChange is called with the new picture after an upload
+export default function ProfilePicture({ initialPicture, onPictureChange }) {
+  const { imageUrl, loading, error: loadError, reload } = useProfilePicture(initialPicture);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
-  const [reloadKey, setReloadKey] = useState(0);
   const fileInputRef = useRef(null);
-
-  // load the saved picture from the backend
-  useEffect(() => {
-    // a preloaded picture is already shown, so it's only loaded again after an upload
-    if (preloaded && reloadKey === 0) return;
-
-    let cancelled = false;
-
-    getProfilePicture()
-      .then((blob) => {
-        if (cancelled) return;
-        setImageUrl(blob ? URL.createObjectURL(blob) : null);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err.message);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [reloadKey, preloaded]);
-
-  // frees the memory of object's URL once it's replaced or the component no longer available
-  useEffect(() => {
-    return () => {
-      if (imageUrl) URL.revokeObjectURL(imageUrl);
-    };
-  }, [imageUrl]);
 
   async function handleFileChange(event) {
     const file = event.target.files[0];
@@ -70,7 +37,8 @@ export default function ProfilePicture({ initialPicture }) {
     setUploading(true);
     try {
       await uploadProfilePicture(file);
-      setReloadKey((k) => k + 1);
+      onPictureChange?.(file);
+      reload();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -82,14 +50,7 @@ export default function ProfilePicture({ initialPicture }) {
     <div className="profile-picture">
       <div className="profile-avatar-wrapper">
         <div className="profile-avatar">
-          {imageUrl ? (
-            <img src={imageUrl} alt="Your profile picture" />
-          ) : (
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8z" />
-            </svg>
-          )}
+          <AvatarImage imageUrl={imageUrl} loading={loading} />
         </div>
         <StreakIcon />
       </div>
@@ -111,9 +72,9 @@ export default function ProfilePicture({ initialPicture }) {
         {uploading ? "Uploading..." : imageUrl ? "Change picture" : "Upload picture"}
       </button>
 
-      {error && (
+      {(error || loadError) && (
         <p className="auth-error" role="alert">
-          {error}
+          {error || loadError}
         </p>
       )}
     </div>

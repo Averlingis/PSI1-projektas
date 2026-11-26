@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import CategorySelector from "./components/CategorySelector";
-import ProfilePicture from "./components/ProfilePicture";
+import HeaderAvatar from "./components/HeaderAvatar";
 import ProfilePage from "./components/ProfilePage";
 import QuizList from "./components/QuizList";
 import QuizDetail from "./components/QuizDetail";
@@ -23,6 +23,8 @@ import {
 import "./App.css";
 
 const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please log in again.";
+// placeholder until the app has a real name
+const APP_NAME = "App name";
 
 export default function App() {
   // tracks which screen the user is on before log in
@@ -58,6 +60,7 @@ export default function App() {
   const [showMyQuizzes, setShowMyQuizzes] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
   // profile page, the details are loaded before the page is shown
+  // it stays open while the language or category is changed, so the user returns to it afterwards
   const [isViewingProfile, setIsViewingProfile] = useState(false);
   const [profile, setProfile] = useState(null);
   // the picture is loaded together with the profile, undefined means not preloaded
@@ -159,6 +162,7 @@ export default function App() {
     setInitialQuestionIndex(0);
     setIsViewingProfile(false);
     setProfile(null);
+    setProfilePicture(undefined);
   }
 
   // sends the chosen language to the backend, using the saved jw token
@@ -336,33 +340,9 @@ export default function App() {
 
           {step === "ready" && !selectedQuiz && !isCreating && !isViewingProfile && (
             <>
-              <ProfilePicture />
-
-              <h2>You're all set</h2>
-              <p>Language: {selected || "none yet"}</p>
-              <p>Category: {category}</p>
-
-              <div className="step-actions">
-                <button
-                  className="secondary-button"
-                  onClick={() => setStep("language")}
-                >
-                  Change language
-                </button>
-                <button
-                  className="secondary-button"
-                  onClick={() => setStep("category")}
-                >
-                  Change category
-                </button>
-              </div>
-
-
-              <div className="step-actions">
-                <button className="secondary-button" onClick={openProfile}>
-                  Edit profile
-                </button>
-                <button onClick={() => setIsCreating(true)}>Create quiz</button>
+              <div className="home-header">
+                <span className="app-name">{APP_NAME}</span>
+                <HeaderAvatar onEditProfile={openProfile} />
               </div>
 
               {latestInProgress && (
@@ -392,12 +372,23 @@ export default function App() {
                 onSelectQuiz={openQuizDetail}
                 showMine={showMyQuizzes}
                 onToggleMine={() => setShowMyQuizzes((v) => !v)}
+                onCreateQuiz={() => setIsCreating(true)}
               />
             </>
           )}
 
           {step === "ready" && isViewingProfile && (
-             <ProfilePage profile={profile} picture={profilePicture} onBack={closeProfile} />
+            <ProfilePage
+              profile={profile}
+              picture={profilePicture}
+              language={selected}
+              category={category}
+              onPictureChange={setProfilePicture}
+              onChangeLanguage={() => setStep("language")}
+              onChangeCategory={() => setStep("category")}
+              onLogout={handleLogout}
+              onBack={closeProfile}
+            />
           )}
 
           {step === "ready" && isCreating && (
@@ -443,13 +434,6 @@ export default function App() {
               onPlayAgain={startQuiz}
               onBackToQuizzes={handleBackToQuizzes}
             />
-          )}
-
-          {/* only on the main page, not during setup or inside a quiz */}
-          {step === "ready" && !selectedQuiz && !isCreating && !isViewingProfile && (
-            <button className="secondary-button logout" onClick={handleLogout}>
-              Log out
-            </button>
           )}
 
         </div>
