@@ -267,3 +267,10 @@ export async function getStreak() {
 export async function getProfile() {
   return authFetch("/api/profile");
 }
+
+// Gets the user's statistics for the selected language.
+export async function getStats(language) {
+  return authFetch(
+    `/api/profile/stats?language=${encodeURIComponent(language)}`
+  );
+}
